@@ -8,8 +8,13 @@
 #define STRUCTURE_H
 
 #include <Arduino.h>
+#include <queue>
+
+using namespace std;
 
 #define ENUM_STRING(p) #p
+
+// #define private public // troll ...
 
 enum Level
 {
@@ -313,29 +318,16 @@ struct PolarPoint
     }
 };
 
-/**
- * @brief Position of robot on the table
- * @param x int mm
- * @param y int mm
- * @param angle float Degree
- */
-struct RobotPosition
-{
-    int x;
-    int y;
-    float angle;
-};
-
 struct PointTracker
 {
     // point coordinates beeing tracked
-    Point point;
+    PolarPoint point;
     // timestamp of the last time the tracker has been updated
     int64_t lastUpdateTime;
-    // Polar points that define the mid point
-    PolarPoint data[25];  // TODO kMaxPoints
-    // Size of the polar points array
-    uint8_t size = 0;
+    // express the confidence we have in the obstacle position based on how much time we've seen it.
+    // It is increased it at every detection up to 4 times.
+    // This is used as a trigger to send the obstacle to the robot (only when we are confident enough)
+    int confidence;
     // avoid to send the same points twice
     bool hasBeenSent = false;
 };
@@ -347,4 +339,10 @@ struct Command
     int32_t data[8];
 };
 
+template <typename T>
+void pop_front(std::vector<T> &vec)
+{
+    assert(!vec.empty());
+    vec.erase(vec.begin());
+}
 #endif
