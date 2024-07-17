@@ -37,5 +37,5 @@ class IModule
         }
     }
     */
-}
+};
 #endif
