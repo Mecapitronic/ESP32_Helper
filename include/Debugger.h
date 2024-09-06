@@ -11,12 +11,15 @@
 
 namespace Debugger
 {
+    void EnableDebugger(Enable enable);
+    bool IsEnable();
 
-void EnableDebugger(Enable enable);
-bool IsEnable();
+    void Initialisation();
+    void HandleCommand(Command cmdTmp);
+    void PrintCommandHelp(void);
 
-void Initialisation();
-bool WaitForAvailableSteps();
-void AddSteps(int16_t steps);
+    bool WaitForAvailableSteps();
+    void AddSteps(int16_t steps);
+    bool GetSteps(void);
 }
 #endif

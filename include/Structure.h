@@ -11,9 +11,6 @@
 #include <queue>
 
 using namespace std;
-
-#define ENUM_STRING(p) #p
-
 // #define private public // troll ...
 
 enum Level
@@ -337,6 +334,16 @@ struct Command
     String cmd;
     int8_t size;
     int32_t data[8];
+
+    Command()
+    {
+        cmd = "";
+        size = 0;
+        for (size_t i = 0; i < 8; i++)
+        {
+            data[i]=0;
+        }        
+    }
 };
 
 template <typename T>

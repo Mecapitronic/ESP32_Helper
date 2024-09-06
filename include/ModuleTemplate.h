@@ -7,11 +7,11 @@ using namespace Printer;
 //// template <class T>
 class IModule
 {
-   private:
+private:
     // QueueHandle_t myQueue;
     // static const int queueSize = 500;
 
-   public:
+public:
     // This function will be be called just before the constructor of the module
     IModule(void) { println("Creating new module with IModule Interface"); }
 

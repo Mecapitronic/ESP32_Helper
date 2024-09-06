@@ -1,5 +1,30 @@
 {
     "cSpell.words": [
-        "Mecapitronic"
-    ]
+        "Mecapi",
+        "Mecapitronic",
+        "teleplot",
+        "wokwi"
+    ],
+    "files.associations": {
+        "string": "cpp",
+        "functional": "cpp",
+        "queue": "cpp",
+        "array": "cpp",
+        "string_view": "cpp"
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "Wokwi GDB 2",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": ".pio/build/Example2_Debug/firmware.elf",
+                "cwd": "${workspaceFolder}",
+                "MIMode": "gdb",
+                "miDebuggerPath": "${userHome}/.platformio/packages/toolchain-xtensa-esp32/bin/xtensa-esp32-elf-gdb.exe",
+                "miDebuggerServerAddress": "localhost:3333"
+            }
+        ]
+    }
 }

@@ -8,10 +8,6 @@
 #define PRINTER_H
 
 #include "ESP32_Helper.h"
-#ifdef WITH_WIFI
-#include <WiFi.h>
-extern WiFiClient client;
-#endif
 
 #define ENUM_PRINT(p)             \
     case (p):                     \
@@ -20,55 +16,71 @@ extern WiFiClient client;
 
 namespace Printer
 {
-    namespace
-    {
-        Level printLevel = LEVEL_VERBOSE;
-        Enable printEnable = ENABLE_NONE;
-    }
+    void SetLevel(Level level);
+    void EnablePrinter(Enable enable);
 
-    void PrintLevel(Level level);
-    Level PrintLevel();
-    void PrintEnable(Enable enable);
-    Enable PrintEnable();
+    void Initialisation();
+    void Update(void *pvParameters);
+    void HandleCommand(Command cmdTmp);
+    void PrintCommandHelp();
 
-    bool IsPrintable();
+    bool IsPrintable(Level level);
 
     void println(Level level = LEVEL_VERBOSE);
 
-    void print(String prefix, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, String suffix = "", Level level = LEVEL_VERBOSE);
+    //void print(String prefix, String suffix = "", Level level = LEVEL_VERBOSE);
+    //void println(String prefix, String suffix = "", Level level = LEVEL_VERBOSE);
 
+    void print(int data, Level level = LEVEL_VERBOSE);
+    void println(int data, Level level = LEVEL_VERBOSE);
     void print(String prefix, int data, String suffix = "", Level level = LEVEL_VERBOSE);
     void println(String prefix, int data, String suffix = "", Level level = LEVEL_VERBOSE);
 
+    void print(uint data, Level level = LEVEL_VERBOSE);
+    void println(uint data, Level level = LEVEL_VERBOSE);
     void print(String prefix, uint data, String suffix = "", Level level = LEVEL_VERBOSE);
     void println(String prefix, uint data, String suffix = "", Level level = LEVEL_VERBOSE);
 
+    void print(char data, Level level = LEVEL_VERBOSE);
+    void println(char data, Level level = LEVEL_VERBOSE);
     void print(String prefix, char data, String suffix = "", Level level = LEVEL_VERBOSE);
     void println(String prefix, char data, String suffix = "", Level level = LEVEL_VERBOSE);
 
+    void print(float data, Level level = LEVEL_VERBOSE);
+    void println(float data, Level level = LEVEL_VERBOSE);
     void print(String prefix, float data, String suffix = "", Level level = LEVEL_VERBOSE);
     void println(String prefix, float data, String suffix = "", Level level = LEVEL_VERBOSE);
 
+    void print(String data, Level level = LEVEL_VERBOSE);
+    void println(String data, Level level = LEVEL_VERBOSE);
     void print(String prefix, String data, String suffix = "", Level level = LEVEL_VERBOSE);
     void println(String prefix, String data, String suffix = "", Level level = LEVEL_VERBOSE);
 
-    void print(String prefix, Point data, String suffix = "", Level level = LEVEL_VERBOSE, boolean lineFeed = true);
-    void print(String prefix, Point3D data, String suffix = "", Level level = LEVEL_VERBOSE, boolean lineFeed = true);
-    void print(String prefix, Point4D data, String suffix = "", Level level = LEVEL_VERBOSE, boolean lineFeed = true);
-    void print(String prefix, PolarPoint data, String suffix = "", Level level = LEVEL_VERBOSE,
-               boolean lineFeed = true);
-    void print(String prefix, Command cmd, String suffix = "", Level level = LEVEL_VERBOSE, boolean lineFeed = true);
+    void print(String prefix, Point data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void println(String prefix, Point data, String suffix = "", Level level = LEVEL_VERBOSE);
+
+    void print(String prefix, Point3D data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void println(String prefix, Point3D data, String suffix = "", Level level = LEVEL_VERBOSE);
+
+    void print(String prefix, Point4D data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void println(String prefix, Point4D data, String suffix = "", Level level = LEVEL_VERBOSE);
+
+    void print(String prefix, PolarPoint data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void println(String prefix, PolarPoint data, String suffix = "", Level level = LEVEL_VERBOSE);
+    
+    void print(String prefix, Command data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void println(String prefix, Command data, String suffix = "", Level level = LEVEL_VERBOSE);
 
     // bool needs to be the last because it overrides all functions
-    void print(String prefix, bool data, String suffix = "", Level level = LEVEL_VERBOSE, boolean lineFeed = true);
+    void print(String prefix, bool data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void println(String prefix, bool data, String suffix = "", Level level = LEVEL_VERBOSE);
 
     void printArray(String prefix, int array[], size_t size, char separator = ',', String suffix = "",
                     Level level = LEVEL_VERBOSE);
 
     /**
      * Send data to be viewed on teleplot, eg: trace x and y in a graph
- */
+     */
     void teleplot(String varName, float var, Level level = LEVEL_VERBOSE);
     void teleplot(String varName, Point point, Level level = LEVEL_VERBOSE);
     void teleplot(String varName, Point points[], uint16_t size, Level level = LEVEL_VERBOSE);
@@ -82,8 +94,8 @@ namespace Printer
     void teleplot(String varName, Point4D point, Level level = LEVEL_VERBOSE);
 
     /**
- * send cloud point data on serial for teleplot to trace 3D shape
- */
+     * send cloud point data on serial for teleplot to trace 3D shape
+     */
     void plot3D(String varName, Point3D p);
     void plot3Dpy(Point3D p);
 }
