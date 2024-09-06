@@ -37,6 +37,8 @@ namespace Wifi_Helper
             if (wifiEnable == enable && enable == ENABLE_FALSE)
             {
                 Printer::print("already Disable");
+                wifiClient.stop();
+                WiFi.disconnect();
             }
             if (wifiEnable != enable && enable == ENABLE_TRUE)
             {
@@ -45,6 +47,8 @@ namespace Wifi_Helper
             if (wifiEnable != enable && enable == ENABLE_FALSE)
             {
                 Printer::print(" Disable");
+                wifiClient.stop();
+                WiFi.disconnect();
             }
             Printer::println();
             wifiEnable = enable;
@@ -256,7 +260,9 @@ namespace Wifi_Helper
     {
         if (cmdTmp.cmd == "WifiEnable")
         {
+            // WifiEnable:0
             // WifiEnable:1
+            Printer::println("Wifi status : ", WiFi.status());
             if (cmdTmp.size == 1)
                 EnableWifi((Enable)cmdTmp.data[0]);
         }
@@ -293,6 +299,8 @@ namespace Wifi_Helper
     void PrintCommandHelp()
     {
         Printer::println("Wifi Command Help :");
+        Printer::println(" > WifiEnable:[bool]");
+        Printer::println("      1 Enable or 0 disable the wifi");
         Printer::println(" > WifiLocalIP:[int]:[int]:[int]:[int]");
         Printer::println("      Set the local IP of the ESP");
         Printer::println(" > WifiServerIP:[int]:[int]:[int]:[int]");
