@@ -1,11 +1,11 @@
 /**
- * @file Structure.h
+ * @file Structure_Helper.h
  * @author Mecapitronic (mecapitronic@gmail.com)
  * @brief All data structures used across program
  * @date 2023-07-25
  */
-#ifndef STRUCTURE_H
-#define STRUCTURE_H
+#ifndef STRUCTURE_HELPER_H
+#define STRUCTURE_HELPER_H
 
 #include <Arduino.h>
 #include <queue>

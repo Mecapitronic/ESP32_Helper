@@ -7,7 +7,7 @@
 #ifndef ESP32_HELPER_H
 #define ESP32_HELPER_H
 
-#include "Structure.h"
+#include "Structure_Helper.h"
 #include "Preferences_Helper.h"
 
 #ifdef WITH_WIFI
