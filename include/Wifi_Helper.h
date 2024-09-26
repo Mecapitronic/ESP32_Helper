@@ -11,6 +11,10 @@
 #include <WiFi.h>
 #include "ESP32_Helper.h"
 
+#ifdef WITH_OTA
+#include <ArduinoOTA.h>
+#endif
+
 namespace Wifi_Helper
 {
     extern WiFiClient wifiClient;
