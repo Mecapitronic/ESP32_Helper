@@ -1,5 +1,5 @@
-#ifndef MODULE_H
-#define MODULE_H
+#ifndef MODULE_TEMPLATE_H
+#define MODULE_TEMPLATE_H
 
 #include "ESP32_Helper.h"
 using namespace Printer;
@@ -19,6 +19,7 @@ public:
     virtual void Initialisation() = 0;
     virtual void Update() = 0;
     virtual void HandleCommand(Command cmd) = 0;
+    virtual void PrintCommandHelp() = 0;
 
     // These bases functions() {} will be called only if not implemented by derived class
     virtual ~IModule() { println("Deleting IModule"); }
