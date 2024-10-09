@@ -29,7 +29,6 @@ namespace ESP32_Helper
         Serial.setRxBufferSize(1024);
         Serial.setTxBufferSize(1024);
         Serial.begin(baud_speed);
-        delay(100);
         Serial.println();
         Serial.println("-- Starting Helper Initialisation --");
         Wifi_Helper::Initialisation();
@@ -67,8 +66,8 @@ namespace ESP32_Helper
         println();
 
         Serial.println("-- Starting Debugger Initialisation --");
-        Debugger::EnableDebugger(debugEnable);
         Debugger::Initialisation();
+        Debugger::EnableDebugger(debugEnable);
         Serial.println("-- End of Debugger Initialisation --");
 
         Serial.println("-- End of Helper Initialisation --");
@@ -91,7 +90,9 @@ namespace ESP32_Helper
                     readBuffer[indexBuffer++] = tmpChar;
                     if (tmpChar == '\n')
                     {
-                        SERIAL_DEBUG.print("Received : ");
+                        SERIAL_DEBUG.print("Received ");
+                        SERIAL_DEBUG.print(indexBuffer);
+                        SERIAL_DEBUG.print(" : ");
                         SERIAL_DEBUG.write(readBuffer, indexBuffer);
                         BufferReadCommand(readBuffer, indexBuffer);
                         indexBuffer = 0;

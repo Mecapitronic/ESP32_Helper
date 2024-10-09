@@ -46,9 +46,9 @@ bool HasWaitingCommand();
 Command GetCommand();
 
 /**
- * @brief Get the current time with miliseconds precision
+ * @brief Get the current time with milliseconds precision
  *
- * @return int64_t current time in miliseconds
+ * @return int64_t current time in milliseconds
  */
 int64_t GetTimeNowMs();
 

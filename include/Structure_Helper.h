@@ -91,6 +91,76 @@ struct PointF
 };
 
 /**
+ * @brief Represents a 2D Int Cartesian point with x, y and h as orientation
+ * @param x int16_t
+ * @param y int16_t
+ * @param h int32_t
+ */
+struct Point2D
+{
+    int16_t x;
+    int16_t y;
+    int32_t h;
+    /**
+     * @brief Construct a new Point2D object
+     *
+     * @param _x int16_t
+     * @param _y int16_t
+     * @param _h int32_t
+     */
+    Point2D(int16_t _x, int16_t _y, int32_t _h)
+    {
+        x = _x;
+        y = _y;
+        h = _h;
+    }
+    /**
+     * @brief Construct a new Point2D object
+     */
+    Point2D()
+    {
+        x = 0;
+        y = 0;
+        h = 0;
+    }
+};
+
+/**
+ * @brief Represents a 2D Float Cartesian point with x, y and h as orientation
+ * @param x float
+ * @param y float
+ * @param h float
+ */
+struct PointF2D
+{
+    float x;
+    float y;
+    float h;
+    /**
+     * @brief Construct a new Point2D object
+     *
+     * @param _x float
+     * @param _y float
+     * @param _h float
+     */
+    PointF2D(float _x, float _y, float _h)
+    {
+        x = _x;
+        y = _y;
+        h = _h;
+    }
+    /**
+     * @brief Construct a new Point2D object
+     */
+    PointF2D()
+    {
+        x = 0;
+        y = 0;
+        h = 0;
+    }
+};
+
+/**
  * @brief Represents a 3D Cartesian point with x, y and z as coordinates
  * @param x int16_t
  * @param y int16_t

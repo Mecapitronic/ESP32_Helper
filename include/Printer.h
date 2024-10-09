@@ -9,6 +9,8 @@
 
 #include "ESP32_Helper.h"
 
+#define PRINT_VAR_NAME(p) print(#p)
+
 #define ENUM_PRINT(p)             \
     case (p):                     \
         SERIAL_DEBUG.println(#p); \
@@ -24,7 +26,7 @@ namespace Printer
     void HandleCommand(Command cmdTmp);
     void PrintCommandHelp();
 
-    bool IsPrintable(Level level);
+    bool IsPrintable(Level level = LEVEL_VERBOSE);
 
     void println(Level level = LEVEL_VERBOSE);
 
@@ -83,10 +85,14 @@ namespace Printer
      */
     void teleplot(String varName, float var, Level level = LEVEL_VERBOSE);
     void teleplot(String varName, Point point, Level level = LEVEL_VERBOSE);
+    void teleplot(String varName, PointF point, Level level = LEVEL_VERBOSE);
+    void teleplot(String varName, Point2D point, Level level = LEVEL_VERBOSE);
+    void teleplot(String varName, PointF2D point, Level level = LEVEL_VERBOSE);
+    
     void teleplot(String varName, Point points[], uint16_t size, Level level = LEVEL_VERBOSE);
 
     void teleplot(String varName, PolarPoint polarPoint, Level level = LEVEL_VERBOSE);
-    void teleplot(String varName, PolarPoint polarPoint, int timeStamp, Level level = LEVEL_VERBOSE);
+    //void teleplot(String varName, PolarPoint polarPoint, int timeStamp, Level level = LEVEL_VERBOSE);
 
     void teleplot(String varName, PolarPoint polarPoints[], uint16_t size, Level level = LEVEL_VERBOSE);
     void teleplot(String varName, vector<PolarPoint> vec, Level level = LEVEL_VERBOSE);

@@ -66,7 +66,6 @@ namespace Wifi_Helper
         WiFi.disconnect(true);
 
         WiFi.mode(WIFI_STA);
-        delay(500);
 
         Serial.print("AP MAC : ");
         Serial.println(WiFi.softAPmacAddress());
@@ -146,18 +145,20 @@ namespace Wifi_Helper
         // Begin WiFi
         WiFi.begin(wifi_ssid, wifi_password);
 
+        //! Connection to server will be done later in the Update task
+
         // time to connect to wifi
-        delay(3000);
+        //delay(3000);
 
         // Connect to server
-        if (wifiClient.connect(wifi_server_ip.c_str(), wifi_server_port))
+        /*if (wifiClient.connect(wifi_server_ip.c_str(), wifi_server_port))
         {
             Serial.println("Connected to server !");
         }
         else
         {
             Serial.println("Connection to server failed");
-        }
+        }*/
 
         Serial.println("Creating Wifi Update Task");
         /* Task function. */
