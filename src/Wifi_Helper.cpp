@@ -210,12 +210,18 @@ namespace Wifi_Helper
         Serial.println("-- End of Wifi initialisation --");
     }
 
-    unsigned long previousMillisWifi = 0;
-    unsigned long previousMillisServer = 0;
-    unsigned long intervalWifi = 5000;
-    unsigned long intervalServer = 5000;
-    unsigned long currentMillisWifi = 0;
-    unsigned long currentMillisServer = 0;
+    namespace
+    {
+        unsigned long previousMillisWifi = 0;
+        unsigned long previousMillisServer = 0;
+        unsigned long previousMillisTeleplot = 0;
+        unsigned long intervalWifi = 5000;
+        unsigned long intervalServer = 5000;
+        unsigned long intervalTeleplot = 5000;
+        unsigned long currentMillisWifi = 0;
+        unsigned long currentMillisServer = 0;
+        unsigned long currentMillisTeleplot = 0;
+    }
 
     void Update(void *pvParameters)
     {
@@ -228,7 +234,7 @@ namespace Wifi_Helper
             if(IsEnable())
             {
                 currentMillisWifi = millis();
-                // if WiFi is down, try reconnecting every CHECK_WIFI_TIME seconds
+                // if WiFi is down, try reconnecting every intervalWifi milliseconds
                 if ((WiFi.status() != WL_CONNECTED) && (currentMillisWifi - previousMillisWifi >= intervalWifi))
                 {
                     if (false)
@@ -245,9 +251,9 @@ namespace Wifi_Helper
                     previousMillisWifi = currentMillisWifi;
                 }
 
-                currentMillisServer = millis();
                 if (WiFi.status() == WL_CONNECTED)
                 {
+                    currentMillisServer = millis();
                     if (!wifiClient.connected() && (currentMillisServer - previousMillisServer >= intervalServer))
                     {
                         wifiClient.stop();
@@ -261,7 +267,19 @@ namespace Wifi_Helper
                         }
                         previousMillisServer = currentMillisServer;
                     }
-                }            
+                    
+                    currentMillisTeleplot = millis();
+                    if(!Printer::teleplotUDP.IsInitialized() && (currentMillisTeleplot - previousMillisTeleplot >= intervalTeleplot))
+                    {
+                        Serial.println("Initialising Teleplot");
+                        Printer::teleplotUDP = Teleplot("192.168.137.1",47269);
+                        previousMillisTeleplot = currentMillisTeleplot;
+                    }
+                }
+                else
+                {
+                    Printer::teleplotUDP.~Teleplot();
+                }
 
                 if (wifiClient.connected())
                 {
@@ -299,7 +317,22 @@ namespace Wifi_Helper
 
     void HandleCommand(Command cmdTmp)
     {
-        if (cmdTmp.cmd == "WifiEnable")
+        
+        if (cmdTmp.cmd == "WifiStatus")
+        {
+            Printer::println("Wifi status : ", WiFi.status());
+            Printer::println("Wifi SSID : ", WiFi.SSID());
+            Printer::println("Wifi SSID saved : ", wifi_ssid);
+            Printer::println("Wifi Password saved : ", wifi_password);
+
+            Printer::println("Wifi IP : ", WiFi.localIP().toString());
+            Printer::println("Wifi MAC : ", WiFi.macAddress());
+            Printer::println("Wifi RSSI : ", WiFi.RSSI());
+            Printer::println("Wifi Server IP : ", wifi_server_ip);
+            Printer::println("Wifi Server Port : ", wifi_server_port);
+
+        }
+        else if (cmdTmp.cmd == "WifiEnable")
         {
             // WifiEnable:0
             // WifiEnable:1

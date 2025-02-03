@@ -2,6 +2,7 @@
 
 namespace Printer
 {
+    Teleplot teleplotUDP;
     namespace
     {
         Level printLevel = LEVEL_VERBOSE;
@@ -456,7 +457,10 @@ namespace Printer
         if (!IsPrintable(level))
             return;
         String data = ">" + varName + ":" + var;
-        println(data);
+        if(teleplotUDP.IsInitialized())
+            teleplotUDP.update(varName.c_str(), var);
+        else
+            println(data);
     }
     
     void teleplot(String varName, Point point, Level level)
@@ -464,7 +468,10 @@ namespace Printer
         if (!IsPrintable(level))
             return;
         String data = ">" + varName + ":" + point.x + ":" + point.y + "|xy";
-        println(data);
+        if(teleplotUDP.IsInitialized())
+            teleplotUDP.update2D(varName.c_str(), point.x, point.y);
+        else
+            println(data);
     }
 
     void teleplot(String varName, PointF point, Level level)
@@ -472,7 +479,10 @@ namespace Printer
         if (!IsPrintable(level))
             return;
         String data = ">" + varName + ":" + point.x + ":" + point.y + "|xy";
-        println(data);
+        if(teleplotUDP.IsInitialized())
+            teleplotUDP.update2D(varName.c_str(), point.x, point.y);
+        else
+            println(data);
     }
 
     void teleplot(String varName, Point2D point, Level level)
@@ -480,7 +490,10 @@ namespace Printer
         if (!IsPrintable(level))
             return;
         String data = ">" + varName + ":" + point.x + ":" + point.y + "|xy";
-        println(data);
+        if(teleplotUDP.IsInitialized())
+            teleplotUDP.update2D(varName.c_str(), point.x, point.y);
+        else
+            println(data);
     }
 
     void teleplot(String varName, PointF2D point, Level level)
@@ -488,9 +501,13 @@ namespace Printer
         if (!IsPrintable(level))
             return;
         String data = ">" + varName + ":" + point.x + ":" + point.y + "|xy";
-        println(data);
+        if(teleplotUDP.IsInitialized())
+            teleplotUDP.update2D(varName.c_str(), point.x, point.y);
+        else
+            println(data);
     }
 
+/*
     void teleplot(String varName, Point points[], uint16_t size, Level level)
     {
         if (!IsPrintable(level))
@@ -503,7 +520,8 @@ namespace Printer
         data += "|xy";
         println(data);
     }
-
+*/
+/*
     void teleplot(String varName, PolarPoint polarPoint, Level level)
     {
         if (!IsPrintable(level))
@@ -511,6 +529,7 @@ namespace Printer
         String data = ">" + varName + ":" + (int)polarPoint.x + ":" + (int)polarPoint.y + "|xy";
         println(data);
     }
+*/
 /*
     void teleplot(String varName, PolarPoint polarPoint, int timeStamp, Level level)
     {
@@ -520,6 +539,7 @@ namespace Printer
         println(data);
     }
 */
+/*
     void teleplot(String varName, PolarPoint polarPoints[], uint16_t size, Level level)
     {
         if (!IsPrintable(level))
@@ -532,7 +552,8 @@ namespace Printer
         data += "|xy";
         println(data);
     }
-
+*/
+/*
     void teleplot(String varName, vector<PolarPoint> vec, Level level)
     {
         if (!IsPrintable(level))
@@ -546,7 +567,8 @@ namespace Printer
         }
         println("|xy");
     }
-
+*/
+/*
     void teleplot(String varName, Point4D point, Level level)
     {
         if (!IsPrintable(level))
@@ -554,7 +576,8 @@ namespace Printer
         String data = ">" + varName + ":" + (int)point.x + ":" + (int)point.y + "|xy";
         println(data);
     }
-
+*/
+/*
     void plot3D(Point3D p, String varName)
     {
         // 3D|A:B:C|E
@@ -569,10 +592,12 @@ namespace Printer
             ">3D|" + varName + ",widget0:S:sphere:P:" + p.x + ":" + p.y + ":" + p.z / 10 + ":RA:1:C:black:O:1";
         println(data);
     }
-
+*/
+/*
     void plot3Dpy(Point3D p)
     {
         String data = "" + String(p.x) + ":" + String(p.y) + ":" + String(p.z);
         println(data);
     }
+*/
 }
