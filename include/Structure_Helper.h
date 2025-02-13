@@ -401,18 +401,22 @@ struct PointTracker
 
 struct Command
 {
-    String cmd;
+    static const int8_t length = 6;
+    static const int8_t sizeStr = 14;
+    String cmd = "";
     int8_t size;
-    int32_t data[8];
+    int32_t data[length];
+    String dataStr; //sizeof(String) = 16 BUT 1 is for length and 1 for end char so 14 in reality
 
     Command()
     {
         cmd = "";
         size = 0;
-        for (size_t i = 0; i < 8; i++)
+        for (size_t i = 0; i < length; i++)
         {
-            data[i]=0;
-        }        
+            data[i] = 0;
+        }
+        dataStr = "";
     }
 };
 

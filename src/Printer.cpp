@@ -395,14 +395,18 @@ namespace Printer
             return;
         print(prefix);
         print(" Cmd=" + data.cmd);
-        print(" Size=", data.size);
-        print(" Data=", data.data[0]);
-        if (data.size > 1)
+        if (data.size > 0)
         {
+            print(" Size=", data.size);
+            print(" Data=", data.data[0]);
             for (size_t size_data = 1; size_data < data.size; size_data++)
             {
                 print(",", data.data[size_data]);
             }
+        }
+        if (data.dataStr != "")
+        {
+            print(" DataStr=", String(data.dataStr));
         }
     }
 

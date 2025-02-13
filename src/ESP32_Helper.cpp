@@ -94,6 +94,7 @@ namespace ESP32_Helper
                         SERIAL_DEBUG.print(indexBuffer);
                         SERIAL_DEBUG.print(" : ");
                         SERIAL_DEBUG.write(readBuffer, indexBuffer);
+                        SERIAL_DEBUG.println();
                         BufferReadCommand(readBuffer, indexBuffer);
                         indexBuffer = 0;
                     }
@@ -129,10 +130,39 @@ namespace ESP32_Helper
             }
             else if (cmdTmp.cmd != "" && (read[i] == ';' || read[i] == ':' || read[i] == '\n'))
             {
-                cmdTmp.data[cmdTmp.size++] = atoi(String(&read[indexSeparator], i-indexSeparator).c_str());
+                //cmdTmp.data[cmdTmp.size++] = atoi(String(&read[indexSeparator], i-indexSeparator).c_str());
+                //check if it's an int or a string by trying to convert it
+                String strToConvert = String(&read[indexSeparator], i-indexSeparator);
+                try
+                {
+                    std::size_t pos{};
+                    int conversion = std::stoi(strToConvert.c_str(), &pos);
+
+                    if (pos == i - indexSeparator)
+                    {
+                        cmdTmp.data[cmdTmp.size++] = conversion;
+                    }
+                    else
+                    {
+                        //println("Conversion didn't consume entire string.");
+                        if(i - indexSeparator <= cmdTmp.sizeStr)
+                            cmdTmp.dataStr = strToConvert;                        
+                        //else
+                        //   println("String too long !");
+                    }
+                }
+                catch(const std::exception& e)
+                {
+                    //println("Conversion error: not an integer");                    
+                    if(i - indexSeparator <= cmdTmp.sizeStr)
+                        cmdTmp.dataStr = strToConvert;
+                    //else
+                    //    println("String too long !");
+                }
                 indexSeparator = i + 1;
             }
         }
+        Printer::println("Command Received : ", cmdTmp);
 
         if(cmdTmp.cmd != "")
         {
