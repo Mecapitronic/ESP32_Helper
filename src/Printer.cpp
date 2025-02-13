@@ -485,7 +485,7 @@ namespace Printer
             println(data);
     }
 
-    void teleplot(String varName, Point2D point, Level level)
+    void teleplot(String varName, Pose point, Level level)
     {
         if (!IsPrintable(level))
             return;
@@ -496,7 +496,7 @@ namespace Printer
             println(data);
     }
 
-    void teleplot(String varName, PointF2D point, Level level)
+    void teleplot(String varName, PoseF point, Level level)
     {
         if (!IsPrintable(level))
             return;

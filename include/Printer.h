@@ -90,8 +90,8 @@ namespace Printer
     void teleplot(String varName, float var, Level level = LEVEL_VERBOSE);
     void teleplot(String varName, Point point, Level level = LEVEL_VERBOSE);
     void teleplot(String varName, PointF point, Level level = LEVEL_VERBOSE);
-    void teleplot(String varName, Point2D point, Level level = LEVEL_VERBOSE);
-    void teleplot(String varName, PointF2D point, Level level = LEVEL_VERBOSE);
+    void teleplot(String varName, Pose point, Level level = LEVEL_VERBOSE);
+    void teleplot(String varName, PoseF point, Level level = LEVEL_VERBOSE);
     
     //void teleplot(String varName, Point points[], uint16_t size, Level level = LEVEL_VERBOSE);
 

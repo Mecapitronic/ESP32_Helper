@@ -91,33 +91,33 @@ struct PointF
 };
 
 /**
- * @brief Represents a 2D Int Cartesian point with x, y and h as orientation
+ * @brief Represents a 2D Int Cartesian pose of object with position x, y and pointing direction h (heading)
  * @param x int16_t
  * @param y int16_t
  * @param h int32_t
  */
-struct Point2D
+struct Pose
 {
     int16_t x;
     int16_t y;
     int32_t h;
     /**
-     * @brief Construct a new Point2D object
+     * @brief Construct a new Pose object
      *
      * @param _x int16_t
      * @param _y int16_t
      * @param _h int32_t
      */
-    Point2D(int16_t _x, int16_t _y, int32_t _h)
+    Pose(int16_t _x, int16_t _y, int32_t _h)
     {
         x = _x;
         y = _y;
         h = _h;
     }
     /**
-     * @brief Construct a new Point2D object
+     * @brief Construct a new Pose object
      */
-    Point2D()
+    Pose()
     {
         x = 0;
         y = 0;
@@ -126,33 +126,33 @@ struct Point2D
 };
 
 /**
- * @brief Represents a 2D Float Cartesian point with x, y and h as orientation
+ * @brief Represents a 2D Float Cartesian pose of object with position x, y and pointing direction h (heading)
  * @param x float
  * @param y float
  * @param h float
  */
-struct PointF2D
+struct PoseF
 {
     float x;
     float y;
     float h;
     /**
-     * @brief Construct a new Point2D object
+     * @brief Construct a new PoseF object
      *
      * @param _x float
      * @param _y float
      * @param _h float
      */
-    PointF2D(float _x, float _y, float _h)
+    PoseF(float _x, float _y, float _h)
     {
         x = _x;
         y = _y;
         h = _h;
     }
     /**
-     * @brief Construct a new Point2D object
+     * @brief Construct a new PoseF object
      */
-    PointF2D()
+    PoseF()
     {
         x = 0;
         y = 0;
