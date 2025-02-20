@@ -11,11 +11,14 @@ namespace Wifi_Helper
         TaskHandle_t TaskUpdate;
 
         // TODO : Change the default password and SSID name
-        String wifi_ssid = "Mecapitronic";
-        String wifi_password = "Geoffroy";
+        // SSID name maximum of 63 characters;
+        String wifi_ssid = "Mecapi";
+        // The password must be at least 8 to 63 characters long
+        String wifi_password = "Mecapi2025";
         String wifi_local_ip = "192.168.137.110";
         String wifi_server_ip = "192.168.137.1";
         int wifi_server_port = 20240;
+        bool wifi_changed = false;
 
         // const String wifi_ssid = "Wokwi-GUEST";
         // const String wifi_password = "";
@@ -237,9 +240,11 @@ namespace Wifi_Helper
                 // if WiFi is down, try reconnecting every intervalWifi milliseconds
                 if ((WiFi.status() != WL_CONNECTED) && (currentMillisWifi - previousMillisWifi >= intervalWifi))
                 {
-                    if (false)
+                    if (wifi_changed)
                     {
+                        wifi_changed = false;
                         Serial.println("Connecting to new WiFi : " + wifi_ssid);
+                        Serial.println("With password : " + wifi_password);
                         WiFi.disconnect();
                         WiFi.begin(wifi_ssid, wifi_password);
                     }
@@ -320,7 +325,7 @@ namespace Wifi_Helper
         
         if (cmdTmp.cmd == "WifiStatus")
         {
-            Printer::println("Wifi status : ", WiFi.status());
+            Printer::println("Wifi status : ", (wl_status_t)WiFi.status());
             Printer::println("Wifi SSID : ", WiFi.SSID());
             Printer::println("Wifi SSID saved : ", wifi_ssid);
             Printer::println("Wifi Password saved : ", wifi_password);
@@ -328,9 +333,9 @@ namespace Wifi_Helper
             Printer::println("Wifi IP : ", WiFi.localIP().toString());
             Printer::println("Wifi MAC : ", WiFi.macAddress());
             Printer::println("Wifi RSSI : ", WiFi.RSSI());
+            Printer::println("Wifi Local IP : ", wifi_local_ip);
             Printer::println("Wifi Server IP : ", wifi_server_ip);
             Printer::println("Wifi Server Port : ", wifi_server_port);
-
         }
         else if (cmdTmp.cmd == "WifiEnable")
         {
@@ -344,24 +349,44 @@ namespace Wifi_Helper
         {
             // Password must be at least 8 char
             // WifiPassword:********
-            // Wifi_Helper::ChangePassword(cmdTmp.data[0]);
+            if(cmdTmp.dataStr != "" && cmdTmp.dataStr.length() >= 8 && cmdTmp.dataStr.length() <= 63)
+            {
+                Preferences_Helper::SaveToPreference("wifi_password", cmdTmp.dataStr);
+                wifi_password = cmdTmp.dataStr;
+                wifi_changed = true;
+                Printer::println("Wifi password Changed !");
+            }
+            else
+                Printer::println("Wifi Password must be at least 8 characters and max 63 char !");
         }
         else if (cmdTmp.cmd == "WifiSsid")
         {
+            if(cmdTmp.dataStr != "" && cmdTmp.dataStr.length() <= 63)
+            {
+                Preferences_Helper::SaveToPreference("wifi_ssid", cmdTmp.dataStr);
+                wifi_ssid = cmdTmp.dataStr;
+                wifi_changed = true;
+                Printer::println("Wifi SSID Changed !");
+            }
+            else
+                Printer::println("Wifi SSID is empty or is too long (max 63 char) !");
         }
         else if (cmdTmp.cmd == "WifiLocalIP" && cmdTmp.size == 4)
         {
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
             Preferences_Helper::SaveToPreference("wifi_local_ip", ip);
+            Printer::println("Wifi local IP Changed !");
         }
         else if (cmdTmp.cmd == "WifiServerIP" && cmdTmp.size == 4)
         {
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
             Preferences_Helper::SaveToPreference("wifi_server_ip", ip);
+            Printer::println("Wifi server IP Changed !");
         }
         else if (cmdTmp.cmd == "WifiServerPort" && cmdTmp.size == 1)
         {
             Preferences_Helper::SaveToPreference("wifi_server_port", cmdTmp.data[0]);
+            Printer::println("Wifi server Port Changed !");
         }
         else
         {
@@ -373,8 +398,14 @@ namespace Wifi_Helper
     void PrintCommandHelp()
     {
         Printer::println("Wifi Command Help :");
+        Printer::println(" > WifiStatus");
+        Printer::println("      Print the Wifi status");
         Printer::println(" > WifiEnable:[bool]");
         Printer::println("      1 Enable or 0 disable the wifi");
+        Printer::println(" > WifiPassword:[string]");
+        Printer::println("      Change the Wifi password (min 8, max 63 characters)");
+        Printer::println(" > WifiSsid:[string]");
+        Printer::println("      Change the Wifi SSID (max 63 characters)");
         Printer::println(" > WifiLocalIP:[int]:[int]:[int]:[int]");
         Printer::println("      Set the local IP of the ESP");
         Printer::println(" > WifiServerIP:[int]:[int]:[int]:[int]");
