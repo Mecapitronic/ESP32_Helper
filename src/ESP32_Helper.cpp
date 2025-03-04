@@ -76,34 +76,34 @@ namespace ESP32_Helper
 
     void Update(void *pvParameters)
     {
-        uint16_t indexBuffer = 0;
         const int readBufferMax = 64;
-        char readBuffer[readBufferMax];
+        vector<char> readBuffer;
+        readBuffer.reserve(readBufferMax);
 
         for (;;)
         {
             while (SERIAL_DEBUG.available() > 0)
             {
                 char tmpChar = SERIAL_DEBUG.read();
-                if (indexBuffer < readBufferMax)
+                if (readBuffer.size() < readBuffer.capacity())
                 {
-                    readBuffer[indexBuffer++] = tmpChar;
+                    readBuffer.push_back(tmpChar);
                     if (tmpChar == '\n')
                     {
                         SERIAL_DEBUG.print("Received ");
-                        SERIAL_DEBUG.print(indexBuffer);
+                        SERIAL_DEBUG.print(readBuffer.size());
                         SERIAL_DEBUG.print(" : ");
-                        SERIAL_DEBUG.write(readBuffer, indexBuffer);
+                        SERIAL_DEBUG.write(readBuffer.data(), readBuffer.size());
                         SERIAL_DEBUG.println();
-                        BufferReadCommand(readBuffer, indexBuffer);
-                        indexBuffer = 0;
+                        BufferReadCommand(readBuffer.data(), readBuffer.size()); // pass data and size
+                        readBuffer.clear();
                     }
                 }
                 else
                 {
                     SERIAL_DEBUG.print("Read Buffer Overflow : ");
-                    SERIAL_DEBUG.println(indexBuffer);
-                    indexBuffer = 0;
+                    SERIAL_DEBUG.println(readBuffer.size());
+                    readBuffer.clear();
                 }
             }
             vTaskDelay(1);
