@@ -148,20 +148,7 @@ namespace Wifi_Helper
         // Begin WiFi
         WiFi.begin(wifi_ssid, wifi_password);
 
-        //! Connection to server will be done later in the Update task
-
-        // time to connect to wifi
-        //delay(3000);
-
-        // Connect to server
-        /*if (wifiClient.connect(wifi_server_ip.c_str(), wifi_server_port))
-        {
-            Serial.println("Connected to server !");
-        }
-        else
-        {
-            Serial.println("Connection to server failed");
-        }*/
+        //! Connection with wifiClient to server will be done later in the Update task
 
         Serial.println("Creating Wifi Update Task");
         /* Task function. */
@@ -213,24 +200,21 @@ namespace Wifi_Helper
         Serial.println("-- End of Wifi initialisation --");
     }
 
-    namespace
+    void Update(void *pvParameters)
     {
+        const int readBufferMax = 64;
+        vector<char> readBuffer;
+        readBuffer.reserve(readBufferMax);
+
         unsigned long previousMillisWifi = 0;
         unsigned long previousMillisServer = 0;
         unsigned long previousMillisTeleplot = 0;
-        unsigned long intervalWifi = 5000;
-        unsigned long intervalServer = 5000;
-        unsigned long intervalTeleplot = 5000;
+        const unsigned long intervalWifi = 5000;
+        const unsigned long intervalServer = 5000;
+        const unsigned long intervalTeleplot = 5000;
         unsigned long currentMillisWifi = 0;
         unsigned long currentMillisServer = 0;
         unsigned long currentMillisTeleplot = 0;
-    }
-
-    void Update(void *pvParameters)
-    {
-        uint16_t indexBuffer = 0;
-        const int readBufferMax = 64;
-        char readBuffer[readBufferMax];
 
         for (;;)
         {
@@ -281,8 +265,10 @@ namespace Wifi_Helper
                         previousMillisTeleplot = currentMillisTeleplot;
                     }
                 }
-                else
+
+                if(WiFi.status() != WL_CONNECTED && Printer::teleplotUDP.IsInitialized())
                 {
+                    // We need to un-init in case of wifi lost
                     Printer::teleplotUDP.~Teleplot();
                 }
 
@@ -291,23 +277,26 @@ namespace Wifi_Helper
                     while (wifiClient.available() > 0)
                     {
                         char tmpChar = wifiClient.read();
-                        if (indexBuffer < readBufferMax)
+                        if (readBuffer.size() < readBuffer.capacity())
                         {
-                            readBuffer[indexBuffer++] = tmpChar;
+                            readBuffer.push_back(tmpChar);
                             if (tmpChar == '\n')
                             {
-                                wifiClient.print("Received : ");
-                                wifiClient.write(readBuffer, indexBuffer);
+                                wifiClient.print("Received ");
+                                wifiClient.print(readBuffer.size());
+                                wifiClient.print(" : ");
+                                wifiClient.write(readBuffer.data(), readBuffer.size());
+                                wifiClient.println();
                                 // Read and extract Commands
-                                ESP32_Helper::BufferReadCommand(readBuffer, indexBuffer);
-                                indexBuffer = 0;                          
+                                ESP32_Helper::BufferReadCommand(readBuffer.data(), readBuffer.size());
+                                readBuffer.clear();
                             }
                         }
                         else
                         {
                             wifiClient.print("Read Buffer Overflow : ");
-                            wifiClient.println(indexBuffer);
-                            indexBuffer = 0;
+                            wifiClient.println(readBuffer.size());
+                            readBuffer.clear();
                         }
                     }
                 }
