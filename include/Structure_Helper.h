@@ -29,6 +29,27 @@ enum Enable
     ENABLE_NONE
 };
 
+enum BaudRate
+{
+    BAUD_RATE_300 = 300,
+    BAUD_RATE_600 = 600,
+    BAUD_RATE_1200 = 1200,
+    BAUD_RATE_2400 = 2400,
+    BAUD_RATE_4800 = 4800,
+    BAUD_RATE_9600 = 9600,
+    BAUD_RATE_19200 = 19200,
+    BAUD_RATE_38400 = 38400,
+    BAUD_RATE_57600 = 57600,
+    BAUD_RATE_74880 = 74880,
+    BAUD_RATE_115200 = 115200,
+    BAUD_RATE_230400 = 230400,
+    BAUD_RATE_256000 = 256000,
+    BAUD_RATE_460800 = 460800,
+    BAUD_RATE_921600 = 921600,
+    BAUD_RATE_1843200 = 1843200,
+    BAUD_RATE_3686400 = 3686400
+};
+
 /**
  * @brief Represents a Cartesian point with x and y as coordinates
  * @param x int16_t
@@ -40,23 +61,15 @@ struct Point
     int16_t y;
     /**
      * @brief Construct a new Point object
+     *
+     */
+    Point() : x(0), y(0) {}
+    /**
+     * @brief Construct a new Point object
      * @param _x int16_t
      * @param _y int16_t
      */
-    Point(int16_t _x, int16_t _y)
-    {
-        x = _x;
-        y = _y;
-    }
-    /**
-     * @brief Construct a new Point object
-     *
-     */
-    Point()
-    {
-        x = 0;
-        y = 0;
-    }
+    Point(int16_t _x, int16_t _y) : x(_x), y(_y) {}
 };
 
 /**
@@ -71,23 +84,15 @@ struct PointF
     /**
      * @brief Construct a new Point F object
      *
-     * @param _x float
-     * @param _y float
      */
-    PointF(float _x, float _y)
-    {
-        x = _x;
-        y = _y;
-    }
+    PointF() : x(0), y(0) {}
     /**
      * @brief Construct a new Point F object
      *
+     * @param _x float
+     * @param _y float
      */
-    PointF()
-    {
-        x = 0;
-        y = 0;
-    }
+    PointF(float _x, float _y) : x(_x), y(_y) {}
 };
 
 /**
@@ -103,26 +108,16 @@ struct Pose
     int32_t h;
     /**
      * @brief Construct a new Pose object
+     */
+    Pose() : x(0), y(0), h(0) {}
+    /**
+     * @brief Construct a new Pose object
      *
      * @param _x int16_t
      * @param _y int16_t
      * @param _h int32_t
      */
-    Pose(int16_t _x, int16_t _y, int32_t _h)
-    {
-        x = _x;
-        y = _y;
-        h = _h;
-    }
-    /**
-     * @brief Construct a new Pose object
-     */
-    Pose()
-    {
-        x = 0;
-        y = 0;
-        h = 0;
-    }
+    Pose(int16_t _x, int16_t _y, int32_t _h) : x(_x), y(_y), h(_h) {}
 };
 
 /**
@@ -138,26 +133,16 @@ struct PoseF
     float h;
     /**
      * @brief Construct a new PoseF object
+     */
+    PoseF() : x(0), y(0), h(0) {}
+    /**
+     * @brief Construct a new PoseF object
      *
      * @param _x float
      * @param _y float
      * @param _h float
      */
-    PoseF(float _x, float _y, float _h)
-    {
-        x = _x;
-        y = _y;
-        h = _h;
-    }
-    /**
-     * @brief Construct a new PoseF object
-     */
-    PoseF()
-    {
-        x = 0;
-        y = 0;
-        h = 0;
-    }
+    PoseF(float _x, float _y, float _h) : x(_x), y(_y), h(_h) {}
 };
 
 /**
@@ -173,26 +158,16 @@ struct Point3D
     int16_t z;
     /**
      * @brief Construct a new Point3D object
+     */
+    Point3D() : x(0), y(0), z(0) {}
+    /**
+     * @brief Construct a new Point3D object
      *
      * @param _x int16_t
      * @param _y int16_t
      * @param _z int16_t
      */
-    Point3D(int16_t _x, int16_t _y, int16_t _z)
-    {
-        x = _x;
-        y = _y;
-        z = _z;
-    }
-    /**
-     * @brief Construct a new Point3D object
-     */
-    Point3D()
-    {
-        x = 0;
-        y = 0;
-        z = 0;
-    }
+    Point3D(int16_t _x, int16_t _y, int16_t _z) : x(_x), y(_y), z(_z) {}
 };
 
 /**
@@ -208,26 +183,16 @@ struct PointF3D
     float z;
     /**
      * @brief Construct a new Point3D object
+     */
+    PointF3D() : x(0), y(0), z(0) {}
+    /**
+     * @brief Construct a new Point3D object
      *
      * @param _x float
      * @param _y float
      * @param _z float
      */
-    PointF3D(float _x, float _y, float _z)
-    {
-        x = _x;
-        y = _y;
-        z = _z;
-    }
-    /**
-     * @brief Construct a new Point3D object
-     */
-    PointF3D()
-    {
-        x = 0;
-        y = 0;
-        z = 0;
-    }
+    PointF3D(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
 };
 
 /**
@@ -245,28 +210,17 @@ struct Point4D
     int16_t w;
     /**
      * @brief Construct a new Point4D object
+     */
+    Point4D() : x(0), y(0), z(0), w(0) {}
+    /**
+     * @brief Construct a new Point4D object
      *
      * @param _x int16_t
      * @param _y int16_t
      * @param _z int16_t
      * @param _w int16_t
      */
-    Point4D(int16_t _x, int16_t _y, int16_t _z, int16_t _w)
-    {
-        x = _x;
-        y = _y;
-        z = _z;
-        w = _w;
-    } /**
-       * @brief Construct a new Point4D object
-       */
-    Point4D()
-    {
-        x = 0;
-        y = 0;
-        z = 0;
-        w = 0;
-    }
+    Point4D(int16_t _x, int16_t _y, int16_t _z, int16_t _w) : x(_x), y(_y), z(_z), w(_w) {}
 };
 
 /**
@@ -284,29 +238,17 @@ struct PointF4D
     float w;
     /**
      * @brief Construct a new Point4D object
+     */
+    PointF4D() : x(0), y(0), z(0), w(0) {}
+    /**
+     * @brief Construct a new Point4D object
      *
      * @param _x float
      * @param _y float
      * @param _z float
      * @param _w float
      */
-    PointF4D(float _x, float _y, float _z, float _w)
-    {
-        x = _x;
-        y = _y;
-        z = _z;
-        w = _w;
-    }
-    /**
-     * @brief Construct a new Point4D object
-     */
-    PointF4D()
-    {
-        x = 0;
-        y = 0;
-        z = 0;
-        w = 0;
-    }
+    PointF4D(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) {}
 };
 
 /**
@@ -327,6 +269,10 @@ struct PolarPoint
     float x;
     float y;
     /**
+     * @brief Construct a new Polar Point object
+     */
+    PolarPoint() : angle(0), distance(0), confidence(0), x(0), y(0) {}
+    /**
      *
      * @brief Construct a new Polar Point object
      *
@@ -334,28 +280,14 @@ struct PolarPoint
      * @param _distance
      * @param _confidence
      */
-    PolarPoint(float _angle, int16_t _distance, uint16_t _confidence)
-    {
-        angle = _angle;
-        distance = _distance;
-        confidence = _confidence;
-        x = 0;
-        y = 0;
-    }
+    PolarPoint(float _angle, int16_t _distance, uint16_t _confidence) : angle(_angle), distance(_distance), confidence(_confidence), x(0), y(0) {}
     /**
      * @brief Construct a new Polar Point object
      *
      * @param _x
      * @param _y
      */
-    PolarPoint(float _x, float _y)
-    {
-        angle = 0;
-        distance = 0;
-        confidence = 0;
-        x = _x;
-        y = _y;
-    }
+    PolarPoint(float _x, float _y) : angle(0), distance(0), confidence(0), x(_x), y(_y) {}
     /**
      * @brief Construct a new Polar Point object
      * @param _angle
@@ -364,30 +296,12 @@ struct PolarPoint
      * @param _x
      * @param _y
      */
-    PolarPoint(float _angle, int16_t _distance, uint16_t _confidence, float _x, float _y)
-    {
-        angle = _angle;
-        distance = _distance;
-        confidence = _confidence;
-        x = _x;
-        y = _y;
-    }
-    /**
-     * @brief Construct a new Polar Point object
-     */
-    PolarPoint()
-    {
-        angle = 0;
-        distance = 0;
-        confidence = 0;
-        x = 0;
-        y = 0;
-    }
+    PolarPoint(float _angle, int16_t _distance, uint16_t _confidence, float _x, float _y) : angle(_angle), distance(_distance), confidence(_confidence), x(_x), y(_y) {}
 };
 
 struct PointTracker
 {
-    // point coordinates beeing tracked
+    // point coordinates being tracked
     PolarPoint point;
     // timestamp of the last time the tracker has been updated
     int64_t lastUpdateTime;

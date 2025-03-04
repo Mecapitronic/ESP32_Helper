@@ -28,15 +28,10 @@
 
 namespace ESP32_Helper
 {
-
-// ESP32 Serial Bauds rates
-// static const unsigned long default_rates[] = {300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 74880,
-// 115200, 230400, 256000, 460800, 921600, 1843200, 3686400};
-
 /**
  * Initialize serial/wifi for PC communication
  */
-void Initialisation(int baud_speed = 921600, Enable printEnable = ENABLE_TRUE,
+void Initialisation(BaudRate baud_speed = BAUD_RATE_921600, Enable printEnable = ENABLE_TRUE,
                   Level printLvl = LEVEL_VERBOSE, Enable debugEnable = ENABLE_FALSE);
 void Update(void *pvParameters);
 void HandleCommand(Command cmdTmp);
@@ -44,19 +39,5 @@ void BufferReadCommand(char * read, int size);
 
 bool HasWaitingCommand();
 Command GetCommand();
-
-/**
- * @brief Get the current time with milliseconds precision
- *
- * @return int64_t current time in milliseconds
- */
-int64_t GetTimeNowMs();
-
-/**
- * @brief Get the current time with microsecond precision
- *
- * @return int64_t current time in microseconds
- */
-int64_t GetTimeNowUs();
 }
 #endif
