@@ -170,6 +170,7 @@ namespace ESP32_Helper
             {
                 Printer::println("Help Commands : ");
                 Printer::PrintCommandHelp();
+                Preferences_Helper::PrintCommandHelp();
                 Debugger::PrintCommandHelp();
                 Wifi_Helper::PrintCommandHelp();
             }
@@ -182,6 +183,8 @@ namespace ESP32_Helper
             else if (cmdTmp.cmd.startsWith("Debug"))
                 Debugger::HandleCommand(cmdTmp);
             else if (cmdTmp.cmd.startsWith("Print"))
+                Printer::HandleCommand(cmdTmp);
+            else if (cmdTmp.cmd.startsWith("Preferences"))
                 Printer::HandleCommand(cmdTmp);
             else if (cmdTmp.cmd.startsWith("Wifi"))
                 Wifi_Helper::HandleCommand(cmdTmp);
