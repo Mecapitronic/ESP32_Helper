@@ -4,7 +4,7 @@ namespace Debugger
 {
     namespace
     {
-        QueueHandle_t queueSteps = nullptr;
+        QueueHandle_t queueSteps;
         const uint16_t queueStepsSize = 100;
         Enable debuggerEnable = ENABLE_NONE;
         int32_t debugSteps = 0;

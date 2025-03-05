@@ -7,8 +7,14 @@
 #ifndef STRUCTURE_H
 #define STRUCTURE_H
 
+#ifdef _VISUAL_STUDIO
+#include "..\..\Arduino.h"
+#include <queue.h>
+#include <vector>
+#else
 #include <Arduino.h>
 #include <queue>
+#endif
 
 using namespace std;
 // #define private public // troll ...
@@ -347,9 +353,9 @@ struct Command
 };
 
 template <typename T>
-void pop_front(std::vector<T> &vec)
+void pop_front(std::vector<T>& vec)
 {
     assert(!vec.empty());
     vec.erase(vec.begin());
-}
+};
 #endif

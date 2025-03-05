@@ -145,7 +145,9 @@ namespace ESP32_Helper
             if (cmdTmp.cmd.startsWith("Reboot"))
             {
                 Printer::println("Rebooting...");
+#ifndef _VISUAL_STUDIO
                 ESP.restart();
+#endif
             }
             // We first handle if the command is for the Lib
             else if (cmdTmp.cmd.startsWith("Debug"))
@@ -180,7 +182,7 @@ namespace ESP32_Helper
         }
         return cmd;
     }
-
+    /*
     int64_t GetTimeNowMs()
     {
         micros();
@@ -198,5 +200,5 @@ namespace ESP32_Helper
 
         int64_t time_us = (int64_t)tv_now.tv_sec * 1000000L + (int64_t)tv_now.tv_usec;
         return time_us;
-    }
+    }*/
 }

@@ -8,7 +8,12 @@
 #ifndef PREFERENCES_HELPER_H
 #define PREFERENCES_HELPER_H
 
+#ifdef _VISUAL_STUDIO
+#include "..\..\Preferences.h"
+#else
 #include <Preferences.h>
+#endif
+
 #include "ESP32_Helper.h"
 
 namespace Preferences_Helper

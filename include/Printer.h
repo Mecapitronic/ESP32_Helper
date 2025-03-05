@@ -31,15 +31,15 @@ namespace Printer
     //void print(String prefix, String suffix = "", Level level = LEVEL_VERBOSE);
     //void println(String prefix, String suffix = "", Level level = LEVEL_VERBOSE);
 
-    void print(int data, Level level = LEVEL_VERBOSE);
-    void println(int data, Level level = LEVEL_VERBOSE);
-    void print(String prefix, int data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, int data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(int32_t data, Level level = LEVEL_VERBOSE);
+    void println(int32_t data, Level level = LEVEL_VERBOSE);
+    void print(String prefix, int32_t data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void println(String prefix, int32_t data, String suffix = "", Level level = LEVEL_VERBOSE);
 
-    void print(uint data, Level level = LEVEL_VERBOSE);
-    void println(uint data, Level level = LEVEL_VERBOSE);
-    void print(String prefix, uint data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, uint data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(uint32_t data, Level level = LEVEL_VERBOSE);
+    void println(uint32_t data, Level level = LEVEL_VERBOSE);
+    void print(String prefix, uint32_t data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void println(String prefix, uint32_t data, String suffix = "", Level level = LEVEL_VERBOSE);
 
     void print(char data, Level level = LEVEL_VERBOSE);
     void println(char data, Level level = LEVEL_VERBOSE);
