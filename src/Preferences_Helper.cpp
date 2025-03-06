@@ -4,7 +4,7 @@ namespace Preferences_Helper
 {
     Preferences preferences;
     vector<String> preferencesList;
-    const char * PREF_NAMESPACE = "Mecapi";
+    const char * const PREF_NAMESPACE = "Mecapi";
 
     int LoadFromPreference(String pref, int defValue)
     {
