@@ -5,12 +5,12 @@ namespace Wifi_Helper
 {
     namespace
     {
-        Enable wifiEnable = ENABLE_NONE;
+        Enable wifiEnable = Enable::ENABLE_NONE;
     }
 
     void EnableWifi(Enable enable)
     {
-        wifiEnable = ENABLE_FALSE;
+        wifiEnable = Enable::ENABLE_FALSE;
         Printer::println("WIFI is Disable");
     }
 

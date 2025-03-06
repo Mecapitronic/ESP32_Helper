@@ -5,8 +5,8 @@ namespace Printer
     Teleplot teleplotUDP;
     namespace
     {
-        Level printLevel = LEVEL_VERBOSE;
-        Enable printEnable = ENABLE_NONE;
+        Level printLevel = Level::LEVEL_VERBOSE;
+        Enable printEnable = Enable::ENABLE_NONE;
         TaskHandle_t TaskUpdate;
     }
 
@@ -16,33 +16,33 @@ namespace Printer
         print("Printer Level : ");
         switch (level)
         {
-            ENUM_PRINT(LEVEL_VERBOSE);
-            ENUM_PRINT(LEVEL_INFO);
-            ENUM_PRINT(LEVEL_WARN);
-            ENUM_PRINT(LEVEL_ERROR);
-            ENUM_PRINT(LEVEL_NONE);
+            ENUM_PRINT(Level::LEVEL_VERBOSE);
+            ENUM_PRINT(Level::LEVEL_INFO);
+            ENUM_PRINT(Level::LEVEL_WARN);
+            ENUM_PRINT(Level::LEVEL_ERROR);
+            ENUM_PRINT(Level::LEVEL_NONE);
         }
     }
 
     void EnablePrinter(Enable enable)
     {
-        if (enable != ENABLE_NONE)
+        if (enable != Enable::ENABLE_NONE)
         {
             Printer::print("Printer : ");
 
-            if (printEnable == enable && enable == ENABLE_TRUE)
+            if (printEnable == enable && enable == Enable::ENABLE_TRUE)
             {
                 Printer::print("already Enable");
             }
-            if (printEnable == enable && enable == ENABLE_FALSE)
+            if (printEnable == enable && enable == Enable::ENABLE_FALSE)
             {
                 Printer::print("already Disable");
             }
-            if (printEnable != enable && enable == ENABLE_TRUE)
+            if (printEnable != enable && enable == Enable::ENABLE_TRUE)
             {
                 Printer::print(" Enable");
             }
-            if (printEnable != enable && enable == ENABLE_FALSE)
+            if (printEnable != enable && enable == Enable::ENABLE_FALSE)
             {
                 Printer::print(" Disable");
             }
@@ -51,7 +51,7 @@ namespace Printer
         }
     }
 
-    bool IsEnable() { return printEnable == ENABLE_TRUE; }
+    bool IsEnable() { return printEnable == Enable::ENABLE_TRUE; }
 
     void Initialisation()
     {        
@@ -76,7 +76,7 @@ namespace Printer
         }
     }
 
-    bool IsPrintable(Level level) { return printEnable == ENABLE_TRUE && printLevel <= level; }
+    bool IsPrintable(Level level) { return printEnable == Enable::ENABLE_TRUE && printLevel <= level; }
 
     void HandleCommand(Command cmdTmp)
     {

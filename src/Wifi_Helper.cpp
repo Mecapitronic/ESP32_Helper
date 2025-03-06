@@ -6,7 +6,7 @@ namespace Wifi_Helper
 
     namespace
     {
-        Enable wifiEnable = ENABLE_NONE;
+        Enable wifiEnable = Enable::ENABLE_NONE;
 
         TaskHandle_t TaskUpdate;
 
@@ -29,25 +29,25 @@ namespace Wifi_Helper
 
     void EnableWifi(Enable enable)
     {
-        if (enable != ENABLE_NONE)
+        if (enable != Enable::ENABLE_NONE)
         {
             Printer::print("Wifi : ");
 
-            if (wifiEnable == enable && enable == ENABLE_TRUE)
+            if (wifiEnable == enable && enable == Enable::ENABLE_TRUE)
             {
                 Printer::print("already Enable");
             }
-            if (wifiEnable == enable && enable == ENABLE_FALSE)
+            if (wifiEnable == enable && enable == Enable::ENABLE_FALSE)
             {
                 Printer::print("already Disable");
                 wifiClient.stop();
                 WiFi.disconnect();
             }
-            if (wifiEnable != enable && enable == ENABLE_TRUE)
+            if (wifiEnable != enable && enable == Enable::ENABLE_TRUE)
             {
                 Printer::print(" Enable");
             }
-            if (wifiEnable != enable && enable == ENABLE_FALSE)
+            if (wifiEnable != enable && enable == Enable::ENABLE_FALSE)
             {
                 Printer::print(" Disable");
                 wifiClient.stop();
@@ -58,11 +58,11 @@ namespace Wifi_Helper
         }
     }
 
-    bool IsEnable() { return wifiEnable == ENABLE_TRUE; }
+    bool IsEnable() { return wifiEnable == Enable::ENABLE_TRUE; }
 
     void Initialisation()
     {
-        wifiEnable = ENABLE_TRUE;
+        wifiEnable = Enable::ENABLE_TRUE;
         Serial.println("-- Starting Wifi initialisation --");
 
         // delete old config only if wifi is connected, if not : does nothing

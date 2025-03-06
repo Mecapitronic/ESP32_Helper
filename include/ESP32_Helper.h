@@ -31,8 +31,8 @@ namespace ESP32_Helper
 /**
  * Initialize serial/wifi for PC communication
  */
-void Initialisation(BaudRate baud_speed = BAUD_RATE_921600, Enable printEnable = ENABLE_TRUE,
-                  Level printLvl = LEVEL_VERBOSE, Enable debugEnable = ENABLE_FALSE);
+void Initialisation(BaudRate baud_speed = BaudRate::BAUD_RATE_921600, Enable printEnable = Enable::ENABLE_TRUE,
+                  Level printLvl = Level::LEVEL_VERBOSE, Enable debugEnable = Enable::ENABLE_FALSE);
 void Update(void *pvParameters);
 void HandleCommand(Command cmdTmp);
 void BufferReadCommand(char * read, int size);

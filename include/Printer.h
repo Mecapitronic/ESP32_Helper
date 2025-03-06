@@ -30,78 +30,78 @@ namespace Printer
     void HandleCommand(Command cmdTmp);
     void PrintCommandHelp();
 
-    bool IsPrintable(Level level = LEVEL_VERBOSE);
+    bool IsPrintable(Level level = Level::LEVEL_VERBOSE);
 
-    void println(Level level = LEVEL_VERBOSE);
+    void println(Level level = Level::LEVEL_VERBOSE);
 
-    //void print(String prefix, String suffix = "", Level level = LEVEL_VERBOSE);
-    //void println(String prefix, String suffix = "", Level level = LEVEL_VERBOSE);
+    //void print(String prefix, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    //void println(String prefix, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
-    void print(int data, Level level = LEVEL_VERBOSE);
-    void println(int data, Level level = LEVEL_VERBOSE);
-    void print(String prefix, int data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, int data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(int data, Level level = Level::LEVEL_VERBOSE);
+    void println(int data, Level level = Level::LEVEL_VERBOSE);
+    void print(String prefix, int data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, int data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
-    void print(uint data, Level level = LEVEL_VERBOSE);
-    void println(uint data, Level level = LEVEL_VERBOSE);
-    void print(String prefix, uint data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, uint data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(uint data, Level level = Level::LEVEL_VERBOSE);
+    void println(uint data, Level level = Level::LEVEL_VERBOSE);
+    void print(String prefix, uint data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, uint data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
-    void print(char data, Level level = LEVEL_VERBOSE);
-    void println(char data, Level level = LEVEL_VERBOSE);
-    void print(String prefix, char data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, char data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(char data, Level level = Level::LEVEL_VERBOSE);
+    void println(char data, Level level = Level::LEVEL_VERBOSE);
+    void print(String prefix, char data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, char data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
-    void print(float data, Level level = LEVEL_VERBOSE);
-    void println(float data, Level level = LEVEL_VERBOSE);
-    void print(String prefix, float data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, float data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(float data, Level level = Level::LEVEL_VERBOSE);
+    void println(float data, Level level = Level::LEVEL_VERBOSE);
+    void print(String prefix, float data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, float data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
-    void print(String data, Level level = LEVEL_VERBOSE);
-    void println(String data, Level level = LEVEL_VERBOSE);
-    void print(String prefix, String data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, String data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(String data, Level level = Level::LEVEL_VERBOSE);
+    void println(String data, Level level = Level::LEVEL_VERBOSE);
+    void print(String prefix, String data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, String data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
-    void print(String prefix, Point data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, Point data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(String prefix, Point data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, Point data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
-    void print(String prefix, Point3D data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, Point3D data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(String prefix, Point3D data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, Point3D data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
-    void print(String prefix, Point4D data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, Point4D data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(String prefix, Point4D data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, Point4D data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
-    void print(String prefix, PolarPoint data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, PolarPoint data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(String prefix, PolarPoint data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, PolarPoint data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
     
-    void print(String prefix, Command data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, Command data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(String prefix, Command data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, Command data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
     // bool needs to be the last because it overrides all functions
-    void print(String prefix, bool data, String suffix = "", Level level = LEVEL_VERBOSE);
-    void println(String prefix, bool data, String suffix = "", Level level = LEVEL_VERBOSE);
+    void print(String prefix, bool data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, bool data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
     void printArray(String prefix, int array[], size_t size, char separator = ',', String suffix = "",
-                    Level level = LEVEL_VERBOSE);
+                    Level level = Level::LEVEL_VERBOSE);
 
     /**
      * Send data to be viewed on teleplot, eg: trace x and y in a graph
      */
-    void teleplot(String varName, float var, Level level = LEVEL_VERBOSE);
-    void teleplot(String varName, Point point, Level level = LEVEL_VERBOSE);
-    void teleplot(String varName, PointF point, Level level = LEVEL_VERBOSE);
-    void teleplot(String varName, Pose point, Level level = LEVEL_VERBOSE);
-    void teleplot(String varName, PoseF point, Level level = LEVEL_VERBOSE);
+    void teleplot(String varName, float var, Level level = Level::LEVEL_VERBOSE);
+    void teleplot(String varName, Point point, Level level = Level::LEVEL_VERBOSE);
+    void teleplot(String varName, PointF point, Level level = Level::LEVEL_VERBOSE);
+    void teleplot(String varName, Pose point, Level level = Level::LEVEL_VERBOSE);
+    void teleplot(String varName, PoseF point, Level level = Level::LEVEL_VERBOSE);
     
-    //void teleplot(String varName, Point points[], uint16_t size, Level level = LEVEL_VERBOSE);
+    //void teleplot(String varName, Point points[], uint16_t size, Level level = Level::LEVEL_VERBOSE);
 
-    //void teleplot(String varName, PolarPoint polarPoint, Level level = LEVEL_VERBOSE);
-    //void teleplot(String varName, PolarPoint polarPoint, int timeStamp, Level level = LEVEL_VERBOSE);
+    //void teleplot(String varName, PolarPoint polarPoint, Level level = Level::LEVEL_VERBOSE);
+    //void teleplot(String varName, PolarPoint polarPoint, int timeStamp, Level level = Level::LEVEL_VERBOSE);
 
-    //void teleplot(String varName, PolarPoint polarPoints[], uint16_t size, Level level = LEVEL_VERBOSE);
-    //void teleplot(String varName, vector<PolarPoint> vec, Level level = LEVEL_VERBOSE);
+    //void teleplot(String varName, PolarPoint polarPoints[], uint16_t size, Level level = Level::LEVEL_VERBOSE);
+    //void teleplot(String varName, vector<PolarPoint> vec, Level level = Level::LEVEL_VERBOSE);
 
-    //void teleplot(String varName, Point4D point, Level level = LEVEL_VERBOSE);
+    //void teleplot(String varName, Point4D point, Level level = Level::LEVEL_VERBOSE);
 
     /**
      * send cloud point data on serial for teleplot to trace 3D shape

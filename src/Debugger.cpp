@@ -6,29 +6,29 @@ namespace Debugger
     {
         QueueHandle_t queueSteps = nullptr;
         const uint16_t queueStepsSize = 100;
-        Enable debuggerEnable = ENABLE_NONE;
+        Enable debuggerEnable = Enable::ENABLE_NONE;
         int32_t debugSteps = 0;
     }
 
     void EnableDebugger(Enable enable)
     {
-        if (enable != ENABLE_NONE)
+        if (enable != Enable::ENABLE_NONE)
         {
             Printer::print("Debugger : ");
 
-            if (debuggerEnable == enable && enable == ENABLE_TRUE)
+            if (debuggerEnable == enable && enable == Enable::ENABLE_TRUE)
             {
                 Printer::print("already Enable");
             }
-            if (debuggerEnable == enable && enable == ENABLE_FALSE)
+            if (debuggerEnable == enable && enable == Enable::ENABLE_FALSE)
             {
                 Printer::print("already Disable");
             }
-            if (debuggerEnable != enable && enable == ENABLE_TRUE)
+            if (debuggerEnable != enable && enable == Enable::ENABLE_TRUE)
             {
                 Printer::print(" Enable");
             }
-            if (debuggerEnable != enable && enable == ENABLE_FALSE)
+            if (debuggerEnable != enable && enable == Enable::ENABLE_FALSE)
             {
                 Printer::print(" Disable");
             }
@@ -37,7 +37,7 @@ namespace Debugger
         }
     }
 
-    bool IsEnable() { return debuggerEnable == ENABLE_TRUE; }
+    bool IsEnable() { return debuggerEnable == Enable::ENABLE_TRUE; }
 
     void Initialisation()
     {

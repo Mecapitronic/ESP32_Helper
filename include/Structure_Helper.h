@@ -13,7 +13,7 @@
 using namespace std;
 // #define private public // troll ...
 
-enum Level
+enum class Level
 {
     LEVEL_VERBOSE,
     LEVEL_INFO,
@@ -22,14 +22,14 @@ enum Level
     LEVEL_NONE
 };
 
-enum Enable
+enum class Enable
 {
     ENABLE_FALSE,
     ENABLE_TRUE,
     ENABLE_NONE
 };
 
-enum BaudRate
+enum class BaudRate
 {
     BAUD_RATE_300 = 300,
     BAUD_RATE_600 = 600,
