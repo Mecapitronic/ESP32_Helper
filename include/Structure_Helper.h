@@ -280,14 +280,14 @@ struct PolarPoint
      * @param _distance
      * @param _confidence
      */
-    PolarPoint(float _angle, int16_t _distance, uint16_t _confidence) : angle(_angle), distance(_distance), confidence(_confidence), x(0), y(0) {}
+    PolarPoint(float _angle, int16_t _distance, uint16_t _confidence) : angle(_angle), distance(_distance), confidence(_confidence){}
     /**
      * @brief Construct a new Polar Point object
      *
      * @param _x
      * @param _y
      */
-    PolarPoint(float _x, float _y) : angle(0), distance(0), confidence(0), x(_x), y(_y) {}
+    PolarPoint(float _x, float _y) : x(_x), y(_y) {}
     /**
      * @brief Construct a new Polar Point object
      * @param _angle
@@ -319,17 +319,14 @@ struct Command
     static const int8_t sizeStr = 14;
     String cmd = "";
     int8_t size;
-    int32_t data[length];
-    String dataStr; //sizeof(String) = 16 BUT 1 is for length and 1 for end char so 14 in reality
+    std::array<int32_t, length> data;
+    String dataStr; //sizeof(String) = 16 BUT 1 is for string length and 1 for \0 so 14 in reality
 
     Command()
     {
         cmd = "";
         size = 0;
-        for (size_t i = 0; i < length; i++)
-        {
-            data[i] = 0;
-        }
+        data.fill(0);
         dataStr = "";
     }
 };
