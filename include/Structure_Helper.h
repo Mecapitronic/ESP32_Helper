@@ -57,13 +57,13 @@ enum BaudRate
  */
 struct Point
 {
-    int16_t x;
-    int16_t y;
+    int16_t x = 0;
+    int16_t y = 0;
     /**
      * @brief Construct a new Point object
      *
      */
-    Point() : x(0), y(0) {}
+    Point() {}
     /**
      * @brief Construct a new Point object
      * @param _x int16_t
@@ -79,13 +79,13 @@ struct Point
  */
 struct PointF
 {
-    float x;
-    float y;
+    float x = 0;
+    float y = 0;
     /**
      * @brief Construct a new Point F object
      *
      */
-    PointF() : x(0), y(0) {}
+    PointF() {}
     /**
      * @brief Construct a new Point F object
      *
@@ -103,13 +103,13 @@ struct PointF
  */
 struct Pose
 {
-    int16_t x;
-    int16_t y;
-    int32_t h;
+    int16_t x = 0;
+    int16_t y = 0;
+    int32_t h = 0;
     /**
      * @brief Construct a new Pose object
      */
-    Pose() : x(0), y(0), h(0) {}
+    Pose() {}
     /**
      * @brief Construct a new Pose object
      *
@@ -128,13 +128,13 @@ struct Pose
  */
 struct PoseF
 {
-    float x;
-    float y;
-    float h;
+    float x = 0;
+    float y = 0;
+    float h = 0;
     /**
      * @brief Construct a new PoseF object
      */
-    PoseF() : x(0), y(0), h(0) {}
+    PoseF() {}
     /**
      * @brief Construct a new PoseF object
      *
@@ -153,13 +153,13 @@ struct PoseF
  */
 struct Point3D
 {
-    int16_t x;
-    int16_t y;
-    int16_t z;
+    int16_t x = 0;
+    int16_t y = 0;
+    int16_t z = 0;
     /**
      * @brief Construct a new Point3D object
      */
-    Point3D() : x(0), y(0), z(0) {}
+    Point3D() {}
     /**
      * @brief Construct a new Point3D object
      *
@@ -178,13 +178,13 @@ struct Point3D
  */
 struct PointF3D
 {
-    float x;
-    float y;
-    float z;
+    float x = 0;
+    float y = 0;
+    float z = 0;
     /**
      * @brief Construct a new Point3D object
      */
-    PointF3D() : x(0), y(0), z(0) {}
+    PointF3D() {}
     /**
      * @brief Construct a new Point3D object
      *
@@ -204,14 +204,14 @@ struct PointF3D
  */
 struct Point4D
 {
-    int16_t x;
-    int16_t y;
-    int16_t z;
-    int16_t w;
+    int16_t x = 0;
+    int16_t y = 0;
+    int16_t z = 0;
+    int16_t w = 0;
     /**
      * @brief Construct a new Point4D object
      */
-    Point4D() : x(0), y(0), z(0), w(0) {}
+    Point4D() {}
     /**
      * @brief Construct a new Point4D object
      *
@@ -232,14 +232,14 @@ struct Point4D
  */
 struct PointF4D
 {
-    float x;
-    float y;
-    float z;
-    float w;
+    float x = 0;
+    float y = 0;
+    float z = 0;
+    float w = 0;
     /**
      * @brief Construct a new Point4D object
      */
-    PointF4D() : x(0), y(0), z(0), w(0) {}
+    PointF4D(){}
     /**
      * @brief Construct a new Point4D object
      *
@@ -263,15 +263,15 @@ struct PointF4D
  */
 struct PolarPoint
 {
-    float angle;
-    int16_t distance;
-    uint16_t confidence;
-    float x;
-    float y;
+    float angle = 0;
+    int16_t distance = 0;
+    uint16_t confidence = 0;
+    float x = 0;
+    float y = 0;
     /**
      * @brief Construct a new Polar Point object
      */
-    PolarPoint() : angle(0), distance(0), confidence(0), x(0), y(0) {}
+    PolarPoint() {}
     /**
      *
      * @brief Construct a new Polar Point object
