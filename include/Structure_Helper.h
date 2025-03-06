@@ -63,7 +63,7 @@ struct Point
      * @brief Construct a new Point object
      *
      */
-    Point() {}
+    Point() = default;
     /**
      * @brief Construct a new Point object
      * @param _x int16_t
@@ -85,7 +85,7 @@ struct PointF
      * @brief Construct a new Point F object
      *
      */
-    PointF() {}
+    PointF() = default;
     /**
      * @brief Construct a new Point F object
      *
@@ -109,7 +109,7 @@ struct Pose
     /**
      * @brief Construct a new Pose object
      */
-    Pose() {}
+    Pose() = default;
     /**
      * @brief Construct a new Pose object
      *
@@ -134,7 +134,7 @@ struct PoseF
     /**
      * @brief Construct a new PoseF object
      */
-    PoseF() {}
+    PoseF() = default;
     /**
      * @brief Construct a new PoseF object
      *
@@ -159,7 +159,7 @@ struct Point3D
     /**
      * @brief Construct a new Point3D object
      */
-    Point3D() {}
+    Point3D() = default;
     /**
      * @brief Construct a new Point3D object
      *
@@ -184,7 +184,7 @@ struct PointF3D
     /**
      * @brief Construct a new Point3D object
      */
-    PointF3D() {}
+    PointF3D() = default;
     /**
      * @brief Construct a new Point3D object
      *
@@ -211,7 +211,7 @@ struct Point4D
     /**
      * @brief Construct a new Point4D object
      */
-    Point4D() {}
+    Point4D() = default;
     /**
      * @brief Construct a new Point4D object
      *
@@ -239,7 +239,7 @@ struct PointF4D
     /**
      * @brief Construct a new Point4D object
      */
-    PointF4D(){}
+    PointF4D() = default;
     /**
      * @brief Construct a new Point4D object
      *
@@ -271,7 +271,7 @@ struct PolarPoint
     /**
      * @brief Construct a new Polar Point object
      */
-    PolarPoint() {}
+    PolarPoint() = default;
     /**
      *
      * @brief Construct a new Polar Point object
