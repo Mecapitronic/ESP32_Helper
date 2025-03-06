@@ -318,16 +318,13 @@ struct Command
     static const int8_t length = 6;
     static const int8_t sizeStr = 14;
     String cmd = "";
-    int8_t size;
+    int8_t size = 0;
     std::array<int32_t, length> data;
-    String dataStr; //sizeof(String) = 16 BUT 1 is for string length and 1 for \0 so 14 in reality
+    String dataStr = ""; //sizeof(String) = 16 BUT 1 is for string length and 1 for \0 so 14 in reality
 
     Command()
     {
-        cmd = "";
-        size = 0;
         data.fill(0);
-        dataStr = "";
     }
 };
 #endif
