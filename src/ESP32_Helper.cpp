@@ -145,7 +145,7 @@ namespace ESP32_Helper
                     else
                     {
                         //println("Conversion didn't consume entire string.");
-                        if(i - indexSeparator <= cmdTmp.sizeStr)
+                        if(i - indexSeparator <= Command::sizeStr)
                             cmdTmp.dataStr = strToConvert;                        
                         //else
                         //   println("String too long !");
@@ -154,7 +154,7 @@ namespace ESP32_Helper
                 catch(const std::exception& e)
                 {
                     //println("Conversion error: not an integer");                    
-                    if(i - indexSeparator <= cmdTmp.sizeStr)
+                    if(i - indexSeparator <= Command::sizeStr)
                         cmdTmp.dataStr = strToConvert;
                     //else
                     //    println("String too long !");
