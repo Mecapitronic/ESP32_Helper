@@ -4,8 +4,7 @@ namespace Debugger
 {
     namespace
     {
-        QueueHandle_t queueSteps = nullptr;
-        const uint16_t queueStepsSize = 100;
+        QueueThread<int16_t> queueSteps;
         Enable debuggerEnable = Enable::ENABLE_NONE;
         int32_t debugSteps = 0;
     }
@@ -42,8 +41,8 @@ namespace Debugger
     void Initialisation()
     {
         Printer::print("Preparing queueSteps : ");
-        queueSteps = xQueueCreate(queueStepsSize, sizeof(int16_t));
-        if (queueSteps == NULL)
+        queueSteps = QueueThread<int16_t>(100);
+        if (!queueSteps.IsInit())
         {
             Printer::println("Error creating the queueSteps !");
         }
@@ -103,16 +102,16 @@ namespace Debugger
 
     void AddSteps(int16_t steps)
     {
-        xQueueSend(queueSteps, &steps, 0);
+        queueSteps.Send(steps);
         Printer::println("Adding ", steps, " steps to Debugger.");
     }
 
     bool GetSteps()
     {
-        if (uxQueueMessagesWaiting(queueSteps) > 0)
+        if (queueSteps.MessagesWaiting() > 0)
         {
             int16_t steps = 0;
-            if (xQueueReceive(queueSteps, &steps, portTICK_PERIOD_MS * 0))
+            if (queueSteps.Receive(steps))
             {
                 debugSteps += steps;
                 return true;

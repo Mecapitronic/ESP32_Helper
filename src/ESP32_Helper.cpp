@@ -6,16 +6,15 @@ namespace ESP32_Helper
 {
     namespace // anonymous nested namespace, cannot access outside this file
     {
-        TaskHandle_t TaskUpdate;
-        QueueHandle_t awaitingCommand = NULL;
+        TaskThread taskUpdate;
+        QueueThread<Command> awaitingCommand;
 
         // converts character array
         // to string and returns it
         String convertToString(char *a, int size)
         {
-            int i;
             String s = "";
-            for (i = 0; i < size; i++)
+            for (int i = 0; i < size; i++)
             {
                 s = s + a[i];
             }
@@ -33,8 +32,8 @@ namespace ESP32_Helper
         Serial.println("-- Starting Helper Initialisation --");
         Wifi_Helper::Initialisation();
         Serial.println("Creating Incoming Command Queue");
-        awaitingCommand = xQueueCreate(100, sizeof(Command));
-        if (awaitingCommand == NULL)
+        awaitingCommand = QueueThread<Command>(20);
+        if (!awaitingCommand.IsInit())
         {
             Serial.println("Error creating the queue : awaitingCommand");
         }
@@ -47,7 +46,7 @@ namespace ESP32_Helper
         /* priority of the task */
         /* Task handle to keep track of created task */
         /* pin task to core 0 */
-        xTaskCreatePinnedToCore(ESP32_Helper::Update, "CommandUpdate", 10000, NULL, 5, &TaskUpdate, 0);
+        taskUpdate = TaskThread(ESP32_Helper::Update, "CommandUpdate");
 
         Serial.println("-- Starting Printer Initialisation --");
         Printer::Initialisation();
@@ -190,26 +189,22 @@ namespace ESP32_Helper
                 Wifi_Helper::HandleCommand(cmdTmp);
             else
             {
-                // If command is not for Lib, we sent it to the main
-                xQueueSend(awaitingCommand, &cmdTmp, 0);
+                // If command is not for Lib, we send it to the main
+                awaitingCommand.Send(cmdTmp);
             }
         }
     }
 
-    bool HasWaitingCommand() { return uxQueueMessagesWaiting(awaitingCommand) > 0; }
+    bool HasWaitingCommand() { return awaitingCommand.MessagesWaiting() > 0; }
 
     Command GetCommand()
     {
         Command cmd;
         if (HasWaitingCommand())
         {
-            if (xQueueReceive(awaitingCommand, &cmd, portTICK_PERIOD_MS * 0))
+            if (awaitingCommand.Receive(cmd))
             {
                 return cmd;
-            }
-            else
-            {
-                cmd.cmd = "";
             }
         }
         return cmd;
