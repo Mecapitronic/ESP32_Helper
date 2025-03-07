@@ -9,6 +9,8 @@
 
 #include "Structure.h"
 #include "Preferences_Helper.h"
+#include "QueueThread.h"
+#include "TaskThread.h"
 
 #ifdef WITH_WIFI
     #include "Wifi_Helper.h"
