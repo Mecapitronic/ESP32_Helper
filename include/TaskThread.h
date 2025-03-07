@@ -1,8 +1,10 @@
 #ifndef TASK_THREAD_H
 #define TASK_THREAD_H
 
+#ifndef _VISUAL_STUDIO
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#endif
 
 //template <typename T>
 class TaskThread

@@ -1,14 +1,16 @@
 #ifndef QUEUE_THREAD_H
 #define QUEUE_THREAD_H
 
+#ifndef _VISUAL_STUDIO
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
+#endif
 
 template <typename T>
 class QueueThread
 {
     private:
-    QueueHandle_t queue;
+    QueueHandle_t _queue;
     bool isInit = false;
 
     public:
@@ -16,8 +18,8 @@ class QueueThread
 
     QueueThread(int size)
     {
-        queue = xQueueCreate(size, sizeof(T));
-        if(queue == nullptr)
+        _queue = xQueueCreate(size, sizeof(T));
+        if(_queue == nullptr)
         {
             isInit = false;
         }
@@ -31,7 +33,7 @@ class QueueThread
     {
         if (isInit)
         {
-            vQueueDelete(queue);
+            vQueueDelete(_queue);
         }
     }
 
@@ -44,7 +46,7 @@ class QueueThread
     {
         if (isInit)
         {
-            xQueueSend(queue, &item, 0);
+            xQueueSend(_queue, &item, 0);
         }        
     }
 
@@ -52,7 +54,7 @@ class QueueThread
     {
         if (isInit)
         {
-            return xQueueReceive(queue, &item, 0);
+            return xQueueReceive(_queue, &item, 0);
         }
         return false;
     }
@@ -61,7 +63,7 @@ class QueueThread
     {
         if (isInit)
         {
-            return uxQueueMessagesWaiting(queue);
+            return uxQueueMessagesWaiting(_queue);
         }
         return 0;
     }
