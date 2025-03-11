@@ -7,8 +7,14 @@
 #ifndef STRUCTURE_HELPER_H
 #define STRUCTURE_HELPER_H
 
+#ifdef _VISUAL_STUDIO
+#include "..\..\Arduino.h"
+#include <queue.h>
+#include <vector>
+#else
 #include <Arduino.h>
 #include <queue>
+#endif
 
 using namespace std;
 // #define private public // troll ...
@@ -326,5 +332,12 @@ struct Command
     {
         data.fill(0);
     }
+};
+
+template <typename T>
+void pop_front(std::vector<T>& vec)
+{
+    assert(!vec.empty());
+    vec.erase(vec.begin());
 };
 #endif
