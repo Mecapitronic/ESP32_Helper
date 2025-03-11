@@ -304,7 +304,7 @@ namespace Wifi_Helper
                 ArduinoOTA.handle();
                 #endif
             }
-            //vTaskDelay(1);
+            vTaskDelay(1);
         }
         Serial.println("Wifi Update Task STOPPED !");
     }
