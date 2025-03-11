@@ -177,9 +177,7 @@ namespace ESP32_Helper
             if (cmdTmp.cmd.startsWith("Reboot"))
             {
                 Printer::println("Rebooting...");
-#ifndef _VISUAL_STUDIO
                 ESP.restart();
-#endif
             }
             // We first handle if the command is for the Lib
             else if (cmdTmp.cmd.startsWith("Debug"))

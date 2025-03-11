@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include <chrono>
 #define vTaskDelay(x) TaskThread::timerSleep(x/1000)
+#define delay vTaskDelay
 #define portBASE_TYPE int
 typedef portBASE_TYPE BaseType_t;
 typedef unsigned portBASE_TYPE UBaseType_t;

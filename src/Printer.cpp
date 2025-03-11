@@ -380,7 +380,7 @@ namespace Printer
         {
             print(" Size=", data.size);
             print(" Data=", data.data[0]);
-            for (size_t size_data = 1; size_data < data.size; size_data++)
+            for (int8_t size_data = 1; size_data < data.size; size_data++)
             {
                 print(",", data.data[size_data]);
             }
