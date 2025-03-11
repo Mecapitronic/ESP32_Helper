@@ -8,7 +8,7 @@ namespace Wifi_Helper
     {
         Enable wifiEnable = Enable::ENABLE_NONE;
 
-        TaskHandle_t TaskUpdate;
+        TaskThread taskUpdate;
 
         // TODO : Change the default password and SSID name
         // SSID name maximum of 63 characters;
@@ -158,7 +158,7 @@ namespace Wifi_Helper
         /* priority of the task */
         /* Task handle to keep track of created task */
         /* pin task to core 0 */
-        xTaskCreatePinnedToCore(Wifi_Helper::Update, "WifiUpdate", 10000, NULL, 10, &TaskUpdate, 0);
+        taskUpdate = TaskThread(Wifi_Helper::Update, "WifiUpdate", 10000, 10, 0);
 
 #ifdef WITH_OTA
         Printer::println("Initialisation of OTA");        

@@ -53,28 +53,9 @@ namespace Printer
 
     bool IsEnable() { return printEnable == Enable::ENABLE_TRUE; }
 
-    void Initialisation()
-    {        
-        Printer::println("Creating Printer Update Task");
-        /* Task function. */
-        /* name of task. */
-        /* Stack size of task */
-        /* parameter of the task */
-        /* priority of the task */
-        /* Task handle to keep track of created task */
-        /* pin task to core 0 */
-        //xTaskCreatePinnedToCore(Printer::Update, "PrinterUpdate", 10000, NULL, 10, &TaskUpdate, 0);
-
-        Printer::println("done.");
-    }
+    void Initialisation() {}
     
-    void Update(void *pvParameters)
-    {
-        for (;;)
-        {
-            vTaskDelay(1);
-        }
-    }
+    void Update(void *pvParameters) {}
 
     bool IsPrintable(Level level) { return printEnable == Enable::ENABLE_TRUE && printLevel <= level; }
 

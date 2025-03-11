@@ -14,27 +14,37 @@ class QueueThread
     bool isInit = false;
 
     public:
-    QueueThread(){}
+    QueueThread(){Serial.println("Create queue : ");}
 
     QueueThread(int size)
     {
+        Serial.println("Creating queue : ");
         _queue = xQueueCreate(size, sizeof(T));
         if(_queue == nullptr)
         {
+            Serial.println("Init queue NOK");
             isInit = false;
         }
         else
         {
+            Serial.println("Init queue OK");
             isInit = true;
         }
     }
 
     ~QueueThread()
     {
+        Serial.println("Deleting queue");
         if (isInit)
         {
-            vQueueDelete(_queue);
+            //vQueueDelete(_queue);
+            Serial.println("Deleted queue");
         }
+    }
+
+    void Delete()
+    {
+        this->~QueueThread();
     }
 
     bool IsInit()
@@ -46,6 +56,7 @@ class QueueThread
     {
         if (isInit)
         {
+            Serial.println("Sending to queue");
             xQueueSend(_queue, &item, 0);
         }        
     }
@@ -54,6 +65,7 @@ class QueueThread
     {
         if (isInit)
         {
+            Serial.println("Receive from queue");
             return xQueueReceive(_queue, &item, 0);
         }
         return false;
