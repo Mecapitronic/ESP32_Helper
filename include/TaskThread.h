@@ -1,66 +1,91 @@
 #ifndef TASK_THREAD_H
 #define TASK_THREAD_H
 
-#ifndef _VISUAL_STUDIO
+#ifdef _VISUAL_STUDIO
+#include <pthread.h>
+#define portBASE_TYPE int
+typedef portBASE_TYPE BaseType_t;
+typedef unsigned portBASE_TYPE UBaseType_t;
+typedef void (*TaskFunction_t)(void*);
+/*void vTaskDelay(int milli) {
+    //timerSleep(0);
+};*/
+#else
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #endif
 
-//template <typename T>
 class TaskThread
 {
     private:
-    TaskHandle_t _task;
-    //TaskFunction_t _pvTaskCode;
-    String _pcName;
-    void (*_pvTaskCode) (void*);
-    
+#ifdef _VISUAL_STUDIO
+     pthread_t pthread;
+     // TaskFunction_t _pvTaskCode;
+     void (*_pvTaskCode)(void*);
+     const char* _pcName;
+#else
+     TaskHandle_t _task;
+     TaskFunction_t _pvTaskCode;
+     String _pcName;
+#endif
+
+     void task()
+     {
+         Serial.print("Calling Task : ");
+         Serial.println(_pcName);
+         _pvTaskCode(NULL);
+     }
+
+     static void startTaskImpl(void* _this)
+     {
+         Serial.print("Impl Task : ");
+         Serial.println(((TaskThread*)_this)->_pcName);
+         ((TaskThread*)_this)->task();
+     }
+
+     static void* startThread(void* _this)
+     {
+         ((TaskThread*)_this)->task();
+         return NULL;
+     }
+
     public:
-    TaskThread(){}
+     TaskThread() {}
 
-    TaskThread( TaskFunction_t pvTaskCode,
-        const char * const pcName,
-        const uint32_t usStackDepth = 10000,
-        UBaseType_t uxPriority = 5,
-        const BaseType_t xCoreID = 0)
-    {
-        _pvTaskCode = pvTaskCode;
-        _pcName = String(pcName);
-        
-        Serial.println("Creating Task : ");
-        Serial.println(_pcName);
+     TaskThread(TaskFunction_t pvTaskCode, const char* const pcName, const uint32_t usStackDepth = 10000,
+                UBaseType_t uxPriority = 5, const BaseType_t xCoreID = 0)
+     {
+         _pvTaskCode = pvTaskCode;
+         _pcName = pcName;
 
-        /* Task function. */
-        /* name of task. */
-        /* Stack size of task */
-        /* parameter of the task */
-        /* priority of the task */
-        /* Task handle to keep track of created task */
-        /* pin task to core x */
-        xTaskCreatePinnedToCore(this->startTaskImpl, pcName, usStackDepth, this, uxPriority, &_task, xCoreID);
-    }
+         Serial.print("Creating Task : ");
+         Serial.println(_pcName);
 
-    ~TaskThread()
-    {
-        Serial.println("Deleting Task : ");
-        Serial.println(_pcName);
-        //vTaskDelete(_task);
-    }
+#ifdef _VISUAL_STUDIO
+         bool ret = pthread_create(&pthread, NULL, startThread, this);
+         pthread_setname_np(pthread, pcName);
+#else
+         /* Task function. */
+         /* name of task. */
+         /* Stack size of task */
+         /* parameter of the task */
+         /* priority of the task */
+         /* Task handle to keep track of created task */
+         /* pin task to core x */
+         xTaskCreatePinnedToCore(this->startTaskImpl, pcName, usStackDepth, this, uxPriority, &_task, xCoreID);
+#endif
+     }
 
-    private:
-    
-    static void startTaskImpl(void * _this)
-    {       
-        Serial.println("Impl Task : ");
-        Serial.println(((TaskThread*)_this)->_pcName); 
-        ((TaskThread*)_this)->task();
-    }
-
-    void task()
-    {
-        Serial.println("Calling Task : ");
-        Serial.println(_pcName);
-        _pvTaskCode(NULL);
+     ~TaskThread()
+     {
+         Serial.print("Deleting Task : ");
+         Serial.println(_pcName);
+#ifdef _VISUAL_STUDIO
+        //bool cancel = pthread_cancel(pthread);
+        //bool join = pthread_join(pthread, NULL);
+#else
+        // vTaskDelete(_task);
+#endif
     }
 
     //get stack for task 2

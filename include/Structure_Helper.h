@@ -336,7 +336,13 @@ struct Command
 template <typename T>
 void pop_front(std::vector<T>& vec)
 {
+
+#ifdef _VISUAL_STUDIO
+    if (vec.empty())
+        return;
+#else
     assert(!vec.empty());
+#endif
     vec.erase(vec.begin());
 };
 #endif

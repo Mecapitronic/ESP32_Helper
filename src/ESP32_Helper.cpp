@@ -105,7 +105,8 @@ namespace ESP32_Helper
                     readBuffer.clear();
                 }
             }
-            vTaskDelay(1);
+            
+            //vTaskDelay(1);
         }
         Printer::println("Command Update Task STOPPED !");
     }
