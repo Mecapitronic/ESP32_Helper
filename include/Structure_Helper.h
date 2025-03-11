@@ -10,6 +10,7 @@
 #ifdef _VISUAL_STUDIO
 #include "..\..\Arduino.h"
 #include <vector>
+#include <array>
 #else
 #include <Arduino.h>
 #include <queue>

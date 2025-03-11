@@ -27,7 +27,7 @@ namespace ESP32_Helper
         Serial.end();
         Serial.setRxBufferSize(1024);
         Serial.setTxBufferSize(1024);
-        Serial.begin(static_cast<ulong>(baud_speed));
+        Serial.begin(static_cast<unsigned long>(baud_speed));
         Serial.println();
         Serial.println("-- Starting Helper Initialisation --");
         Wifi_Helper::Initialisation();

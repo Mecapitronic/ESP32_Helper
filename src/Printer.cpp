@@ -7,7 +7,6 @@ namespace Printer
     {
         Level printLevel = Level::LEVEL_VERBOSE;
         Enable printEnable = Enable::ENABLE_NONE;
-        TaskHandle_t TaskUpdate;
     }
 
     void SetLevel(Level level)

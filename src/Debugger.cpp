@@ -54,14 +54,14 @@ namespace Debugger
         if (cmdTmp.cmd == "DebugSteps")
         {
             // DebugSteps:10
-            if (cmdTmp.size == 1 && cmdTmp.data[0] > 0)
-                Debugger::AddSteps(cmdTmp.data[0]);
+            if (cmdTmp.size == 1 && cmdTmp.data.at(0) > 0)
+                Debugger::AddSteps(cmdTmp.data.at(0));
         }
         else if (cmdTmp.cmd == "DebugEnable")
         {
             // DebugEnable:1
             if (cmdTmp.size == 1)
-                Debugger::EnableDebugger((Enable)cmdTmp.data[0]);
+                Debugger::EnableDebugger((Enable)cmdTmp.data.at(0));
         }
         else
         {

@@ -6,7 +6,7 @@
 
 #ifndef WITH_WIFI
     #define TELEPLOT_DISABLE
-#include <unistd.h>
+//#include <unistd.h>
 #include <string.h>
 //#include <sys/types.h>
 #include <sstream>
