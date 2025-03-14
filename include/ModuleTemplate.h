@@ -8,8 +8,7 @@ using namespace Printer;
 class IModule
 {
 private:
-    // QueueHandle_t myQueue;
-    // static const int queueSize = 500;
+    /* data */
 
 public:
     // This function will be be called just before the constructor of the module
@@ -27,16 +26,5 @@ public:
     // virtual bool ReadSerial() { println("ReadSerial IModule : not implemented !"); }
     // virtual void SendSerial() { println("SendSerial IModule : not implemented !"); }
 
-    // TEST ONLY
-    /*
-    void CreateQueue(int size = queueSize)
-    {
-        myQueue = xQueueCreate(size, sizeof(uint8_t));
-        if (myQueue == NULL)
-        {
-            //Printer::println("Error creating the queue", LEVEL_ERROR);
-        }
-    }
-    */
 };
 #endif
