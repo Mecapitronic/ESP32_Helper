@@ -8,18 +8,6 @@ namespace ESP32_Helper
     {
         TaskThread taskUpdate;
         QueueThread<Command> awaitingCommand;
-
-        // converts character array
-        // to string and returns it
-        String convertToString(char *a, int size)
-        {
-            String s = "";
-            for (int i = 0; i < size; i++)
-            {
-                s = s + a[i];
-            }
-            return s;
-        }
     }
 
     void Initialisation(BaudRate baud_speed, Enable printEnable, Level printLvl, Enable debugEnable)
@@ -75,7 +63,7 @@ namespace ESP32_Helper
 
     void Update(void *pvParameters)
     {
-        const int readBufferMax = 64;
+        const int8_t readBufferMax = 64;
         vector<char> readBuffer;
         readBuffer.reserve(readBufferMax);
 
@@ -114,13 +102,13 @@ namespace ESP32_Helper
     {
 
     }
-    
-    void BufferReadCommand(char *read, int size)
+
+    void BufferReadCommand(char *read, int32_t size)
     {
         Command cmdTmp;
         uint16_t indexSeparator = 0;
         // Start at 1 to let one letter for command at least
-        for (uint8_t i = 1; i < size; i++)
+        for (int32_t i = 1; i < size; i++)
         {
             if (cmdTmp.cmd == "" && (read[i] == ':' || read[i] == '\n'))
             {
@@ -129,13 +117,13 @@ namespace ESP32_Helper
             }
             else if (cmdTmp.cmd != "" && (read[i] == ';' || read[i] == ':' || read[i] == '\n'))
             {
-                //cmdTmp.data[cmdTmp.size++] = atoi(String(&read[indexSeparator], i-indexSeparator).c_str());
-                //check if it's an int or a string by trying to convert it
+                // cmdTmp.data[cmdTmp.size++] = atoi(String(&read[indexSeparator], i-indexSeparator).c_str());
+                // check if it's an integer or a string by trying to convert it
                 String strToConvert = String(&read[indexSeparator], i-indexSeparator);
                 try
                 {
                     std::size_t pos{};
-                    int conversion = std::stoi(strToConvert.c_str(), &pos);
+                    int32_t conversion = std::stoi(strToConvert.c_str(), &pos);
 
                     if (pos == i - indexSeparator)
                     {

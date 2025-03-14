@@ -6,10 +6,10 @@ namespace Preferences_Helper
     vector<String> preferencesList;
     const char * const PREF_NAMESPACE = "Mecapi";
 
-    int LoadFromPreference(String pref, int defValue)
+    int32_t LoadFromPreference(String pref, int32_t defValue)
     {
         preferences.begin(PREF_NAMESPACE, true);
-        int value = preferences.getInt(pref.c_str(), defValue);
+        int32_t value = preferences.getInt(pref.c_str(), defValue);
         preferencesList.push_back(pref);
         Printer::print("Preferences ");
         Printer::println(pref, value);
@@ -28,7 +28,7 @@ namespace Preferences_Helper
         return value;
     }
 
-    void SaveToPreference(String pref, int value)
+    void SaveToPreference(String pref, int32_t value)
     {
         preferences.begin(PREF_NAMESPACE, false);
         preferences.putInt(pref.c_str(), value);

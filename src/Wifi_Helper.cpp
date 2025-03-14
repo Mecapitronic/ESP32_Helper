@@ -17,7 +17,7 @@ namespace Wifi_Helper
         String wifi_password = "Mecapi2025";
         String wifi_local_ip = "192.168.137.110";
         String wifi_server_ip = "192.168.137.1";
-        int wifi_server_port = 20240;
+        int32_t wifi_server_port = 20240;
         bool wifi_changed = false;
 
         // const String wifi_ssid = "Wokwi-GUEST";
@@ -104,7 +104,7 @@ namespace Wifi_Helper
         server_IP.fromString(wifi_server_ip);
 
         // Get the Server Port saved
-        int saved_wifi_server_port = Preferences_Helper::LoadFromPreference("wifi_server_port", wifi_server_port);
+        int32_t saved_wifi_server_port = Preferences_Helper::LoadFromPreference("wifi_server_port", wifi_server_port);
         if (saved_wifi_server_port != wifi_server_port)
         {
             wifi_server_port = saved_wifi_server_port;
@@ -161,7 +161,7 @@ namespace Wifi_Helper
         taskUpdate = TaskThread(Wifi_Helper::Update, "WifiUpdate", 10000, 10, 0);
 
 #ifdef WITH_OTA
-        Printer::println("Initialisation of OTA");        
+        Printer::println("Initialisation of OTA");
         ArduinoOTA
             .onStart([]() {
             String type;
@@ -177,7 +177,7 @@ namespace Wifi_Helper
             .onEnd([]() {
             Printer::println("\nEnd");
             })
-            .onProgress([](unsigned int progress, unsigned int total) {
+            .onProgress([](unsigned int32_t progress, unsigned int32_t total) {
             Printer::println("Progress: ", (progress / (total / 100)), " %");
             })
             .onError([](ota_error_t error) {
@@ -202,7 +202,7 @@ namespace Wifi_Helper
 
     void Update(void *pvParameters)
     {
-        const int readBufferMax = 64;
+        const int8_t readBufferMax = 64;
         vector<char> readBuffer;
         readBuffer.reserve(readBufferMax);
 

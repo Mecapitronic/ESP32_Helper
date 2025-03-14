@@ -12,7 +12,7 @@ void setup(void)
     Debugger::AddSteps(10);
 }
 
-int cpt = 0;
+int32_t cpt = 0;
 void loop(void)
 {
     // Send

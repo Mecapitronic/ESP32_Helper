@@ -115,14 +115,14 @@ namespace Printer
             println();
         }
     */
-    void print(int data, Level level)
+    void print(int32_t data, Level level)
     {
         if (!IsPrintable(level))
             return;
         print(String(data));
     }
 
-    void println(int data, Level level)
+    void println(int32_t data, Level level)
     {
         if (!IsPrintable(level))
             return;
@@ -130,7 +130,7 @@ namespace Printer
         println();
     }
 
-    void print(String prefix, int data, String suffix, Level level)
+    void print(String prefix, int32_t data, String suffix, Level level)
     {
         if (!IsPrintable(level))
             return;
@@ -139,7 +139,7 @@ namespace Printer
         print(suffix);
     }
 
-    void println(String prefix, int data, String suffix, Level level)
+    void println(String prefix, int32_t data, String suffix, Level level)
     {
         if (!IsPrintable(level))
             return;
@@ -147,21 +147,21 @@ namespace Printer
         println();
     }
 
-    void print(uint data, Level level)
+    void print(uint32_t data, Level level)
     {
         if (!IsPrintable(level))
             return;
         print(String(data));
     }
 
-    void println(uint data, Level level)
+    void println(uint32_t data, Level level)
     {
         if (!IsPrintable(level))
             return;
         print(data);
     }
 
-    void print(String prefix, uint data, String suffix, Level level)
+    void print(String prefix, uint32_t data, String suffix, Level level)
     {
         if (!IsPrintable(level))
             return;
@@ -170,7 +170,7 @@ namespace Printer
         print(suffix);
     }
 
-    void println(String prefix, uint data, String suffix, Level level)
+    void println(String prefix, uint32_t data, String suffix, Level level)
     {
         if (!IsPrintable(level))
             return;
@@ -379,7 +379,7 @@ namespace Printer
         {
             print(" Size=", data.size);
             print(" Data=", data.data[0]);
-            for (size_t size_data = 1; size_data < data.size; size_data++)
+            for (int8_t size_data = 1; size_data < data.size; size_data++)
             {
                 print(",", data.data[size_data]);
             }
@@ -419,7 +419,7 @@ namespace Printer
         println();
     }
 
-    void printArray(String prefix, int array[], size_t size, char separator, String suffix, Level level)
+    void printArray(String prefix, int32_t array[], size_t size, char separator, String suffix, Level level)
     {
         if (!IsPrintable(level))
             return;
@@ -515,7 +515,7 @@ namespace Printer
     }
 */
 /*
-    void teleplot(String varName, PolarPoint polarPoint, int timeStamp, Level level)
+    void teleplot(String varName, PolarPoint polarPoint, int32_t timeStamp, Level level)
     {
         if (!IsPrintable(level))
             return;

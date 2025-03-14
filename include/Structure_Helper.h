@@ -308,7 +308,7 @@ struct PointTracker
     // express the confidence we have in the obstacle position based on how much time we've seen it.
     // It is increased it at every detection up to 4 times.
     // This is used as a trigger to send the obstacle to the robot (only when we are confident enough)
-    int confidence;
+    int32_t confidence;
     // avoid to send the same points twice
     bool hasBeenSent = false;
 };
@@ -335,4 +335,16 @@ void pop_front(std::vector<T>& vec)
     assert(!vec.empty());
     vec.erase(vec.begin());
 };
+
+// converts character array
+// to string and returns it
+String convertToString(char* a, int32_t size)
+{
+    String s = "";
+    for (int32_t i = 0; i < size; i++)
+    {
+        s = s + a[i];
+    }
+    return s;
+}
 #endif

@@ -13,9 +13,9 @@
 
 namespace Preferences_Helper
 {
-    int LoadFromPreference(String pref, int defValue = 0);
+    int32_t LoadFromPreference(String pref, int32_t defValue = 0);
     String LoadFromPreference(String pref, String defValue = "");
-    void SaveToPreference(String pref, int value);
+    void SaveToPreference(String pref, int32_t value);
     void SaveToPreference(String pref, String value);
     void ClearPreferences();
     void HandleCommand(Command cmdTmp);

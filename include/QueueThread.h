@@ -14,7 +14,7 @@ class QueueThread
     public:
     QueueThread(){Serial.println("Create queue : ");}
 
-    QueueThread(int size)
+    QueueThread(int32_t size)
     {
         Serial.println("Creating queue : ");
 
@@ -71,7 +71,7 @@ class QueueThread
         return false;
     }
 
-    int MessagesWaiting()
+    int32_t MessagesWaiting()
     {
         if (isInit)
         {

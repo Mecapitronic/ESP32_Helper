@@ -37,7 +37,7 @@ void Initialisation(BaudRate baud_speed = BaudRate::BAUD_RATE_921600, Enable pri
                   Level printLvl = Level::LEVEL_VERBOSE, Enable debugEnable = Enable::ENABLE_FALSE);
 void Update(void *pvParameters);
 void HandleCommand(Command cmdTmp);
-void BufferReadCommand(char * read, int size);
+void BufferReadCommand(char *read, int32_t size);
 
 bool HasWaitingCommand();
 Command GetCommand();
