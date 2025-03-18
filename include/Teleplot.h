@@ -6,7 +6,7 @@
 
 #ifndef WITH_WIFI
     #define TELEPLOT_DISABLE
-#include <unistd.h>
+//#include <unistd.h>
 #include <string.h>
 //#include <sys/types.h>
 #include <sstream>
@@ -57,16 +57,16 @@ public:
                 std::string roundValue(const double value, const unsigned short precision) const
                 {
                     std::string value_str = std::to_string(value);
-                    int res_length = value_str.length();
+                    int32_t res_length = value_str.length();
                     
-                    int i = 0;
+                    int32_t i = 0;
                     bool stop = false;
 
                     while (i < res_length && !stop)
                     {
                         if (value_str[i] == '.')
                         {
-                            int u = i + precision;
+                            uint32_t u = i + precision;
                             if (u+1 < value_str.length())
                             {
                                 while (value_str[u] == '0') u--;
@@ -212,7 +212,7 @@ class Teleplot {
 public:
     Teleplot(){};
     #ifndef TELEPLOT_DISABLE
-    Teleplot(std::string address, unsigned int port=47269, unsigned int bufferingFrequencyHz = 30)
+    Teleplot(std::string address, uint32_t port=47269, uint32_t bufferingFrequencyHz = 30)
         : address_(address)
         , bufferingFrequencyHz_(bufferingFrequencyHz)
     {
@@ -237,7 +237,7 @@ public:
     #endif
 
     template<typename T>
-    void update(std::string const& key, T const& value, std::string unit = "", unsigned int maxFrequencyHz = 0, std::string flags = TELEPLOT_FLAG_DEFAULT) {
+    void update(std::string const& key, T const& value, std::string unit = "", uint32_t maxFrequencyHz = 0, std::string flags = TELEPLOT_FLAG_DEFAULT) {
         #ifdef TELEPLOT_DISABLE
             return ;
         #else
@@ -248,7 +248,7 @@ public:
     }
 
     template<typename T1, typename T2>
-    void update2D(std::string const& key, T1 const& valueX, T2 const& valueY, unsigned int maxFrequencyHz = 0, std::string flags = TELEPLOT_FLAG_2D) {
+    void update2D(std::string const& key, T1 const& valueX, T2 const& valueY, uint32_t maxFrequencyHz = 0, std::string flags = TELEPLOT_FLAG_2D) {
         #ifdef TELEPLOT_DISABLE
             return ;
         #else
@@ -258,7 +258,7 @@ public:
         #endif
     }
 
-    void update3D(ShapeTeleplot const& mshape, unsigned int maxFrequencyHz = 0, std::string flags = TELEPLOT_FLAG_DEFAULT) {
+    void update3D(ShapeTeleplot const& mshape, uint32_t maxFrequencyHz = 0, std::string flags = TELEPLOT_FLAG_DEFAULT) {
         #ifdef TELEPLOT_DISABLE
             return ;
         #else
@@ -277,7 +277,7 @@ public:
         #endif
     }
 
-    bool shouldUpdateData(std::string const& key, unsigned int frequency)
+    bool shouldUpdateData(std::string const& key, uint32_t frequency)
     {
 #ifdef TELEPLOT_USE_FREQUENCY 
         if(frequency<=0) return true;
@@ -304,7 +304,7 @@ private:
     #endif
 
     template<typename T1, typename T2, typename T3>
-    void updateData(std::string const& key, T1 const& valueX, T2 const& valueY, T3 const& valueZ, std::string const& flags, unsigned int maxFrequencyHz, std::string unit = "", ShapeTeleplot const& mshape = ShapeTeleplot()) {
+    void updateData(std::string const& key, T1 const& valueX, T2 const& valueY, T3 const& valueZ, std::string const& flags, uint32_t maxFrequencyHz, std::string unit = "", ShapeTeleplot const& mshape = ShapeTeleplot()) {
         #ifdef TELEPLOT_DISABLE
             return ;
         #else
@@ -404,10 +404,10 @@ private:
 
     bool initialized_ = false;
     #ifndef TELEPLOT_DISABLE
-    int sockfd_;
+    int32_t sockfd_;
     std::string address_;
     sockaddr_in serv_;
-    unsigned int bufferingFrequencyHz_;
+    uint32_t bufferingFrequencyHz_;
     int64_t lastBufferingFlushTimestampUs_=0;
     #endif
 };
