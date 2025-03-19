@@ -7,8 +7,16 @@
 #ifndef STRUCTURE_HELPER_H
 #define STRUCTURE_HELPER_H
 
+#ifdef _VISUAL_STUDIO
+#include "Arduino.h"
+#include <vector>
+#include <array>
+
+#include <queue>
+#else
 #include <Arduino.h>
 #include <queue>
+#endif
 
 using namespace std;
 // #define private public // troll ...
