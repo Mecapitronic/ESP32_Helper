@@ -331,14 +331,14 @@ struct Command
 template <typename T>
 void pop_front(std::vector<T>& vec)
 {
-
-    assert(!vec.empty());
+    if (vec.empty())
+        return;
     vec.erase(vec.begin());
 };
 
 // converts character array
 // to string and returns it
-String convertToString(char* a, int32_t size)
+/*String convertToString(char* a, int32_t size)
 {
     String s = "";
     for (int32_t i = 0; i < size; i++)
@@ -346,5 +346,7 @@ String convertToString(char* a, int32_t size)
         s = s + a[i];
     }
     return s;
-}
+};
+*/
+
 #endif
