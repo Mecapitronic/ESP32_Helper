@@ -29,6 +29,19 @@ enum class Enable
     ENABLE_NONE
 };
 
+enum class Team 
+{
+    TEAM_BLUE,
+    TEAM_YELLOW
+};
+
+enum class Mode 
+{
+    MODE_MATCH,
+    MODE_TEST
+};
+
+
 enum class BaudRate
 {
     BAUD_RATE_300 = 300,

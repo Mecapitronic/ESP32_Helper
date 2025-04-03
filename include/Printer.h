@@ -24,14 +24,22 @@ namespace Printer
 
     void SetLevel(Level level);
     void EnablePrinter(Enable enable);
+    bool IsEnable();
+    bool IsPrintable(Level level);
 
     void Initialisation();
     void Update(void *pvParameters);
     void HandleCommand(Command cmdTmp);
     void PrintCommandHelp();
 
-    bool IsPrintable(Level level = Level::LEVEL_VERBOSE);
+    void PrintLevel(Level level);
+    Level PrintLevel();
+    void PrintEnable(Enable enable);
+    Enable PrintEnable();
 
+    void PrintTeamColor(Team teamColor);
+    void PrintMode(Mode mode);
+    
     void println(Level level = Level::LEVEL_VERBOSE);
 
     //void print(String prefix, String suffix = "", Level level = Level::LEVEL_VERBOSE);
