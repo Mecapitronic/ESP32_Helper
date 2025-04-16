@@ -14,7 +14,7 @@ void setup(void)
     ESP32_Helper::Initialisation();
 }
 
-int32_t cpt = 0;
+static int32_t cpt = 0;
 void loop(void)
 {
     // This will be send over Wifi, not on Serial

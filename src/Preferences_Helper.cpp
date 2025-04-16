@@ -1,5 +1,8 @@
 #include "Preferences_Helper.h"
 
+using namespace Printer;
+using namespace std;
+
 namespace Preferences_Helper
 {
     Preferences preferences;
@@ -11,8 +14,8 @@ namespace Preferences_Helper
         preferences.begin(PREF_NAMESPACE, true);
         int32_t value = preferences.getInt(pref.c_str(), defValue);
         preferencesList.push_back(pref);
-        Printer::print("Preferences ");
-        Printer::println(pref, value);
+        print("Preferences ");
+        println(pref, value);
         preferences.end();
         return value;
     }
@@ -22,8 +25,8 @@ namespace Preferences_Helper
         preferences.begin(PREF_NAMESPACE, true);
         String value = preferences.getString(pref.c_str(), defValue.c_str());
         preferencesList.push_back(pref);
-        Printer::print("Preferences ");
-        Printer::println(pref, "=", value);
+        print("Preferences ");
+        println(pref, "=", value);
         preferences.end();
         return value;
     }
@@ -59,42 +62,42 @@ namespace Preferences_Helper
             // PreferencesClear:1
             if (cmdTmp.size == 1 && cmdTmp.data[0] == 1)
             {
-                Printer::print("Clear all pref under : ");
-                Printer::println(PREF_NAMESPACE);
+                print("Clear all pref under : ");
+                println(PREF_NAMESPACE);
                 Preferences_Helper::ClearPreferences();
             }
         }
         if(cmdTmp.cmd == "PreferencesList")
         {
-            Printer::println("Preferences List : ");
+            println("Preferences List : ");
             for (size_t i = 0; i < preferencesList.size(); i++)
             {
                 if(preferences.isKey(preferencesList[i].c_str()))
                 {
                     PreferenceType type = preferences.getType(preferencesList[i].c_str());
-                    Printer::println(preferencesList[i]);
-                    Printer::print(" - Type of ");
-                    Printer::print(type);
+                    println(preferencesList[i]);
+                    print(" - Type of ");
+                    print(type);
                 }
                 else
                 {
-                    Printer::println(preferencesList[i] + " - Key not found.");
+                    println(preferencesList[i] + " - Key not found.");
                 }
             }
         }
         else
         {
-            Printer::println("Not a Preferences command !");            
+            println("Not a Preferences command !");            
             PrintCommandHelp();
         }
     }
     
     void PrintCommandHelp()
     {
-        Printer::println("Preferences Command Help :");
-        Printer::println(" > PreferencesClear:[int]");
-        Printer::println("      1 Clear all preferences under the namespace");
-        Printer::println(" > PreferencesList");
-        Printer::println("      List all key preferences");
+        println("Preferences Command Help :");
+        println(" > PreferencesClear:[int]");
+        println("      1 Clear all preferences under the namespace");
+        println(" > PreferencesList");
+        println("      List all key preferences");
     }
 }

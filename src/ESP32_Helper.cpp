@@ -1,6 +1,7 @@
 #include "ESP32_Helper.h"
 
 using namespace Printer;
+using namespace std;
 
 namespace ESP32_Helper
 {

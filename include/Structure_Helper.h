@@ -10,7 +10,6 @@
 #include <Arduino.h>
 #include <queue>
 
-using namespace std;
 // #define private public // troll ...
 
 enum class Level
@@ -327,7 +326,7 @@ struct Command
     std::array<int32_t, length> data;
     String dataStr = ""; //sizeof(String) = 16 BUT 1 is for string length and 1 for \0 so 14 in reality
 
-    Command()
+    Command() noexcept
     {
         data.fill(0);
     }

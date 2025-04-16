@@ -10,7 +10,7 @@ void setup(void)
     ESP32_Helper::Initialisation();
 }
 
-int32_t cpt = 0;
+static int32_t cpt = 0;
 void loop(void)
 {    
     // This will be print on Serial
