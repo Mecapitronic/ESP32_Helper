@@ -27,7 +27,7 @@ namespace Printer
     bool IsEnable();
     bool IsPrintable(Level level);
 
-    void Initialisation();
+    void Initialisation(Enable enable = Enable::ENABLE_TRUE, Level lvl = Level::LEVEL_VERBOSE);
     void Update(void *pvParameters);
     void HandleCommand(Command cmdTmp);
     void PrintCommandHelp();

@@ -27,25 +27,25 @@ namespace Printer
     {
         if (enable != Enable::ENABLE_NONE)
         {
-            Printer::print("Printer : ");
+            print("Printer : ");
 
             if (printEnable == enable && enable == Enable::ENABLE_TRUE)
             {
-                Printer::print("already Enable");
+                print("already Enable");
             }
             if (printEnable == enable && enable == Enable::ENABLE_FALSE)
             {
-                Printer::print("already Disable");
+                print("already Disable");
             }
             if (printEnable != enable && enable == Enable::ENABLE_TRUE)
             {
-                Printer::print(" Enable");
+                print(" Enable");
             }
             if (printEnable != enable && enable == Enable::ENABLE_FALSE)
             {
-                Printer::print(" Disable");
+                print(" Disable");
             }
-            Printer::println();
+            println();
             printEnable = enable;
         }
     }
@@ -54,9 +54,16 @@ namespace Printer
 
     bool IsPrintable(Level level) { return printEnable == Enable::ENABLE_TRUE && printLevel <= level; }
 
-    void Initialisation() {}
+    void Initialisation(Enable enable, Level lvl)
+    {
+        SetLevel(lvl);
+        EnablePrinter(enable);
+    }
     
-    void Update(void *pvParameters) {}
+    void Update(void *pvParameters)
+    {
+        println("Printer Update");
+    }
 
     void HandleCommand(Command cmdTmp)
     {
@@ -64,29 +71,29 @@ namespace Printer
         {
             // PrintLevel:0
             if (cmdTmp.size == 1)
-                Printer::SetLevel((Level)cmdTmp.data[0]);
+                SetLevel((Level)cmdTmp.data[0]);
         }
         else if (cmdTmp.cmd == "PrintEnable")
         {
             // PrintEnable:1
             if (cmdTmp.size == 1)
-                Printer::EnablePrinter((Enable)cmdTmp.data[0]);
+                EnablePrinter((Enable)cmdTmp.data[0]);
         }
         else
         {
-            Printer::println("Not a Print command !");            
+            println("Not a Print command !");            
             PrintCommandHelp();
         }
     }
 
     void PrintCommandHelp()
     {
-        Printer::println("Printer Command Help :");
-        Printer::println(" > PrintLevel:[int]");
-        Printer::println("      0 VERBOSE, 1 INFO, 2 WARN, 3 ERROR");
-        Printer::println(" > PrintEnable:[int]");
-        Printer::println("      0 Disable, 1 Enable Debugger");
-        Printer::println();
+        println("Printer Command Help :");
+        println(" > PrintLevel:[int]");
+        println("      0 VERBOSE, 1 INFO, 2 WARN, 3 ERROR");
+        println(" > PrintEnable:[int]");
+        println("      0 Disable, 1 Enable Debugger");
+        println();
     }
 
     Level PrintLevel() { return printLevel; }

@@ -169,8 +169,8 @@ namespace ESP32_Helper
                         {
                             if(i - indexSeparator <= Command::sizeStr)
                                     cmdTmp.dataStr = strToConvert;
-                            //else
-                                //println("String too long !");
+                            else
+                                println("String too long !", String(" : "), strToConvert, Level::LEVEL_ERROR);
                         }
                         else
                         {
@@ -180,11 +180,12 @@ namespace ESP32_Helper
                                 int32_t conversion = std::stoi(strToConvert.c_str(), &pos);
                                 if (pos == i - indexSeparator)
                                 {
-                                    cmdTmp.data[cmdTmp.size++] = conversion;
+                                    cmdTmp.data[cmdTmp.size] = conversion;
+                                    cmdTmp.size++;
                                 }
                                 else
                                 {
-                                    //println("Conversion didn't consume entire string.");
+                                    println("Conversion didn't consume entire string", String(" : "), strToConvert, Level::LEVEL_ERROR);
                                 }
                             }
                             catch(const std::exception& e)

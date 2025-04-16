@@ -43,11 +43,8 @@ public:
     TaskThread() {}
 
     TaskThread(TaskFunction_t pvTaskCode, const char *const pcName, const uint32_t usStackDepth = 10000,
-               UBaseType_t uxPriority = 5, const BaseType_t xCoreID = 0)
+               UBaseType_t uxPriority = 5, const BaseType_t xCoreID = 0) : _pvTaskCode(pvTaskCode), _pcName(pcName)
     {
-        _pvTaskCode = pvTaskCode;
-        _pcName = pcName;
-
         if (debug)
         {
             SERIAL_DEBUG.print("Creating Task : ");
@@ -61,7 +58,7 @@ public:
         /* priority of the task */
         /* Task handle to keep track of created task */
         /* pin task to core x */
-        xTaskCreatePinnedToCore(this->startTaskImpl, pcName, usStackDepth, this, uxPriority, &_task, xCoreID);
+        xTaskCreatePinnedToCore(TaskThread::startTaskImpl, pcName, usStackDepth, this, uxPriority, &_task, xCoreID);
     }
 
     ~TaskThread()
@@ -70,7 +67,6 @@ public:
         {
             SERIAL_DEBUG.print("Deleting Task : ");
             SERIAL_DEBUG.println(_pcName);
-            //  vTaskDelete(_task);
             SERIAL_DEBUG.println("Deleted task");
         }
     }

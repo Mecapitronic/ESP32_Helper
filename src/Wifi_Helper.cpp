@@ -1,5 +1,9 @@
 #ifdef WITH_WIFI
 #include "Wifi_Helper.h"
+
+using namespace Printer;
+using namespace std;
+
 namespace Wifi_Helper
 {
     WiFiClient wifiClient;

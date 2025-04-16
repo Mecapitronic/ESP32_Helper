@@ -45,7 +45,6 @@ class QueueThread
             SERIAL_DEBUG.println("Deleting queue");
         if (isInit)
         {
-            //vQueueDelete(_queue);
             if (debug)
                 SERIAL_DEBUG.println("Deleted queue");
         }
