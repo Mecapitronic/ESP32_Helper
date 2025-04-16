@@ -82,6 +82,11 @@ namespace Preferences_Helper
                 }
             }
         }
+        else
+        {
+            Printer::println("Not a Preferences command !");            
+            PrintCommandHelp();
+        }
     }
     
     void PrintCommandHelp()
