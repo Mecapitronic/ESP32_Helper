@@ -16,6 +16,7 @@ namespace ESP32_Helper
         Serial.setRxBufferSize(1024);
         Serial.setTxBufferSize(1024);
         Serial.begin(static_cast<unsigned long>(baud_speed));
+        delay(2000);
         Serial.println();
         Serial.println("-- Starting Helper Initialisation --");
         Wifi_Helper::Initialisation();
@@ -74,15 +75,20 @@ namespace ESP32_Helper
                 char tmpChar = SERIAL_DEBUG.read();
                 if (readBuffer.size() < readBuffer.capacity())
                 {
+                    if(tmpChar == '\r')
+                        continue; // Ignore Carriage Return
                     readBuffer.push_back(tmpChar);
                     if (tmpChar == '\n')
                     {
-                        SERIAL_DEBUG.print("Received ");
-                        SERIAL_DEBUG.print(readBuffer.size());
-                        SERIAL_DEBUG.print(" : ");
-                        SERIAL_DEBUG.write(readBuffer.data(), readBuffer.size());
-                        SERIAL_DEBUG.println();
-                        BufferReadCommand(readBuffer.data(), readBuffer.size()); // pass data and size
+                        if(readBuffer.size() > 1)
+                        {
+                            SERIAL_DEBUG.print("Received ");
+                            SERIAL_DEBUG.print(readBuffer.size());
+                            SERIAL_DEBUG.print(" : ");
+                            SERIAL_DEBUG.write(readBuffer.data(), readBuffer.size()-1);
+                            SERIAL_DEBUG.println();
+                            BufferReadCommand(readBuffer.data(), readBuffer.size()); // pass data and size
+                        }
                         readBuffer.clear();
                     }
                 }
@@ -100,68 +106,17 @@ namespace ESP32_Helper
 
     void HandleCommand(Command cmdTmp)
     {
-
-    }
-
-    void BufferReadCommand(char *read, int32_t size)
-    {
-        Command cmdTmp;
-        uint16_t indexSeparator = 0;
-        // Start at 1 to let one letter for command at least
-        for (int32_t i = 1; i < size; i++)
-        {
-            if (cmdTmp.cmd == "" && (read[i] == ':' || read[i] == '\n'))
-            {
-                cmdTmp.cmd = String(&read[0], i);
-                indexSeparator = i + 1;
-            }
-            else if (cmdTmp.cmd != "" && (read[i] == ';' || read[i] == ':' || read[i] == '\n'))
-            {
-                // cmdTmp.data[cmdTmp.size++] = atoi(String(&read[indexSeparator], i-indexSeparator).c_str());
-                // check if it's an integer or a string by trying to convert it
-                String strToConvert = String(&read[indexSeparator], i-indexSeparator);
-                try
-                {
-                    std::size_t pos{};
-                    int32_t conversion = std::stoi(strToConvert.c_str(), &pos);
-
-                    if (pos == i - indexSeparator)
-                    {
-                        cmdTmp.data[cmdTmp.size++] = conversion;
-                    }
-                    else
-                    {
-                        //println("Conversion didn't consume entire string.");
-                        if(i - indexSeparator <= Command::sizeStr)
-                            cmdTmp.dataStr = strToConvert;                        
-                        //else
-                        //   println("String too long !");
-                    }
-                }
-                catch(const std::exception& e)
-                {
-                    //println("Conversion error: not an integer");                    
-                    if(i - indexSeparator <= Command::sizeStr)
-                        cmdTmp.dataStr = strToConvert;
-                    //else
-                    //    println("String too long !");
-                }
-                indexSeparator = i + 1;
-            }
-        }
-        Printer::println("Command Received : ", cmdTmp);
-
         if(cmdTmp.cmd != "")
         {
             if (cmdTmp.cmd.startsWith("Help"))
             {
                 Printer::println("Help Commands : ");
+                Debugger::PrintCommandHelp();
                 Printer::PrintCommandHelp();
                 Preferences_Helper::PrintCommandHelp();
-                Debugger::PrintCommandHelp();
                 Wifi_Helper::PrintCommandHelp();
             }
-            if (cmdTmp.cmd.startsWith("Reboot"))
+            else if (cmdTmp.cmd.startsWith("Reboot"))
             {
                 Printer::println("Rebooting...");
                 ESP.restart();
@@ -172,7 +127,7 @@ namespace ESP32_Helper
             else if (cmdTmp.cmd.startsWith("Print"))
                 Printer::HandleCommand(cmdTmp);
             else if (cmdTmp.cmd.startsWith("Preferences"))
-                Printer::HandleCommand(cmdTmp);
+                Preferences_Helper::HandleCommand(cmdTmp);
             else if (cmdTmp.cmd.startsWith("Wifi"))
                 Wifi_Helper::HandleCommand(cmdTmp);
             else
@@ -181,6 +136,69 @@ namespace ESP32_Helper
                 awaitingCommand.Send(cmdTmp);
             }
         }
+    }
+
+    void BufferReadCommand(char *read, int32_t size)
+    {
+        Command cmdTmp;
+        uint16_t indexSeparator = 0;
+        bool isString = false;
+        // Start at 1 to let one letter for command at least
+        for (int32_t i = 1; i < size; i++)
+        {
+            if(read[i] != ';' && read[i] != ':' && read[i] != '\n')
+            {
+                if(read[i] < 0x30 || read[i] > 0x39)
+                    isString = true;
+            }
+            else
+            {        
+                if (cmdTmp.cmd == "")
+                {
+                    cmdTmp.cmd = String(&read[0], i);
+                    indexSeparator = i + 1;
+                }
+                else
+                {
+                    if(i - indexSeparator > 0)
+                    {
+                        // check if it's a string, if it's an integer : convert it
+                        String strToConvert = String(&read[indexSeparator], i - indexSeparator);
+                        if(isString)
+                        {
+                            if(i - indexSeparator <= Command::sizeStr)
+                                    cmdTmp.dataStr = strToConvert;
+                            //else
+                                //println("String too long !");
+                        }
+                        else
+                        {
+                            std::size_t pos{};
+                            try
+                            {
+                                int32_t conversion = std::stoi(strToConvert.c_str(), &pos);
+                                if (pos == i - indexSeparator)
+                                {
+                                    cmdTmp.data[cmdTmp.size++] = conversion;
+                                }
+                                else
+                                {
+                                    //println("Conversion didn't consume entire string.");
+                                }
+                            }
+                            catch(const std::exception& e)
+                            {
+                                println(e.what(), String(" error : "), strToConvert, Level::LEVEL_ERROR);
+                            }
+                        }
+                        isString = false;
+                    }
+                    indexSeparator = i + 1;
+                }
+            }
+        }
+        Printer::println("Command Received : ", cmdTmp);
+        HandleCommand(cmdTmp);
     }
 
     bool HasWaitingCommand() { return awaitingCommand.MessagesWaiting() > 0; }
