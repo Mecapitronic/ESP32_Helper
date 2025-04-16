@@ -88,7 +88,8 @@ namespace Printer
         Printer::println("      0 Disable, 1 Enable Debugger");
         Printer::println();
     }
-    
+
+    Level PrintLevel() { return printLevel; }
     void PrintLevel(Level level)
     {
         printLevel = level;
@@ -103,43 +104,17 @@ namespace Printer
         }
     }
 
-    Level PrintLevel() { return printLevel; }
-
+    Enable PrintEnable() { return printEnable; }
     void PrintEnable(Enable enable)
     {
-        //if (enable != ENABLE_NONE)
+        printEnable = enable;
+        SERIAL_DEBUG.print("PrintEnable : ");
+        switch (enable)
         {
-            printEnable = enable;
-            SERIAL_DEBUG.print("PrintEnable : ");
-            switch (enable)
-            {
-                ENUM_PRINT(Enable::ENABLE_FALSE);
-                ENUM_PRINT(Enable::ENABLE_TRUE);
-                ENUM_PRINT(Enable::ENABLE_NONE);
-            }
+            ENUM_PRINT(Enable::ENABLE_FALSE);
+            ENUM_PRINT(Enable::ENABLE_TRUE);
+            ENUM_PRINT(Enable::ENABLE_NONE);
         }
-    }
-
-    Enable PrintEnable() { return printEnable; }
-
-    void PrintTeamColor(Team teamColor)
-    {
-            SERIAL_DEBUG.print("PrintTeamColor : ");
-            switch (teamColor)
-            {
-                ENUM_PRINT(Team::TEAM_BLUE);
-                ENUM_PRINT(Team::TEAM_YELLOW);
-            }
-    }
-    
-    void PrintMode(Mode mode)
-    {
-            SERIAL_DEBUG.print("PrintMode : ");
-            switch (mode)
-            {
-                ENUM_PRINT(Mode::MODE_MATCH);
-                ENUM_PRINT(Mode::MODE_TEST);
-            }
     }
     /*
         void print(String prefix, String suffix, Level level)

@@ -32,13 +32,10 @@ namespace Printer
     void HandleCommand(Command cmdTmp);
     void PrintCommandHelp();
 
-    void PrintLevel(Level level);
     Level PrintLevel();
-    void PrintEnable(Enable enable);
+    void PrintLevel(Level level);
     Enable PrintEnable();
-
-    void PrintTeamColor(Team teamColor);
-    void PrintMode(Mode mode);
+    void PrintEnable(Enable enable);
     
     void println(Level level = Level::LEVEL_VERBOSE);
 

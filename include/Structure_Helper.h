@@ -22,6 +22,9 @@ enum class Level
     LEVEL_NONE
 };
 
+// ENABLE_FALSE = 0
+// ENABLE_TRUE = 1
+// ENABLE_NONE = 2
 enum class Enable
 {
     ENABLE_FALSE,
@@ -29,17 +32,6 @@ enum class Enable
     ENABLE_NONE
 };
 
-enum class Team 
-{
-    TEAM_BLUE,
-    TEAM_YELLOW
-};
-
-enum class Mode 
-{
-    MODE_MATCH,
-    MODE_TEST
-};
 
 
 enum class BaudRate
