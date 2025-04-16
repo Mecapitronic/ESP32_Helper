@@ -8,9 +8,6 @@
 #define ESP32_HELPER_H
 
 #include "Structure_Helper.h"
-#include "Preferences_Helper.h"
-#include "QueueThread.h"
-#include "TaskThread.h"
 
 #ifdef WITH_WIFI
     #include "Wifi_Helper.h"
@@ -25,6 +22,9 @@
     #define SERIAL_DEBUG Serial
 #endif
 
+#include "Preferences_Helper.h"
+#include "QueueThread.h"
+#include "TaskThread.h"
 #include "Printer.h"
 #include "Debugger.h"
 

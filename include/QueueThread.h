@@ -3,6 +3,7 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
+#include "ESP32_Helper.h"
 
 template <typename T>
 class QueueThread
@@ -10,34 +11,43 @@ class QueueThread
     private:
     QueueHandle_t _queue;
     bool isInit = false;
+    bool debug = false;
 
     public:
-    QueueThread(){Serial.println("Create queue : ");}
+    QueueThread()
+    {
+        if (debug)
+            SERIAL_DEBUG.println("Create queue : ");
+    }
 
     QueueThread(int32_t size)
     {
-        Serial.println("Creating queue : ");
-
+        if (debug)
+            SERIAL_DEBUG.println("Creating queue : ");
         _queue = xQueueCreate(size, sizeof(T));
         if(_queue == nullptr)
         {
-            Serial.println("Init queue NOK");
+            if (debug)
+                SERIAL_DEBUG.println("Init queue NOK");
             isInit = false;
         }
         else
         {
-            Serial.println("Init queue OK");
+            if (debug)
+                SERIAL_DEBUG.println("Init queue OK");
             isInit = true;
         }
     }
 
     ~QueueThread()
     {
-        Serial.println("Deleting queue");
+        if (debug)
+            SERIAL_DEBUG.println("Deleting queue");
         if (isInit)
         {
             //vQueueDelete(_queue);
-            Serial.println("Deleted queue");
+            if (debug)
+                SERIAL_DEBUG.println("Deleted queue");
         }
     }
 
@@ -55,7 +65,8 @@ class QueueThread
     {
         if (isInit)
         {
-            Serial.println("Sending to queue");
+            if (debug)
+                SERIAL_DEBUG.println("Sending to queue");
             xQueueSend(_queue, &item, 0);
 
         }        
@@ -65,7 +76,8 @@ class QueueThread
     {
         if (isInit)
         {
-            Serial.println("Receive from queue");
+            if (debug)
+                SERIAL_DEBUG.println("Receive from queue");
             return xQueueReceive(_queue, &item, 0);
         }
         return false;
