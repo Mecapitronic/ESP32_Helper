@@ -7,6 +7,8 @@ namespace ESP32_Helper
 {
     namespace // anonymous nested namespace, cannot access outside this file
     {
+        const int8_t readBufferMax = 64;
+        std::vector<char> readBuffer;
         TaskThread taskUpdate;
         QueueThread<Command> awaitingCommand;
     }
@@ -27,6 +29,9 @@ namespace ESP32_Helper
         {
             Serial.println("Error creating the queue : awaitingCommand");
         }
+
+        readBuffer.reserve(readBufferMax);
+        readBuffer.clear();
 
         Serial.println("Creating Incoming Command Update Task");
         /* Task function. */
@@ -65,44 +70,44 @@ namespace ESP32_Helper
 
     void Update(void *pvParameters)
     {
-        const int8_t readBufferMax = 64;
-        vector<char> readBuffer;
-        readBuffer.reserve(readBufferMax);
-
         for (;;)
         {
             while (SERIAL_DEBUG.available() > 0)
             {
-                char tmpChar = SERIAL_DEBUG.read();
-                if (readBuffer.size() < readBuffer.capacity())
-                {
-                    if(tmpChar == '\r')
-                        continue; // Ignore Carriage Return
-                    readBuffer.push_back(tmpChar);
-                    if (tmpChar == '\n')
-                    {
-                        if(readBuffer.size() > 1)
-                        {
-                            SERIAL_DEBUG.print("Received ");
-                            SERIAL_DEBUG.print(readBuffer.size());
-                            SERIAL_DEBUG.print(" : ");
-                            SERIAL_DEBUG.write(readBuffer.data(), readBuffer.size()-1);
-                            SERIAL_DEBUG.println();
-                            BufferReadCommand(readBuffer.data(), readBuffer.size()); // pass data and size
-                        }
-                        readBuffer.clear();
-                    }
-                }
-                else
-                {
-                    SERIAL_DEBUG.print("Read Buffer Overflow : ");
-                    SERIAL_DEBUG.println(readBuffer.size());
-                    readBuffer.clear();
-                }
+                ProcessIncomingChar(SERIAL_DEBUG.read());
             }
             vTaskDelay(1);
         }
         Printer::println("Command Update Task STOPPED !");
+    }
+
+    void ProcessIncomingChar(char c)
+    {
+        if (c == '\r')
+            return; // Ignore Carriage Return
+        if (readBuffer.size() < readBuffer.capacity())
+        {
+            readBuffer.push_back(c);
+            if (c == '\n')
+            {
+                if (readBuffer.size() > 1)
+                {
+                    SERIAL_DEBUG.print("Received ");
+                    SERIAL_DEBUG.print(readBuffer.size());
+                    SERIAL_DEBUG.print(" : ");
+                    SERIAL_DEBUG.write(readBuffer.data(), readBuffer.size() - 1);
+                    SERIAL_DEBUG.println();
+                    ESP32_Helper::BufferReadCommand(readBuffer);
+                }
+                readBuffer.clear();
+            }
+        }
+        else
+        {
+            SERIAL_DEBUG.print("Read Buffer Overflow : ");
+            SERIAL_DEBUG.println(readBuffer.size());
+            readBuffer.clear();
+        }
     }
 
     void HandleCommand(Command cmdTmp)
@@ -139,17 +144,18 @@ namespace ESP32_Helper
         }
     }
 
-    void BufferReadCommand(char *read, int32_t size)
+    // Read and extract Commands
+    void BufferReadCommand(std::vector<char> read)
     {
         Command cmdTmp;
         uint16_t indexSeparator = 0;
         bool isString = false;
         // Start at 1 to let one letter for command at least
-        for (int32_t i = 1; i < size; i++)
+        for (int32_t i = 1; i < read.size(); i++)
         {
             if(read[i] != ';' && read[i] != ':' && read[i] != '\n')
             {
-                if(read[i] < 0x30 || read[i] > 0x39)
+                if(read[i] < 0x30 || read[i] > 0x39 && read[i] != '-' && read[i] != '+')
                     isString = true;
             }
             else
@@ -193,10 +199,10 @@ namespace ESP32_Helper
                                 println(e.what(), String(" error : "), strToConvert, Level::LEVEL_ERROR);
                             }
                         }
-                        isString = false;
                     }
                     indexSeparator = i + 1;
                 }
+                isString = false;
             }
         }
         Printer::println("Command Received : ", cmdTmp);
@@ -217,4 +223,19 @@ namespace ESP32_Helper
         }
         return cmd;
     }
+    
+    // converts character array
+    // to string and returns it
+    String convertToString(char* a, int32_t size)
+    {
+        String s = "";
+        for (int32_t i = 0; i < size; i++)
+        {
+            if(a[i] == '\0')
+                break;
+            s = s + a[i];
+        }
+        return s;
+    }
+
 }

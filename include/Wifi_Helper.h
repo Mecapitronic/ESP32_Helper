@@ -24,6 +24,11 @@ namespace Wifi_Helper
 
     void Initialisation(void);
     void Update(void *pvParameters);
+    void ProcessIncomingChar(char c);
+    void HandleWifiConnection();
+    void HandleClientConnection();
+    void HandleTeleplotConnection();
+
     void HandleCommand(Command cmdTmp);
     void PrintCommandHelp(void);
 

@@ -10,8 +10,9 @@ namespace Wifi_Helper
 
     namespace
     {
+        const int8_t readBufferMax = 64;
+        vector<char> readBuffer;
         Enable wifiEnable = Enable::ENABLE_NONE;
-
         TaskThread taskUpdate;
 
         // TODO : Change the default password and SSID name
@@ -154,6 +155,9 @@ namespace Wifi_Helper
 
         //! Connection with wifiClient to server will be done later in the Update task
 
+        readBuffer.reserve(readBufferMax);
+        readBuffer.clear();
+
         Serial.println("Creating Wifi Update Task");
         /* Task function. */
         /* name of task. */
@@ -206,102 +210,29 @@ namespace Wifi_Helper
 
     void Update(void *pvParameters)
     {
-        const int8_t readBufferMax = 64;
-        vector<char> readBuffer;
-        readBuffer.reserve(readBufferMax);
-
-        unsigned long previousMillisWifi = 0;
-        unsigned long previousMillisServer = 0;
-        unsigned long previousMillisTeleplot = 0;
-        const unsigned long intervalWifi = 5000;
-        const unsigned long intervalServer = 5000;
-        const unsigned long intervalTeleplot = 5000;
-        unsigned long currentMillisWifi = 0;
-        unsigned long currentMillisServer = 0;
-        unsigned long currentMillisTeleplot = 0;
-
         for (;;)
         {
             if(IsEnable())
-            {
-                currentMillisWifi = millis();
-                // if WiFi is down, try reconnecting every intervalWifi milliseconds
-                if ((WiFi.status() != WL_CONNECTED) && (currentMillisWifi - previousMillisWifi >= intervalWifi))
-                {
-                    if (wifi_changed)
-                    {
-                        wifi_changed = false;
-                        Serial.println("Connecting to new WiFi : " + wifi_ssid);
-                        Serial.println("With password : " + wifi_password);
-                        WiFi.disconnect();
-                        WiFi.begin(wifi_ssid, wifi_password);
-                    }
-                    else
-                    {
-                        Serial.println("Reconnecting to WiFi...");
-                        WiFi.reconnect();
-                    }
-                    previousMillisWifi = currentMillisWifi;
-                }
-
+            {                
                 if (WiFi.status() == WL_CONNECTED)
                 {
-                    currentMillisServer = millis();
-                    if (!wifiClient.connected() && (currentMillisServer - previousMillisServer >= intervalServer))
-                    {
-                        wifiClient.stop();
-                        if (wifiClient.connect(wifi_server_ip.c_str(), wifi_server_port))
-                        {
-                            Serial.println("Connected to server !");
-                        }
-                        else
-                        {
-                            Serial.println("Connection to server failed");
-                        }
-                        previousMillisServer = currentMillisServer;
-                    }
-                    
-                    currentMillisTeleplot = millis();
-                    if(!Printer::teleplotUDP.IsInitialized() && (currentMillisTeleplot - previousMillisTeleplot >= intervalTeleplot))
-                    {
-                        Serial.println("Initialising Teleplot");
-                        Printer::teleplotUDP = Teleplot("192.168.137.1",47269);
-                        previousMillisTeleplot = currentMillisTeleplot;
-                    }
-                }
+                    // Try to connect client to server
+                    HandleClientConnection();
 
-                if(WiFi.status() != WL_CONNECTED && Printer::teleplotUDP.IsInitialized())
+                    // Try to initialise UDP teleplot
+                    HandleTeleplotConnection();
+                }
+                else
                 {
-                    // We need to un-init in case of wifi lost
-                    Printer::teleplotUDP.~Teleplot();
+                    // if WiFi is down, try reconnecting
+                    HandleWifiConnection();
                 }
 
                 if (wifiClient.connected())
                 {
                     while (wifiClient.available() > 0)
                     {
-                        char tmpChar = wifiClient.read();
-                        if (readBuffer.size() < readBuffer.capacity())
-                        {
-                            readBuffer.push_back(tmpChar);
-                            if (tmpChar == '\n')
-                            {
-                                wifiClient.print("Received ");
-                                wifiClient.print(readBuffer.size());
-                                wifiClient.print(" : ");
-                                wifiClient.write(readBuffer.data(), readBuffer.size());
-                                wifiClient.println();
-                                // Read and extract Commands
-                                ESP32_Helper::BufferReadCommand(readBuffer.data(), readBuffer.size());
-                                readBuffer.clear();
-                            }
-                        }
-                        else
-                        {
-                            wifiClient.print("Read Buffer Overflow : ");
-                            wifiClient.println(readBuffer.size());
-                            readBuffer.clear();
-                        }
+                        ProcessIncomingChar(wifiClient.read());
                     }
                 }
                 #ifdef WITH_OTA
@@ -311,6 +242,99 @@ namespace Wifi_Helper
             vTaskDelay(1);
         }
         Serial.println("Wifi Update Task STOPPED !");
+    }
+
+    void ProcessIncomingChar(char c)
+    {
+        if (c == '\r')
+            return; // Ignore Carriage Return
+        if (readBuffer.size() < readBuffer.capacity())
+        {
+            readBuffer.push_back(c);
+            if (c == '\n')
+            {
+                if (readBuffer.size() > 1)
+                {
+                    wifiClient.print("Received ");
+                    wifiClient.print(readBuffer.size());
+                    wifiClient.print(" : ");
+                    wifiClient.write(readBuffer.data(), readBuffer.size());
+                    wifiClient.println();
+                    ESP32_Helper::BufferReadCommand(readBuffer);
+                }
+                readBuffer.clear();
+            }
+        }
+        else
+        {
+            wifiClient.print("Read Buffer Overflow : ");
+            wifiClient.println(readBuffer.size());
+            readBuffer.clear();
+        }
+    }
+
+    void HandleWifiConnection()
+    {
+        static Timeout wifiTO;
+        if (!wifiTO.isRunning)
+            wifiTO.Start(5000);
+        
+        if (wifiTO.IsTimeOut())
+        {
+            if (wifi_changed)
+            {
+                wifi_changed = false;
+                Serial.println("Connecting to new WiFi : " + wifi_ssid);
+                Serial.println("With password : " + wifi_password);
+                WiFi.disconnect();
+                WiFi.begin(wifi_ssid, wifi_password);
+            }
+            else
+            {
+                Serial.println("Reconnecting to WiFi...");
+                WiFi.reconnect();
+            }
+        }
+
+        if(Printer::teleplotUDP.IsInitialized())
+        {
+            // We need to un-init in case of wifi lost
+            Serial.println("Deleting Teleplot");
+            Printer::teleplotUDP.~Teleplot();
+        }
+    }
+
+    void HandleClientConnection()
+    {
+        static Timeout clientTo;
+        if (!clientTo.isRunning)
+            clientTo.Start(5000);
+        
+        if (!wifiClient.connected() && clientTo.IsTimeOut())
+        {
+            wifiClient.stop();
+            if (wifiClient.connect(wifi_server_ip.c_str(), wifi_server_port))
+            {
+                Serial.println("Connected to server !");
+            }
+            else
+            {
+                Serial.println("Connection to server failed");
+            }
+        }
+    }
+
+    void HandleTeleplotConnection()
+    {               
+        static Timeout teleplotTO;
+        if (!teleplotTO.isRunning)
+            teleplotTO.Start(5000);
+        
+        if(!Printer::teleplotUDP.IsInitialized() && teleplotTO.IsTimeOut())
+        {
+            Serial.println("Initialising Teleplot");
+            Printer::teleplotUDP = Teleplot("192.168.137.1",47269);
+        }
     }
 
     void HandleCommand(Command cmdTmp)

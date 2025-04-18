@@ -317,6 +317,7 @@ struct PointTracker
     bool hasBeenSent = false;
 };
 
+// Command comming from User to be handle
 struct Command
 {
     static const int8_t length = 6;
@@ -332,6 +333,40 @@ struct Command
     }
 };
 
+// Timeout
+struct Timeout
+{
+    int32_t timeout = 0;
+    int32_t current = 0;
+    int32_t previous = 0;
+    bool isRunning = false;
+
+    void Start(int32_t _timeout)
+    {
+        timeout = _timeout;
+        current = millis();
+        previous = current;
+        isRunning = true;
+    };
+    bool IsTimeOut()
+    {
+        if (isRunning)
+        {
+            current = millis();
+            if (current - previous >= timeout)
+            {
+                previous = current;
+                return true;
+            }
+        }
+        return false;
+    };
+    void Stop()
+    {
+        isRunning = false;
+    };
+};
+
 template <typename T>
 void pop_front(std::vector<T>& vec)
 {
@@ -339,18 +374,5 @@ void pop_front(std::vector<T>& vec)
         return;
     vec.erase(vec.begin());
 };
-
-// converts character array
-// to string and returns it
-/*String convertToString(char* a, int32_t size)
-{
-    String s = "";
-    for (int32_t i = 0; i < size; i++)
-    {
-        s = s + a[i];
-    }
-    return s;
-};
-*/
 
 #endif

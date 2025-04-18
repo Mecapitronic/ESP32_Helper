@@ -36,10 +36,13 @@ namespace ESP32_Helper
 void Initialisation(BaudRate baud_speed = BaudRate::BAUD_RATE_921600, Enable printEnable = Enable::ENABLE_TRUE,
                   Level printLvl = Level::LEVEL_VERBOSE, Enable debugEnable = Enable::ENABLE_FALSE);
 void Update(void *pvParameters);
+void ProcessIncomingChar(char c);
 void HandleCommand(Command cmdTmp);
-void BufferReadCommand(char *read, int32_t size);
+void BufferReadCommand(std::vector<char> read);
 
 bool HasWaitingCommand();
 Command GetCommand();
+String convertToString(char* a, int32_t size);
+
 }
 #endif
