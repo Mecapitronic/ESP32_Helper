@@ -11,6 +11,7 @@
 #include "Preferences_Helper.h"
 #include "QueueThread.h"
 #include "TaskThread.h"
+#include "TimerThread.h"
 
 #ifdef WITH_WIFI
     #include "Wifi_Helper.h"
