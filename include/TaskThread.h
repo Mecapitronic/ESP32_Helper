@@ -17,7 +17,6 @@ class TaskThread
     private:
 #ifdef _VISUAL_STUDIO
      pthread_t pthread;
-     // TaskFunction_t _pvTaskCode;
      void (*_pvTaskCode)(void*);
      const char* _pcName;
 #else
@@ -33,18 +32,24 @@ class TaskThread
          _pvTaskCode(NULL);
      }
 
+#ifdef _VISUAL_STUDIO
+     static void* startThread(void* _this)
+     {
+         pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+         myprintf("Start thread "); myprintf(((TaskThread*)_this)->_pcName); myprintf("\n");
+         ((TaskThread*)_this)->task();
+         myprintf("End thread "); myprintf(((TaskThread*)_this)->_pcName); myprintf("\n");
+         return NULL;
+     }
+#else
      static void startTaskImpl(void* _this)
      {
          Serial.print("Impl Task : ");
          Serial.println(((TaskThread*)_this)->_pcName);
          ((TaskThread*)_this)->task();
      }
+#endif
 
-     static void* startThread(void* _this)
-     {
-         ((TaskThread*)_this)->task();
-         return NULL;
-     }
 
     public:
      TaskThread() {}
