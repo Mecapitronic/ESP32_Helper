@@ -25,6 +25,7 @@
 #include "Preferences_Helper.h"
 #include "QueueThread.h"
 #include "TaskThread.h"
+#include "TimerThread.h"
 #include "Printer.h"
 #include "Debugger.h"
 
