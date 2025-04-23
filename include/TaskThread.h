@@ -71,6 +71,8 @@ public:
         }
     }
 
+    static void DeleteTask(TaskHandle_t task) { vTaskDelete(task); }
+
     // get stack for task 2
     // unsigned int temp2 = uxTaskGetStackHighWaterMark(nullptr);
     // SERIAL_DEBUG.print("task2="); SERIAL_DEBUG.println(temp2);
