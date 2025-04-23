@@ -7,6 +7,7 @@
 typedef portBASE_TYPE BaseType_t;
 typedef unsigned portBASE_TYPE UBaseType_t;
 typedef void (*TaskFunction_t)(void*);
+typedef void* TaskHandle_t;
 #else
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -18,7 +19,6 @@ class TaskThread
 private:
 #ifdef _VISUAL_STUDIO
      pthread_t pthread;
-     // TaskFunction_t _pvTaskCode;
      void (*_pvTaskCode)(void*);
      const char* _pcName;
 #else
@@ -38,21 +38,30 @@ private:
         _pvTaskCode(NULL);
     }
 
-    static void startTaskImpl(void *_this)
-    {
-        if (((TaskThread *)_this)->debug)
-        {
-            SERIAL_DEBUG.print("Impl Task : ");
-            SERIAL_DEBUG.println(((TaskThread *)_this)->_pcName);
-        }
-        ((TaskThread *)_this)->task();
-    }
+#ifdef _VISUAL_STUDIO
+     static void* startThread(void* _this)
+     {
+         pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+         myprintf("Start thread "); myprintf(((TaskThread*)_this)->_pcName); myprintf("\n");
+         ((TaskThread*)_this)->task();
+         myprintf("End thread "); myprintf(((TaskThread*)_this)->_pcName); myprintf("\n");
+         return NULL;
+     }
+#else
+    static void* startThread(void* _this)
+     {
+         ((TaskThread*)_this)->task();
+         return NULL;
+     }
+#endif
+     static void startTaskImpl(void* _this)
+     {
+         SERIAL_DEBUG.print("Impl Task : ");
+         SERIAL_DEBUG.println(((TaskThread*)_this)->_pcName);
+         ((TaskThread*)_this)->task();
+     }
 
-    static void *startThread(void *_this)
-    {
-        ((TaskThread *)_this)->task();
-        return NULL;
-    }
+
 
 public:
     TaskThread() {}
@@ -91,7 +100,14 @@ public:
         }
     }
 
-    static void DeleteTask(TaskHandle_t task) { vTaskDelete(task); }
+    static void DeleteTask(TaskHandle_t task)
+    {
+#ifdef _VISUAL_STUDIO
+
+#else
+        vTaskDelete(task);
+#endif
+    }
 
      // get stack for task 2
      // unsigned int32_t temp2 = uxTaskGetStackHighWaterMark(nullptr);
