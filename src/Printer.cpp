@@ -397,6 +397,28 @@ namespace Printer
         print(suffix);
     }
 
+    void println(String prefix, PoseF data, String suffix, Level level)
+    {
+        if (!IsPrintable(level))
+            return;
+        print(prefix, data, suffix, level);
+        println();
+    }
+
+    void print(String prefix, PoseF data, String suffix, Level level)
+    {
+        if (!IsPrintable(level))
+            return;
+        print(prefix);
+        print(" X: ");
+        print(data.x);
+        print(" Y: ");
+        print(data.y);
+        print(" H: ");
+        print(data.h / 100);
+        print(suffix);
+    }
+
     void println(String prefix, PolarPoint data, String suffix, Level level)
     {
         if (!IsPrintable(level))
@@ -541,15 +563,18 @@ namespace Printer
         println(data);
     }
 */
-/*
+
     void teleplot(String varName, PolarPoint polarPoint, Level level)
     {
         if (!IsPrintable(level))
             return;
         String data = ">" + varName + ":" + (int)polarPoint.x + ":" + (int)polarPoint.y + "|xy";
-        println(data);
+        if (teleplotUDP.IsInitialized())
+            teleplotUDP.update2D(varName.c_str(), polarPoint.x, polarPoint.y);
+        else
+            println(data);
     }
-*/
+
 /*
     void teleplot(String varName, PolarPoint polarPoint, int32_t timeStamp, Level level)
     {

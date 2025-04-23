@@ -78,7 +78,10 @@ namespace Printer
 
     void print(String prefix, PolarPoint data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
     void println(String prefix, PolarPoint data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    
+
+    void print(String prefix, PoseF data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, PoseF data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+
     void print(String prefix, Command data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
     void println(String prefix, Command data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
@@ -100,7 +103,7 @@ namespace Printer
     
     //void teleplot(String varName, Point points[], uint16_t size, Level level = Level::LEVEL_VERBOSE);
 
-    //void teleplot(String varName, PolarPoint polarPoint, Level level = Level::LEVEL_VERBOSE);
+    void teleplot(String varName, PolarPoint polarPoint, Level level = Level::LEVEL_VERBOSE);
     //void teleplot(String varName, PolarPoint polarPoint, int32_t timeStamp, Level level = Level::LEVEL_VERBOSE);
 
     //void teleplot(String varName, PolarPoint polarPoints[], uint16_t size, Level level = Level::LEVEL_VERBOSE);
