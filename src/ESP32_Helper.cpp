@@ -104,7 +104,7 @@ namespace ESP32_Helper
         }
         else
         {
-            SERIAL_DEBUG.print("Read Buffer Overflow : ");
+            SERIAL_DEBUG.print("SERIAL_DEBUG Read Buffer Overflow : ");
             SERIAL_DEBUG.println(readBuffer.size());
             readBuffer.clear();
         }

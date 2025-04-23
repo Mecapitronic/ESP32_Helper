@@ -267,7 +267,7 @@ namespace Wifi_Helper
         }
         else
         {
-            wifiClient.print("Read Buffer Overflow : ");
+            wifiClient.print("wifiClient Read Buffer Overflow : ");
             wifiClient.println(readBuffer.size());
             readBuffer.clear();
         }
