@@ -12,9 +12,11 @@ private:
     TimerCallbackFunction_t _callBack;
     String _pcName;
     TickType_t _period;
+    bool _enable = false;
+    bool _isRunning = false;
 
 public:
-    bool debugPrint = false;
+    bool debugPrint = true;
     TimerThread() = default;
     TimerThread(TimerCallbackFunction_t callBack, const char *const pcName, TickType_t period, bool autoReload = true, void *const id = 0)
         : _callBack(callBack), _pcName(pcName), _period(period)
@@ -25,7 +27,17 @@ public:
             SERIAL_DEBUG.println(_pcName);
         }
 
-        _timer = xTimerCreate(pcName, period, autoReload, (void *)0, callBack);
+        _timer = xTimerCreate(pcName, period, autoReload, (void *)0, _callBack);
+
+        if (_timer == 0x00)
+        {
+            if (debugPrint)
+            {
+                SERIAL_DEBUG.print("Timer ");
+                SERIAL_DEBUG.print(_pcName);
+                SERIAL_DEBUG.println(" not created");
+            }
+        }
     }
 
     ~TimerThread()
@@ -34,7 +46,6 @@ public:
         {
             SERIAL_DEBUG.print("Deleting Timer : ");
             SERIAL_DEBUG.println(_pcName);
-            SERIAL_DEBUG.println("Deleted timer");
         }
     }
 
@@ -45,25 +56,87 @@ public:
 
     void Start()
     {
-        if (debugPrint)
+        if (_timer != NULL)
         {
-            SERIAL_DEBUG.print("Starting Timer : ");
-            SERIAL_DEBUG.println(_pcName);
+            if (debugPrint)
+            {
+                SERIAL_DEBUG.print("Starting Timer : ");
+                SERIAL_DEBUG.println(_pcName);
+            }
+            Enable();
+            xTimerStart(_timer, portMAX_DELAY);
         }
-        while (_timer == 0x00)
+        else
         {
+            if (debugPrint)
+            {
+                SERIAL_DEBUG.print("Timer ");
+                SERIAL_DEBUG.print(_pcName);
+                SERIAL_DEBUG.println(" not started");
+            }
         }
-        xTimerStart(_timer, portMAX_DELAY);
     }
 
     void Stop()
     {
+        if (_timer != NULL)
+        {
+            if (debugPrint)
+            {
+                SERIAL_DEBUG.print("Stopping Timer : ");
+                SERIAL_DEBUG.println(_pcName);
+            }
+            xTimerStop(_timer, portMAX_DELAY);
+        }
+        else
+        {
+            if (debugPrint)
+            {
+                SERIAL_DEBUG.print("Timer ");
+                SERIAL_DEBUG.print(_pcName);
+                SERIAL_DEBUG.println(" not stopped");
+            }
+        }
+    }
+
+    void WaitForDisable()
+    {
         if (debugPrint)
         {
-            SERIAL_DEBUG.print("Stopping Timer : ");
+            SERIAL_DEBUG.print("Timer OFF : ");
             SERIAL_DEBUG.println(_pcName);
         }
-        xTimerStop(_timer, portMAX_DELAY);
+        _enable = false;
+        if (_isRunning)
+        {
+            if (debugPrint)
+            {
+                SERIAL_DEBUG.print("Wait Timer stop running : ");
+                SERIAL_DEBUG.println(_pcName);
+            }
+        }
+        while (_isRunning)
+        {
+            vTaskDelay(1);
+            // Wait for the timer to be disabled by callback at the end of the callback
+        }
+    }
+    void Enable()
+    {
+        if (debugPrint)
+        {
+            SERIAL_DEBUG.print("Timer ON : ");
+            SERIAL_DEBUG.println(_pcName);
+        }
+        _enable = true;
+    }
+    bool IsEnable()
+    {
+        return _enable == true;
+    }
+    bool Running(bool _run)
+    {
+        return _isRunning = _run;
     }
 };
 #endif

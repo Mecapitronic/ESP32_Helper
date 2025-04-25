@@ -40,7 +40,6 @@ public:
         {
             SERIAL_DEBUG.print("Deleting Task : ");
             SERIAL_DEBUG.println(_pcName);
-            SERIAL_DEBUG.println("Deleted task");
         }
     }
 
