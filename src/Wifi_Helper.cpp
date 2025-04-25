@@ -15,6 +15,15 @@ namespace Wifi_Helper
         Enable wifiEnable = Enable::ENABLE_NONE;
         TaskThread taskUpdate;
 
+#ifdef WOKWI
+        String wifi_ssid = "Wokwi-GUEST";
+        String wifi_password = "";
+        String wifi_local_ip = "10.13.37.110";
+        String wifi_server_ip = "10.13.37.2";
+        int32_t wifi_server_port = 20240;
+        String wifi_teleplot_ip = "host.wokwi.internal";
+        int32_t wifi_teleplot_port = 47269;
+#else
         // TODO : Change the default password and SSID name
         // SSID name maximum of 63 characters;
         String wifi_ssid = "Mecapi";
@@ -22,14 +31,12 @@ namespace Wifi_Helper
         String wifi_password = "Mecapi2025";
         String wifi_local_ip = "192.168.137.110";
         String wifi_server_ip = "192.168.137.1";
+        String wifi_teleplot_ip = wifi_server_ip;
         int32_t wifi_server_port = 20240;
+        int32_t wifi_teleplot_port = 47269;
+#endif
         bool wifi_changed = false;
 
-        // const String wifi_ssid = "Wokwi-GUEST";
-        // const String wifi_password = "";
-        // const String wifi_local_ip = "10.13.37.110";
-        // const String wifi_server = "host.wokwi.internal";
-        
     }
 
     void EnableWifi(Enable enable)
@@ -181,13 +188,13 @@ namespace Wifi_Helper
 
             // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
             Printer::println("Start updating " + type);
-            })
+})
             .onEnd([]() {
-            Printer::println("\nEnd");
-            })
+Printer::println("\nEnd");
+})
             .onProgress([](unsigned int32_t progress, unsigned int32_t total) {
-            Printer::println("Progress: ", (progress / (total / 100)), " %");
-            })
+Printer::println("Progress: ", (progress / (total / 100)), " %");
+})
             .onError([](ota_error_t error) {
             Printer::println("Error[", error,"]: ");
             if (error == OTA_AUTH_ERROR) {
@@ -201,7 +208,7 @@ namespace Wifi_Helper
             } else if (error == OTA_END_ERROR) {
                 Printer::println("End Failed");
             }
-            });
+});
         ArduinoOTA.begin();
 #endif
 
@@ -212,8 +219,8 @@ namespace Wifi_Helper
     {
         for (;;)
         {
-            if(IsEnable())
-            {                
+            if (IsEnable())
+            {
                 if (WiFi.status() == WL_CONNECTED)
                 {
                     // Try to connect client to server
@@ -235,9 +242,9 @@ namespace Wifi_Helper
                         ProcessIncomingChar(wifiClient.read());
                     }
                 }
-                #ifdef WITH_OTA
+#ifdef WITH_OTA
                 ArduinoOTA.handle();
-                #endif
+#endif
             }
             vTaskDelay(1);
         }
@@ -278,7 +285,7 @@ namespace Wifi_Helper
         static Timeout wifiTO;
         if (!wifiTO.isRunning)
             wifiTO.Start(5000);
-        
+
         if (wifiTO.IsTimeOut())
         {
             if (wifi_changed)
@@ -296,7 +303,7 @@ namespace Wifi_Helper
             }
         }
 
-        if(Printer::teleplotUDP.IsInitialized())
+        if (Printer::teleplotUDP.IsInitialized())
         {
             // We need to un-init in case of wifi lost
             Serial.println("Deleting Teleplot");
@@ -309,7 +316,7 @@ namespace Wifi_Helper
         static Timeout clientTo;
         if (!clientTo.isRunning)
             clientTo.Start(5000);
-        
+
         if (!wifiClient.connected() && clientTo.IsTimeOut())
         {
             wifiClient.stop();
@@ -325,21 +332,21 @@ namespace Wifi_Helper
     }
 
     void HandleTeleplotConnection()
-    {               
+    {
         static Timeout teleplotTO;
         if (!teleplotTO.isRunning)
             teleplotTO.Start(5000);
-        
-        if(!Printer::teleplotUDP.IsInitialized() && teleplotTO.IsTimeOut())
+
+        if (!Printer::teleplotUDP.IsInitialized() && teleplotTO.IsTimeOut())
         {
             Serial.println("Initialising Teleplot");
-            Printer::teleplotUDP = Teleplot("192.168.137.1",47269);
+            Printer::teleplotUDP = Teleplot(wifi_teleplot_ip.c_str(), wifi_teleplot_port);
         }
     }
 
     void HandleCommand(Command cmdTmp)
     {
-        
+
         if (cmdTmp.cmd == "WifiStatus")
         {
             Printer::println("Wifi status : ", (wl_status_t)WiFi.status());
@@ -364,9 +371,9 @@ namespace Wifi_Helper
         }
         else if (cmdTmp.cmd == "WifiPassword")
         {
-            // Password must be at least 8 char
+            // Password must be at least 8 char or empty
             // WifiPassword:********
-            if(cmdTmp.dataStr != "" && cmdTmp.dataStr.length() >= 8 && cmdTmp.dataStr.length() <= 63)
+            if (cmdTmp.dataStr == "" || (cmdTmp.dataStr.length() >= 8 && cmdTmp.dataStr.length() <= 63))
             {
                 Preferences_Helper::SaveToPreference("wifi_password", cmdTmp.dataStr);
                 wifi_password = cmdTmp.dataStr;
@@ -378,7 +385,7 @@ namespace Wifi_Helper
         }
         else if (cmdTmp.cmd == "WifiSsid")
         {
-            if(cmdTmp.dataStr != "" && cmdTmp.dataStr.length() <= 63)
+            if (cmdTmp.dataStr != "" && cmdTmp.dataStr.length() <= 63)
             {
                 Preferences_Helper::SaveToPreference("wifi_ssid", cmdTmp.dataStr);
                 wifi_ssid = cmdTmp.dataStr;
@@ -411,7 +418,7 @@ namespace Wifi_Helper
             PrintCommandHelp();
         }
     }
-    
+
     void PrintCommandHelp()
     {
         Printer::println("Wifi Command Help :");
