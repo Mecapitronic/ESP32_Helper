@@ -284,7 +284,7 @@ struct PolarPoint
      * @param _distance
      * @param _confidence
      */
-    PolarPoint(float _angle, int16_t _distance, uint16_t _confidence) : angle(_angle), distance(_distance), confidence(_confidence){}
+    PolarPoint(float _angle, int16_t _distance, uint16_t _confidence) : angle(_angle), distance(_distance), confidence(_confidence) {}
     /**
      * @brief Construct a new Polar Point object
      *
@@ -325,7 +325,7 @@ struct Command
     String cmd = "";
     int8_t size = 0;
     std::array<int32_t, length> data;
-    String dataStr = ""; //sizeof(String) = 16 BUT 1 is for string length and 1 for \0 so 14 in reality
+    String dataStr = ""; // sizeof(String) = 16 BUT 1 is for string length and 1 for \0 so 14 in reality
 
     Command() noexcept
     {
@@ -368,7 +368,7 @@ struct Timeout
 };
 
 template <typename T>
-void pop_front(std::vector<T>& vec)
+void pop_front(std::vector<T> &vec)
 {
     if (vec.empty())
         return;

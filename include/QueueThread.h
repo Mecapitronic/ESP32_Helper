@@ -8,51 +8,41 @@
 template <typename T>
 class QueueThread
 {
-    private:
+private:
     QueueHandle_t _queue;
     bool isInit = false;
-    bool debug = false;
 
-    public:
-    QueueThread()
-    {
-        if (debug)
-            SERIAL_DEBUG.println("Create queue : ");
-    }
-
+public:
+    bool debugPrint = false;
+    QueueThread() = default;
     QueueThread(int32_t size)
     {
-        if (debug)
-            SERIAL_DEBUG.println("Creating queue : ");
+        if (debugPrint)
+            SERIAL_DEBUG.println("Creating Queue : ");
         _queue = xQueueCreate(size, sizeof(T));
-        if(_queue == nullptr)
+        if (_queue == nullptr)
         {
-            if (debug)
-                SERIAL_DEBUG.println("Init queue NOK");
+            if (debugPrint)
+                SERIAL_DEBUG.println("Init Queue NOK");
             isInit = false;
         }
         else
         {
-            if (debug)
-                SERIAL_DEBUG.println("Init queue OK");
+            if (debugPrint)
+                SERIAL_DEBUG.println("Init Queue OK");
             isInit = true;
         }
     }
 
     ~QueueThread()
     {
-        if (debug)
-            SERIAL_DEBUG.println("Deleting queue");
+        if (debugPrint)
+            SERIAL_DEBUG.println("Deleting Queue");
         if (isInit)
         {
-            if (debug)
-                SERIAL_DEBUG.println("Deleted queue");
+            if (debugPrint)
+                SERIAL_DEBUG.println("Deleted Queue");
         }
-    }
-
-    void Delete()
-    {
-        this->~QueueThread();
     }
 
     bool IsInit()
@@ -60,23 +50,22 @@ class QueueThread
         return isInit;
     }
 
-    void Send(const T& item)
+    void Send(const T &item)
     {
         if (isInit)
         {
-            if (debug)
-                SERIAL_DEBUG.println("Sending to queue");
+            if (debugPrint)
+                SERIAL_DEBUG.println("Sending to Queue");
             xQueueSend(_queue, &item, 0);
-
-        }        
+        }
     }
 
-    bool Receive(T& item)
+    bool Receive(T &item)
     {
         if (isInit)
         {
-            if (debug)
-                SERIAL_DEBUG.println("Receive from queue");
+            if (debugPrint)
+                SERIAL_DEBUG.println("Receive from Queue");
             return xQueueReceive(_queue, &item, 0);
         }
         return false;
@@ -86,7 +75,13 @@ class QueueThread
     {
         if (isInit)
         {
-            return uxQueueMessagesWaiting(_queue);
+            int32_t msgWait = uxQueueMessagesWaiting(_queue);
+            if (debugPrint)
+            {
+                SERIAL_DEBUG.print("Waiting in Queue : ");
+                SERIAL_DEBUG.println(msgWait);
+            }
+            return msgWait;
         }
         return 0;
     }

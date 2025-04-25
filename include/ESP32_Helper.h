@@ -10,16 +10,15 @@
 #include "Structure_Helper.h"
 
 #ifdef WITH_WIFI
-    #include "Wifi_Helper.h"
-    //extern WiFiClient wifiClient;
-    #define WIFI_DEBUG Wifi_Helper::wifiClient
+#include "Wifi_Helper.h"
+#define WIFI_DEBUG Wifi_Helper::wifiClient
 #else
-    #include "Wifi_No_Helper.h"
-    #define WIFI_DEBUG Serial
+#include "Wifi_No_Helper.h"
+#define WIFI_DEBUG Serial
 #endif
 
 #ifndef SERIAL_DEBUG
-    #define SERIAL_DEBUG Serial
+#define SERIAL_DEBUG Serial
 #endif
 
 #include "Preferences_Helper.h"
@@ -31,19 +30,19 @@
 
 namespace ESP32_Helper
 {
-/**
- * Initialize serial/wifi for PC communication
- */
-void Initialisation(BaudRate baud_speed = BaudRate::BAUD_RATE_921600, Enable printEnable = Enable::ENABLE_TRUE,
-                  Level printLvl = Level::LEVEL_VERBOSE, Enable debugEnable = Enable::ENABLE_FALSE);
-void Update(void *pvParameters);
-void ProcessIncomingChar(char c);
-void HandleCommand(Command cmdTmp);
-void BufferReadCommand(std::vector<char> read);
+    /**
+     * Initialize serial/wifi for PC communication
+     */
+    void Initialisation(BaudRate baud_speed = BaudRate::BAUD_RATE_921600, Enable printEnable = Enable::ENABLE_TRUE,
+                        Level printLvl = Level::LEVEL_VERBOSE, Enable debugEnable = Enable::ENABLE_FALSE);
+    void Update(void *pvParameters);
+    void ProcessIncomingChar(char c);
+    void HandleCommand(Command cmdTmp);
+    void BufferReadCommand(std::vector<char> read);
 
-bool HasWaitingCommand();
-Command GetCommand();
-String convertToString(char* a, int32_t size);
+    bool HasWaitingCommand();
+    Command GetCommand();
+    String convertToString(char *a, int32_t size);
 
 }
 #endif

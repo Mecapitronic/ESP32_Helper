@@ -1,14 +1,9 @@
 #ifndef TIMER_THREAD_H
 #define TIMER_THREAD_H
 
-#ifdef _VISUAL_STUDIO
-#include <pthread.h>
-typedef void *TimerHandle_t;
-typedef void (*TimerCallbackFunction_t)(void*);
-#else
 #include "freertos/FreeRTOS.h"
 #include "freertos/timers.h"
-#endif
+#include "ESP32_Helper.h"
 
 class TimerThread
 {
@@ -19,26 +14,30 @@ private:
     TickType_t _period;
 
 public:
-    TimerThread() {}
-    TimerThread(TimerCallbackFunction_t callBack, const char* const pcName, TickType_t period, bool autoReload = true, void * const id = 0)
+    bool debugPrint = false;
+    TimerThread() = default;
+    TimerThread(TimerCallbackFunction_t callBack, const char *const pcName, TickType_t period, bool autoReload = true, void *const id = 0)
+        : _callBack(callBack), _pcName(pcName), _period(period)
     {
-        _callBack = callBack;
-        _pcName = pcName;
-        _period = period;
+        if (debugPrint)
+        {
+            SERIAL_DEBUG.print("Creating Timer : ");
+            SERIAL_DEBUG.println(_pcName);
+        }
 
-        SERIAL_DEBUG.print("Creating Timer : ");
-        SERIAL_DEBUG.println(_pcName);
         _timer = xTimerCreate(pcName, period, autoReload, (void *)0, callBack);
     }
-    
+
     ~TimerThread()
     {
-        SERIAL_DEBUG.print("Deleting Timer : ");
-        SERIAL_DEBUG.println(_pcName);
-        //xTimerDelete(_timer);
-        SERIAL_DEBUG.println("Deleted timer");
+        if (debugPrint)
+        {
+            SERIAL_DEBUG.print("Deleting Timer : ");
+            SERIAL_DEBUG.println(_pcName);
+            SERIAL_DEBUG.println("Deleted timer");
+        }
     }
-    
+
     TickType_t Period()
     {
         return _period;
@@ -46,16 +45,24 @@ public:
 
     void Start()
     {
-        while(_timer==0x00){}
-        SERIAL_DEBUG.print("Starting Timer : ");
-        SERIAL_DEBUG.println(_pcName);
+        if (debugPrint)
+        {
+            SERIAL_DEBUG.print("Starting Timer : ");
+            SERIAL_DEBUG.println(_pcName);
+        }
+        while (_timer == 0x00)
+        {
+        }
         xTimerStart(_timer, portMAX_DELAY);
     }
 
     void Stop()
     {
-        SERIAL_DEBUG.print("Stopping Timer : ");
-        SERIAL_DEBUG.println(_pcName);
+        if (debugPrint)
+        {
+            SERIAL_DEBUG.print("Stopping Timer : ");
+            SERIAL_DEBUG.println(_pcName);
+        }
         xTimerStop(_timer, portMAX_DELAY);
     }
 };
