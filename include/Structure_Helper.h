@@ -31,7 +31,35 @@ enum class Enable
     ENABLE_NONE
 };
 
+// ENABLE_FALSE = 0
+// ENABLE_TRUE = 1
+// ENABLE_NONE = 2
+class EnableT
+{
 
+public:
+    enum Value : uint8_t
+    {
+        ENABLE_FALSE,
+        ENABLE_TRUE,
+        ENABLE_NONE
+    };
+    EnableT() = default;
+    constexpr EnableT(Value enable) : value(enable) {}
+    // Allow switch and comparisons.
+    constexpr operator Value() const { return value; }
+    // Allow usage: if(enable)
+    explicit operator bool() const { return value == ENABLE_TRUE; }
+    // constexpr bool operator==(EnableT a) const { return value == a.value; }
+    // constexpr bool operator!=(EnableT a) const { return value != a.value; }
+
+    // constexpr bool IsTrue() const { return value == ENABLE_TRUE; }
+    // constexpr bool IsFalse() const { return value == ENABLE_FALSE; }
+    // constexpr bool IsNone() const { return value == ENABLE_NONE; }
+
+private:
+    Value value = ENABLE_NONE;
+};
 
 enum class BaudRate
 {
