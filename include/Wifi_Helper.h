@@ -32,6 +32,10 @@ namespace Wifi_Helper
     void HandleCommand(Command cmdTmp);
     void PrintCommandHelp(void);
 
+    void SetLocalIP(String ip);
+    void SetServerIP(String ip);
+
+
     void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info);
     void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info);
 }

@@ -35,5 +35,15 @@ namespace Wifi_Helper
     {
         Printer::println("NO WIFI !");
     }
+    
+    void SetLocalIP(String ip)
+    {
+        Printer::println("NO WIFI !");
+    }
+    
+    void SetServerIP(String ip)
+    {
+        Printer::println("NO WIFI !");
+    }
 }
 #endif

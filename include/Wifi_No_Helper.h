@@ -19,6 +19,9 @@ namespace Wifi_Helper
     void Update(void *pvParameters);
     void HandleCommand(Command cmdTmp);
     void PrintCommandHelp(void);
+    
+    void SetLocalIP(String ip);
+    void SetServerIP(String ip);
 }
 #endif
 #endif

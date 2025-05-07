@@ -398,12 +398,14 @@ Printer::println("Progress: ", (progress / (total / 100)), " %");
         else if (cmdTmp.cmd == "WifiLocalIP" && cmdTmp.size == 4)
         {
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
+            SetLocalIP(ip);
             Preferences_Helper::SaveToPreference("wifi_local_ip", ip);
             Printer::println("Wifi local IP Changed !");
         }
         else if (cmdTmp.cmd == "WifiServerIP" && cmdTmp.size == 4)
         {
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
+            SetServerIP(ip);
             Preferences_Helper::SaveToPreference("wifi_server_ip", ip);
             Printer::println("Wifi server IP Changed !");
         }
@@ -437,6 +439,32 @@ Printer::println("Progress: ", (progress / (total / 100)), " %");
         Printer::println(" > WifiServerPort:[int]");
         Printer::println("      Set the server Port for the ESP to connect");
         Printer::println();
+    }
+
+    void SetLocalIP(String ip)
+    {
+        IPAddress local_IP;
+        local_IP.fromString(ip);
+        wifi_local_ip = ip;
+        // Configures static IP address
+        if (!WiFi.config(local_IP, WiFi.gatewayIP(), WiFi.subnetMask()))
+        {
+            Serial.println("STA Failed to configure");
+        }        
+        wifi_changed = true;
+    }
+
+    void SetServerIP(String ip)
+    {
+        IPAddress server_IP;
+        server_IP.fromString(ip);
+        wifi_server_ip = ip;
+        // Configures static IP address
+        if (!WiFi.config(WiFi.localIP(), server_IP, WiFi.subnetMask()))
+        {
+            Serial.println("STA Failed to configure");
+        }
+        wifi_changed = true;
     }
 
     void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
