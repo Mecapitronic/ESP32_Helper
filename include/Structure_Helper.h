@@ -331,6 +331,11 @@ struct Command
     {
         data.fill(0);
     }
+    Command(String s)
+    {
+        cmd = s;
+        data.fill(0);
+    }
 };
 
 // Timeout
