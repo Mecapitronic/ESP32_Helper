@@ -278,6 +278,70 @@ namespace Printer
         println();
     }
 
+    void print(unsigned long data, Level level)
+    {
+        if (!IsPrintable(level))
+            return;
+        print(String(data));
+    }
+
+    void println(unsigned long data, Level level)
+    {
+        if (!IsPrintable(level))
+            return;
+        print(data);
+        println();
+    }
+
+    void print(String prefix, unsigned long data, String suffix, Level level)
+    {
+        if (!IsPrintable(level))
+            return;
+        print(prefix);
+        print(data);
+        print(suffix);
+    }
+
+    void println(String prefix, unsigned long data, String suffix, Level level)
+    {
+        if (!IsPrintable(level))
+            return;
+        print(prefix, data, suffix, level);
+        println();
+    }
+
+    void print(long data, Level level)
+    {
+        if (!IsPrintable(level))
+            return;
+        print(String(data));
+    }
+
+    void println(long data, Level level)
+    {
+        if (!IsPrintable(level))
+            return;
+        print(data);
+        println();
+    }
+
+    void print(String prefix, long data, String suffix, Level level)
+    {
+        if (!IsPrintable(level))
+            return;
+        print(prefix);
+        print(data);
+        print(suffix);
+    }
+
+    void println(String prefix, long data, String suffix, Level level)
+    {
+        if (!IsPrintable(level))
+            return;
+        print(prefix, data, suffix, level);
+        println();
+    }
+
     void print(String data, Level level)
     {
         if (!IsPrintable(level))

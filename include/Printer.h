@@ -62,6 +62,16 @@ namespace Printer
     void print(String prefix, float data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
     void println(String prefix, float data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
 
+    void print(long data, Level level = Level::LEVEL_VERBOSE);
+    void println(long data, Level level = Level::LEVEL_VERBOSE);
+    void print(String prefix, long data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, long data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+
+    void print(unsigned long data, Level level = Level::LEVEL_VERBOSE);
+    void println(unsigned long data, Level level = Level::LEVEL_VERBOSE);
+    void print(String prefix, unsigned long data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+    void println(String prefix, unsigned long data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
+
     void print(String data, Level level = Level::LEVEL_VERBOSE);
     void println(String data, Level level = Level::LEVEL_VERBOSE);
     void print(String prefix, String data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
