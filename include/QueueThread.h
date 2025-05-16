@@ -1,9 +1,14 @@
 #ifndef QUEUE_THREAD_H
 #define QUEUE_THREAD_H
 
+#ifdef _VISUAL_STUDIO
+#include <pthread.h>
+#define QueueHandle_t vector<T>
+#else
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include "ESP32_Helper.h"
+#endif
 
 template <typename T>
 class QueueThread
@@ -19,6 +24,11 @@ public:
     {
         if (debugPrint)
             SERIAL_DEBUG.println("Creating Queue : ");
+#ifdef _VISUAL_STUDIO
+        _queue.reserve(size);
+        SERIAL_DEBUG.println("Init queue OK");
+        isInit = true;
+#else
         _queue = xQueueCreate(size, sizeof(T));
         if (_queue == nullptr)
         {
@@ -32,6 +42,7 @@ public:
                 SERIAL_DEBUG.println("Init Queue OK");
             isInit = true;
         }
+#endif
     }
 
     ~QueueThread()
@@ -56,7 +67,11 @@ public:
         {
             if (debugPrint)
                 SERIAL_DEBUG.println("Sending to Queue");
+#ifdef _VISUAL_STUDIO
+            _queue.push_back(item);
+#else
             xQueueSend(_queue, &item, 0);
+#endif
         }
     }
 
@@ -66,7 +81,13 @@ public:
         {
             if (debugPrint)
                 SERIAL_DEBUG.println("Receive from Queue");
+#ifdef _VISUAL_STUDIO
+            item = _queue.at(0);
+            pop_front(_queue);
+            return true;
+#else
             return xQueueReceive(_queue, &item, 0);
+#endif
         }
         return false;
     }
@@ -75,7 +96,11 @@ public:
     {
         if (isInit)
         {
+#ifdef _VISUAL_STUDIO
+            int32_t msgWait = _queue.size();
+#else
             int32_t msgWait = uxQueueMessagesWaiting(_queue);
+#endif
             if (debugPrint)
             {
                 SERIAL_DEBUG.print("Waiting in Queue : ");
