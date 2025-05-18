@@ -178,7 +178,8 @@ namespace Wifi_Helper
 #ifdef WITH_OTA
         Printer::println("Initialisation of OTA");
         ArduinoOTA
-            .onStart([]() {
+            .onStart([]()
+                     {
             String type;
             if (ArduinoOTA.getCommand() == U_FLASH) {
                 type = "sketch";
@@ -187,16 +188,13 @@ namespace Wifi_Helper
             }
 
             // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-            Printer::println("Start updating " + type);
-})
-            .onEnd([]() {
-Printer::println("\nEnd");
-})
-            .onProgress([](unsigned int32_t progress, unsigned int32_t total) {
-Printer::println("Progress: ", (progress / (total / 100)), " %");
-})
-            .onError([](ota_error_t error) {
-            Printer::println("Error[", error,"]: ");
+            Printer::println("Start updating " + type); })
+            .onEnd([]()
+                   { Printer::println("\nEnd"); })
+            .onProgress([](unsigned int progress, unsigned int total)
+                        { Printer::println("Progress: ", (progress / (total / 100)), " %"); })
+            .onError([](ota_error_t error)
+                     { Printer::println("Error[", error,"]: ");
             if (error == OTA_AUTH_ERROR) {
                 Printer::println("Auth Failed");
             } else if (error == OTA_BEGIN_ERROR) {
@@ -207,8 +205,7 @@ Printer::println("Progress: ", (progress / (total / 100)), " %");
                 Printer::println("Receive Failed");
             } else if (error == OTA_END_ERROR) {
                 Printer::println("End Failed");
-            }
-});
+            } });
         ArduinoOTA.begin();
 #endif
 
@@ -450,7 +447,7 @@ Printer::println("Progress: ", (progress / (total / 100)), " %");
         if (!WiFi.config(local_IP, WiFi.gatewayIP(), WiFi.subnetMask()))
         {
             Serial.println("STA Failed to configure");
-        }        
+        }
         wifi_changed = true;
     }
 
