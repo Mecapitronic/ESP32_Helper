@@ -155,7 +155,7 @@ namespace ESP32_Helper
         {
             if(read[i] != ';' && read[i] != ':' && read[i] != '\n')
             {
-                if(read[i] < 0x30 || read[i] > 0x39 && read[i] != '-' && read[i] != '+')
+                if ((read[i] < 0x30 || read[i] > 0x39) && read[i] != '-' && read[i] != '+')
                     isString = true;
             }
             else
