@@ -13,9 +13,9 @@
 #define PRINT_VAR_NAME(p) print(#p)
 #define printVar(p) print(#p); println(" : ",p)
 
-#define ENUM_PRINT(p)             \
-    case (p):                     \
-        SERIAL_DEBUG.println(#p); \
+#define ENUM_PRINT(p) \
+    case (p):         \
+        println(#p);  \
         break;
 
 namespace Printer

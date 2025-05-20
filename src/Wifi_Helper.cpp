@@ -75,27 +75,27 @@ namespace Wifi_Helper
     void Initialisation()
     {
         wifiEnable = Enable::ENABLE_TRUE;
-        Serial.println("-- Starting Wifi initialisation --");
+        println("-- Starting Wifi initialisation --");
 
         // delete old config only if wifi is connected, if not : does nothing
         WiFi.disconnect(true);
 
         WiFi.mode(WIFI_STA);
 
-        Serial.print("AP MAC : ");
-        Serial.println(WiFi.softAPmacAddress());
-        Serial.print("Wifi MAC : ");
-        Serial.println(WiFi.macAddress());
+        print("AP MAC : ");
+        println(WiFi.softAPmacAddress());
+        print("Wifi MAC : ");
+        println(WiFi.macAddress());
 
         // Get the Local Static IP saved
         String saved_wifi_local_ip = Preferences_Helper::LoadFromPreference("wifi_local_ip", wifi_local_ip);
         if (saved_wifi_local_ip != wifi_local_ip)
         {
             wifi_local_ip = saved_wifi_local_ip;
-            Serial.println("Wifi local ip saved : " + wifi_local_ip);
+            println("Wifi local ip saved : " + wifi_local_ip);
         }
         else
-            Serial.println("No wifi local ip saved, using default : " + wifi_local_ip);
+            println("No wifi local ip saved, using default : " + wifi_local_ip);
 
         // Set the Local Static IP address
         IPAddress local_IP;
@@ -106,10 +106,10 @@ namespace Wifi_Helper
         if (saved_wifi_server_ip != wifi_server_ip)
         {
             wifi_server_ip = saved_wifi_server_ip;
-            Serial.println("Wifi server ip saved : " + wifi_server_ip);
+            println("Wifi server ip saved : " + wifi_server_ip);
         }
         else
-            Serial.println("No wifi server ip saved, using default : " + wifi_server_ip);
+            println("No wifi server ip saved, using default : " + wifi_server_ip);
 
         // Set the Server Static IP address
         IPAddress server_IP;
@@ -120,10 +120,10 @@ namespace Wifi_Helper
         if (saved_wifi_server_port != wifi_server_port)
         {
             wifi_server_port = saved_wifi_server_port;
-            Serial.println("Wifi server port saved : " + String(wifi_server_port));
+            println("Wifi server port saved : " + String(wifi_server_port));
         }
         else
-            Serial.println("No wifi server port saved, using default : " + String(wifi_server_port));
+            println("No wifi server port saved, using default : " + String(wifi_server_port));
 
         IPAddress subnet(255, 255, 255, 0);
         // IPAddress primaryDNS(8, 8, 8, 8);   //optional
@@ -132,26 +132,26 @@ namespace Wifi_Helper
         // Configures static IP address
         if (!WiFi.config(local_IP, server_IP, subnet)) //, primaryDNS, secondaryDNS))
         {
-            Serial.println("STA Failed to configure");
+            println("STA Failed to configure");
         }
 
         String saved_wifi_password = Preferences_Helper::LoadFromPreference("wifi_password", wifi_password);
         if (saved_wifi_password != wifi_password)
         {
             wifi_password = saved_wifi_password;
-            Serial.println("Wifi server ip saved : " + wifi_password);
+            println("Wifi server ip saved : " + wifi_password);
         }
         else
-            Serial.println("No wifi password saved, using default : " + wifi_password);
+            println("No wifi password saved, using default : " + wifi_password);
 
         String saved_wifi_ssid = Preferences_Helper::LoadFromPreference("wifi_ssid", wifi_ssid);
         if (saved_wifi_ssid != wifi_ssid)
         {
             wifi_ssid = saved_wifi_ssid;
-            Serial.println("Wifi ssid saved : " + wifi_ssid);
+            println("Wifi ssid saved : " + wifi_ssid);
         }
         else
-            Serial.println("No wifi ssid saved, using default : " + wifi_ssid);
+            println("No wifi ssid saved, using default : " + wifi_ssid);
 
         // Events callback (to reconnect)
         WiFi.onEvent(WiFiStationConnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
@@ -165,7 +165,7 @@ namespace Wifi_Helper
         readBuffer.reserve(readBufferMax);
         readBuffer.clear();
 
-        Serial.println("Creating Wifi Update Task");
+        println("Creating Wifi Update Task");
         /* Task function. */
         /* name of task. */
         /* Stack size of task */
@@ -209,7 +209,7 @@ namespace Wifi_Helper
         ArduinoOTA.begin();
 #endif
 
-        Serial.println("-- End of Wifi initialisation --");
+        println("-- End of Wifi initialisation --");
     }
 
     void Update(void *pvParameters)
@@ -245,7 +245,7 @@ namespace Wifi_Helper
             }
             vTaskDelay(1);
         }
-        Serial.println("Wifi Update Task STOPPED !");
+        println("Wifi Update Task STOPPED !");
     }
 
     void ProcessIncomingChar(char c)
@@ -288,14 +288,14 @@ namespace Wifi_Helper
             if (wifi_changed)
             {
                 wifi_changed = false;
-                Serial.println("Connecting to new WiFi : " + wifi_ssid);
-                Serial.println("With password : " + wifi_password);
+                println("Connecting to new WiFi : " + wifi_ssid);
+                println("With password : " + wifi_password);
                 WiFi.disconnect();
                 WiFi.begin(wifi_ssid, wifi_password);
             }
             else
             {
-                Serial.println("Reconnecting to WiFi...");
+                println("Reconnecting to WiFi...");
                 WiFi.reconnect();
             }
         }
@@ -303,7 +303,7 @@ namespace Wifi_Helper
         if (Printer::teleplotUDP.IsInitialized())
         {
             // We need to un-init in case of wifi lost
-            Serial.println("Deleting Teleplot");
+            println("Deleting Teleplot");
             Printer::teleplotUDP.~Teleplot();
         }
     }
@@ -319,11 +319,11 @@ namespace Wifi_Helper
             wifiClient.stop();
             if (wifiClient.connect(wifi_server_ip.c_str(), wifi_server_port))
             {
-                Serial.println("Connected to server !");
+                println("Connected to server !");
             }
             else
             {
-                Serial.println("Connection to server failed");
+                println("Connection to server failed");
             }
         }
     }
@@ -336,7 +336,7 @@ namespace Wifi_Helper
 
         if (!Printer::teleplotUDP.IsInitialized() && teleplotTO.IsTimeOut())
         {
-            Serial.println("Initialising Teleplot");
+            println("Initialising Teleplot");
             Printer::teleplotUDP = Teleplot(wifi_teleplot_ip.c_str(), wifi_teleplot_port);
         }
     }
@@ -446,7 +446,7 @@ namespace Wifi_Helper
         // Configures static IP address
         if (!WiFi.config(local_IP, WiFi.gatewayIP(), WiFi.subnetMask()))
         {
-            Serial.println("STA Failed to configure");
+            println("STA Failed to configure");
         }
         wifi_changed = true;
     }
@@ -459,20 +459,20 @@ namespace Wifi_Helper
         // Configures static IP address
         if (!WiFi.config(WiFi.localIP(), server_IP, WiFi.subnetMask()))
         {
-            Serial.println("STA Failed to configure");
+            println("STA Failed to configure");
         }
         wifi_changed = true;
     }
 
     void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
     {
-        Serial.println("Connected to SSID " + WiFi.SSID() + " with IP " + WiFi.localIP().toString() + " successfully!");
+        println("Connected to SSID " + WiFi.SSID() + " with IP " + WiFi.localIP().toString() + " successfully!");
     }
 
     void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
     {
-        Serial.print("WiFi lost connection : ");
-        Serial.println((wifi_err_reason_t)info.wifi_sta_disconnected.reason);
+        print("WiFi lost connection : ");
+        println((wifi_err_reason_t)info.wifi_sta_disconnected.reason);
     }
 }
 #endif

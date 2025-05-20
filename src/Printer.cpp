@@ -6,7 +6,7 @@ namespace Printer
     namespace
     {
         Level printLevel = Level::LEVEL_VERBOSE;
-        Enable printEnable = Enable::ENABLE_NONE;
+        Enable printEnable = Enable::ENABLE_TRUE;
     }
 
     void SetLevel(Level level)
@@ -100,7 +100,7 @@ namespace Printer
     void PrintLevel(Level level)
     {
         printLevel = level;
-        SERIAL_DEBUG.print("PrintLevel : ");
+        print("PrintLevel : ");
         switch (level)
         {
             ENUM_PRINT(Level::LEVEL_VERBOSE);
@@ -115,7 +115,7 @@ namespace Printer
     void PrintEnable(Enable enable)
     {
         printEnable = enable;
-        SERIAL_DEBUG.print("PrintEnable : ");
+        print("PrintEnable : ");
         switch (enable)
         {
             ENUM_PRINT(Enable::ENABLE_FALSE);
@@ -148,7 +148,7 @@ namespace Printer
         if(Wifi_Helper::IsEnable())
             WIFI_DEBUG.println();
         //else
-            SERIAL_DEBUG.println();
+        SERIAL_DEBUG.println();
     }
 
     void print(int32_t data, Level level)
@@ -349,7 +349,7 @@ namespace Printer
         if(Wifi_Helper::IsEnable())
             WIFI_DEBUG.print(data);
         //else
-            SERIAL_DEBUG.print(data);
+        SERIAL_DEBUG.print(data);
     }
 
     void println(String data, Level level)

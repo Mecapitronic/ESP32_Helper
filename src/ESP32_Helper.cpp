@@ -15,25 +15,31 @@ namespace ESP32_Helper
 
     void Initialisation(BaudRate baud_speed, Enable printEnable, Level printLvl, Enable debugEnable)
     {
-        Serial.end();
-        Serial.setRxBufferSize(1024);
-        Serial.setTxBufferSize(1024);
-        Serial.begin(static_cast<unsigned long>(baud_speed));
+        SERIAL_DEBUG.end();
+        SERIAL_DEBUG.setRxBufferSize(1024);
+        SERIAL_DEBUG.setTxBufferSize(1024);
+        SERIAL_DEBUG.begin(static_cast<unsigned long>(baud_speed));
         delay(2000);
-        Serial.println();
-        Serial.println("-- Starting Helper Initialisation --");
+        println();
+        println("-- Starting Helper Initialisation --");
+
+        println("-- Starting Printer Initialisation --");
+        Printer::Initialisation(printEnable, printLvl);
+        println("-- End of Printer Initialisation --");
+
         Wifi_Helper::Initialisation();
-        Serial.println("Creating Incoming Command Queue");
+
+        println("Creating Incoming Command Queue");
         awaitingCommand = QueueThread<Command>(20);
         if (!awaitingCommand.IsInit())
         {
-            Serial.println("Error creating the queue : awaitingCommand");
+            println("Error creating the queue : awaitingCommand");
         }
 
         readBuffer.reserve(readBufferMax);
         readBuffer.clear();
 
-        Serial.println("Creating Incoming Command Update Task");
+        println("Creating Incoming Command Update Task");
         /* Task function. */
         /* name of task. */
         /* Stack size of task */
@@ -42,12 +48,6 @@ namespace ESP32_Helper
         /* Task handle to keep track of created task */
         /* pin task to core 0 */
         taskUpdate = TaskThread(ESP32_Helper::Update, "CommandUpdate");
-
-        Serial.println("-- Starting Printer Initialisation --");
-        Printer::Initialisation();
-        Printer::SetLevel(printLvl);
-        Printer::EnablePrinter(printEnable);
-        Serial.println("-- End of Printer Initialisation --");
 
         println();
         println("+---------------+");
@@ -59,13 +59,13 @@ namespace ESP32_Helper
         println(__TIME__);
         println();
 
-        Serial.println("-- Starting Debugger Initialisation --");
+        println("-- Starting Debugger Initialisation --");
         Debugger::Initialisation();
         Debugger::EnableDebugger(debugEnable);
-        Serial.println("-- End of Debugger Initialisation --");
+        println("-- End of Debugger Initialisation --");
 
-        Serial.println("-- End of Helper Initialisation --");
-        Serial.println();
+        println("-- End of Helper Initialisation --");
+        println();
     }
 
     void Update(void *pvParameters)
