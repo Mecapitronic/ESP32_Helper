@@ -4,23 +4,32 @@
     You can redefine it to change the Serial port used
 */
 
+#ifndef WITH_WIFI
+#define WITH_WIFI
+#endif
+#ifndef OTA
+#define OTA
+#endif
+
 #include "ESP32_Helper.h"
 using namespace Printer;
 
 void setup(void)
 {
     ESP32_Helper::Initialisation();
-    Debugger::EnableDebugger(Enable::ENABLE_TRUE);
-    Debugger::AddSteps(10);
 }
 
 static int32_t cpt = 0;
+Point point = Point(0, 0);
+
 void loop(void)
 {
-    // Send
-    // DebugSteps:10/n
-    // over Serial to unblock the loop
-    Debugger::WaitForAvailableSteps();
+    // This will be send over Wifi if enable and also on Serial
     println("Hello World ", cpt++, " times !");
+    point.x = cpt + cpt;
+    point.y = cpt * cpt;
     delay(1000);
+
+    teleplot("cpt", cpt);
+    teleplot("point", point);
 }

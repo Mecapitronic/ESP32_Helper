@@ -7,20 +7,20 @@
 #include "ESP32_Helper.h"
 using namespace Printer;
 
+int32_t cpt;
 void setup(void)
 {
     ESP32_Helper::Initialisation();
-    Debugger::EnableDebugger(Enable::ENABLE_TRUE);
-    Debugger::AddSteps(10);
+    cpt = Preferences_Helper::LoadFromPreference("cpt", -1);
+    println("Load cpt = ", cpt);
 }
 
-static int32_t cpt = 0;
 void loop(void)
 {
-    // Send
-    // DebugSteps:10/n
-    // over Serial to unblock the loop
-    Debugger::WaitForAvailableSteps();
-    println("Hello World ", cpt++, " times !");
+    // This will be print on Serial
+    println("Hello World ", cpt, " times !");
     delay(1000);
+
+    Preferences_Helper::SaveToPreference("cpt", cpt);
+    println("Saved cpt = ", cpt);
 }

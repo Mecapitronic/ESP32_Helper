@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        pio-env: [ "Example1_FastStartup", "Example2_Debug", "Example3_WithWifi", "Example4_HandleCommand"]
+        pio-env: [ "Example1_FastStartup", "Example2_Debug", "Example3_WithWifi", "Example4_HandleCommand", "Example5_Preferences", "Example6_Teleplot"]
 
     steps:
       - uses: actions/checkout@v4
