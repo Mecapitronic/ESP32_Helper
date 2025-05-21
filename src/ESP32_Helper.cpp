@@ -117,6 +117,10 @@ namespace ESP32_Helper
             if (cmdTmp.cmd.startsWith("Help"))
             {
                 Printer::println("Help Commands : ");
+                Printer::println(" > Help");
+                Printer::println("     Display this help");
+                Printer::println(" > Reboot");
+                Printer::println("     Reboot the ESP32");
                 Debugger::PrintCommandHelp();
                 Printer::PrintCommandHelp();
                 Preferences_Helper::PrintCommandHelp();
