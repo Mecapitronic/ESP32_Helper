@@ -3,6 +3,7 @@
 namespace Printer
 {
     Teleplot teleplotUDP;
+    Enable teleplotUDPEnable = Enable::ENABLE_FALSE;
     namespace
     {
         Level printLevel = Level::LEVEL_VERBOSE;
@@ -79,6 +80,20 @@ namespace Printer
             if (cmdTmp.size == 1)
                 EnablePrinter((Enable)cmdTmp.data[0]);
         }
+        else if (cmdTmp.cmd == "PrintTeleplotUDP" && cmdTmp.size == 1)
+        {
+            // PrintTeleplotUDP:0
+            if (cmdTmp.data[0] == 0)
+            {
+                teleplotUDPEnable = Enable::ENABLE_FALSE;
+                println("Teleplot UDP Enable"); 
+            }
+            else
+            {
+                teleplotUDPEnable = Enable::ENABLE_TRUE;
+                println("Teleplot UDP Disable");
+            }
+        }
         else
         {
             println("Not a Print command !");            
@@ -93,6 +108,8 @@ namespace Printer
         println("      0 VERBOSE, 1 INFO, 2 WARN, 3 ERROR");
         println(" > PrintEnable:[int]");
         println("      0 Disable, 1 Enable Debugger");
+        println(" > PrintTeleplotUDP:[int]");
+        println("      0 Disable, 1 Enable");
         println();
     }
 

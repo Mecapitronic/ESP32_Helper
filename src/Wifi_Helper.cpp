@@ -334,10 +334,15 @@ namespace Wifi_Helper
         if (!teleplotTO.isRunning)
             teleplotTO.Start(5000);
 
-        if (!Printer::teleplotUDP.IsInitialized() && teleplotTO.IsTimeOut())
+        if (!Printer::teleplotUDP.IsInitialized() && teleplotTO.IsTimeOut() && Printer::teleplotUDPEnable == Enable::ENABLE_TRUE)
         {
             println("Initialising Teleplot");
             Printer::teleplotUDP = Teleplot(wifi_teleplot_ip.c_str(), wifi_teleplot_port);
+        }
+
+        if (Printer::teleplotUDP.IsInitialized() && Printer::teleplotUDPEnable == Enable::ENABLE_FALSE)
+        {
+            Printer::teleplotUDP.~Teleplot();
         }
     }
 
