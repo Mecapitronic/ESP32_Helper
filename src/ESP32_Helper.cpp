@@ -209,8 +209,16 @@ namespace ESP32_Helper
                 isString = false;
             }
         }
-        Printer::println("Command Received : ", cmdTmp);
-        HandleCommand(cmdTmp);
+        if (cmdTmp.cmd == "Ping")
+        {
+            // Handle Ping command
+            println("Pong");
+        }
+        else
+        {
+            Printer::println("Command Received : ", cmdTmp);
+            HandleCommand(cmdTmp);
+        }
     }
 
     bool HasWaitingCommand() { return awaitingCommand.MessagesWaiting() > 0; }
