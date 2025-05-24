@@ -86,12 +86,12 @@ namespace Printer
             if (cmdTmp.data[0] == 0)
             {
                 teleplotUDPEnable = Enable::ENABLE_FALSE;
-                println("Teleplot UDP Enable"); 
+                println("Teleplot UDP Disable");
             }
             else
             {
                 teleplotUDPEnable = Enable::ENABLE_TRUE;
-                println("Teleplot UDP Disable");
+                println("Teleplot UDP Enable");
             }
         }
         else
