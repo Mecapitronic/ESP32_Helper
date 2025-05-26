@@ -340,28 +340,33 @@ struct Command
 };
 
 // Timeout
+
 struct Timeout
 {
-    int32_t timeout = 0;
-    int32_t current = 0;
-    int32_t previous = 0;
+    // Timeout in ms
+    int32_t timeOut = 0;
+    // Don't touch this value
+    int32_t currentTime = 0;
+    // Don't touch this value
+    int32_t previousTime = 0;
+    // Retturn true if the timeout is running
     bool isRunning = false;
 
-    void Start(int32_t _timeout)
+    void Start(int32_t _timeOut)
     {
-        timeout = _timeout;
-        current = millis();
-        previous = current;
+        timeOut = _timeOut;
+        currentTime = millis();
+        previousTime = currentTime;
         isRunning = true;
     };
     bool IsTimeOut()
     {
         if (isRunning)
         {
-            current = millis();
-            if (current - previous >= timeout)
+            currentTime = millis();
+            if (currentTime - previousTime >= timeOut)
             {
-                previous = current;
+                previousTime = currentTime;
                 return true;
             }
         }
