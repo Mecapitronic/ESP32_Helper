@@ -339,8 +339,8 @@ struct Command
     }
 };
 
-// Timeout
-
+// Use Start to specify the timeOut in ms,
+// Use IsTimeOut to check if the timer has passed the timeOut value
 struct Timeout
 {
     // Timeout in ms
@@ -375,6 +375,37 @@ struct Timeout
     void Stop()
     {
         isRunning = false;
+    };
+};
+
+// Use to calcul the time elapsed between two calls at a given number of loop
+struct Chrono
+{
+    String name = "";
+    int32_t loopNbr = 0;
+    int32_t loopMax = 0;
+    unsigned long startTime = 0;
+    unsigned long elapsedTime = 0;
+    Chrono(String _name, int32_t _nbrLoop) : name(_name), loopMax(_nbrLoop) {};
+
+    void Start()
+    {
+        startTime = micros();
+        if (loopNbr >= loopMax)
+        {
+            loopNbr = 0;
+            elapsedTime = 0;
+        }
+    };
+    bool Check()
+    {
+        elapsedTime += micros() - startTime;
+        loopNbr++;
+        if (loopNbr >= loopMax)
+        {
+            return true;
+        }
+        return false;
     };
 };
 
