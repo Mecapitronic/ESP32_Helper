@@ -148,6 +148,16 @@ struct PoseF
      * @param _h float
      */
     PoseF(float _x, float _y, float _h) : x(_x), y(_y), h(_h) {}
+
+    bool operator==(const PoseF &other) const
+    {
+        return x == other.x && y == other.y && h == other.h;
+    }
+
+    bool operator!=(const PoseF &other) const
+    {
+        return x != other.x || y != other.y || h != other.h;
+    }
 };
 
 /**
