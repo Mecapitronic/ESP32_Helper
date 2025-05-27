@@ -15,6 +15,15 @@ private:
 public:
     bool debugPrint = false;
     TaskThread() = default;
+    /**
+     * @brief Launch a new Task Thread
+     *
+     * @param pvTaskCode The function to call
+     * @param pcName The name of the thread
+     * @param usStackDepth Length of stack
+     * @param uxPriority Priority, from High (20) to Low (0)
+     * @param xCoreID Core affinity
+     */
     TaskThread(TaskFunction_t pvTaskCode, const char *const pcName, const uint32_t usStackDepth = 10000,
                UBaseType_t uxPriority = 5, const BaseType_t xCoreID = 0) : _pvTaskCode(pvTaskCode), _pcName(pcName)
     {
