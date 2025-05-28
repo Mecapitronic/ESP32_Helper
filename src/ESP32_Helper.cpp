@@ -19,7 +19,7 @@ namespace ESP32_Helper
         SERIAL_DEBUG.setRxBufferSize(1024);
         SERIAL_DEBUG.setTxBufferSize(1024);
         SERIAL_DEBUG.begin(static_cast<unsigned long>(baud_speed));
-        delay(2000);
+        // delay(2000);
         println();
         println("-- Starting Helper Initialisation --");
 
