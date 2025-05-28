@@ -396,7 +396,7 @@ struct Chrono
     int32_t loopMax = 0;
     unsigned long startTime = 0;
     unsigned long elapsedTime = 0;
-    static bool print;
+    // static bool print;
     Chrono(String _name, int32_t _nbrLoop) : name(_name), loopMax(_nbrLoop) {};
 
     void Start()
@@ -418,6 +418,8 @@ struct Chrono
         }
         return false;
     };
+    // bool IsPrintEnable() { return print; }
+    // void EnablePrint(bool enable) { print = enable; };
 };
 
 template <typename T>
