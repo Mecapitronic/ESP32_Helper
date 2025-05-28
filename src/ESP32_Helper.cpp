@@ -19,6 +19,7 @@ namespace ESP32_Helper
         SERIAL_DEBUG.setRxBufferSize(1024);
         SERIAL_DEBUG.setTxBufferSize(1024);
         SERIAL_DEBUG.begin(static_cast<unsigned long>(baud_speed));
+        Chrono::print = false;
         delay(2000);
         println();
         println("-- Starting Helper Initialisation --");
@@ -140,6 +141,19 @@ namespace ESP32_Helper
                 Preferences_Helper::HandleCommand(cmdTmp);
             else if (cmdTmp.cmd.startsWith("Wifi"))
                 Wifi_Helper::HandleCommand(cmdTmp);
+            else if (cmdTmp.cmd == "ChronoPrint" && cmdTmp.size == 1)
+            {
+                if (cmdTmp.data[0] == 1)
+                {
+                    Chrono::print = true;
+                    println("Enable Chrono Print");
+                }
+                else
+                {
+                    Chrono::print = false;
+                    println("Disable Chrono Print");
+                }
+            }
             else
             {
                 // If command is not for Lib, we send it to the main
