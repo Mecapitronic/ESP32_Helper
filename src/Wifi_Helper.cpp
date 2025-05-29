@@ -14,6 +14,7 @@ namespace Wifi_Helper
         vector<char> readBuffer;
         Enable wifiEnable = Enable::ENABLE_NONE;
         TaskThread taskUpdate;
+        bool OTARunning;
 
 #ifdef WOKWI
         String wifi_ssid = "Wokwi-GUEST";
@@ -38,6 +39,8 @@ namespace Wifi_Helper
         bool wifi_changed = false;
 
     }
+
+    bool IsOTARunning() { return OTARunning; }
 
     void EnableWifi(Enable enable)
     {
@@ -176,36 +179,57 @@ namespace Wifi_Helper
         taskUpdate = TaskThread(Wifi_Helper::Update, "WifiUpdate", 10000, 10, 0);
 
 #ifdef WITH_OTA
+        OTARunning = false;
         Printer::println("Initialisation of OTA");
         ArduinoOTA
-            .onStart([]()
-                     {
-            String type;
-            if (ArduinoOTA.getCommand() == U_FLASH) {
-                type = "sketch";
-            } else {  // U_SPIFFS
-                type = "filesystem";
-            }
-
-            // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-            Printer::println("Start updating " + type); })
-            .onEnd([]()
-                   { Printer::println("\nEnd"); })
-            .onProgress([](unsigned int progress, unsigned int total)
-                        { Printer::println("Progress: ", (progress / (total / 100)), " %"); })
-            .onError([](ota_error_t error)
-                     { Printer::println("Error[", error,"]: ");
-            if (error == OTA_AUTH_ERROR) {
-                Printer::println("Auth Failed");
-            } else if (error == OTA_BEGIN_ERROR) {
-                Printer::println("Begin Failed");
-            } else if (error == OTA_CONNECT_ERROR) {
-                Printer::println("Connect Failed");
-            } else if (error == OTA_RECEIVE_ERROR) {
-                Printer::println("Receive Failed");
-            } else if (error == OTA_END_ERROR) {
-                Printer::println("End Failed");
-            } });
+            .onStart(
+                []()
+                {
+                    String type;
+                    if (ArduinoOTA.getCommand() == U_FLASH)
+                    {
+                        type = "sketch";
+                    }
+                    else
+                    {  // U_SPIFFS
+                        type = "filesystem";
+                    }
+                    Wifi_Helper::OTARunning = true;
+                    // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+                    Printer::println("Start updating " + type);
+                })
+            .onEnd([]() { Printer::println("\nEnd"); })
+            .onProgress(
+                [](unsigned int progress, unsigned int total)
+                {
+                    Printer::println("Progress: ", (progress / (total / 100)), " %");
+                    Wifi_Helper::OTARunning = true;
+                })
+            .onError(
+                [](ota_error_t error)
+                {
+                    Printer::println("Error[", error, "]: ");
+                    if (error == OTA_AUTH_ERROR)
+                    {
+                        Printer::println("Auth Failed");
+                    }
+                    else if (error == OTA_BEGIN_ERROR)
+                    {
+                        Printer::println("Begin Failed");
+                    }
+                    else if (error == OTA_CONNECT_ERROR)
+                    {
+                        Printer::println("Connect Failed");
+                    }
+                    else if (error == OTA_RECEIVE_ERROR)
+                    {
+                        Printer::println("Receive Failed");
+                    }
+                    else if (error == OTA_END_ERROR)
+                    {
+                        Printer::println("End Failed");
+                    }
+                });
         ArduinoOTA.begin();
 #endif
 

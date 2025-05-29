@@ -8,6 +8,8 @@ namespace Wifi_Helper
         Enable wifiEnable = Enable::ENABLE_NONE;
     }
 
+    bool IsOTARunning() { return false; }
+
     void EnableWifi(Enable enable)
     {
         wifiEnable = Enable::ENABLE_FALSE;

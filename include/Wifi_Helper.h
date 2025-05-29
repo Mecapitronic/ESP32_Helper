@@ -19,6 +19,7 @@ namespace Wifi_Helper
 {
     extern WiFiClient wifiClient;
 
+    bool IsOTARunning();
     void EnableWifi(Enable enable);
     bool IsEnable();
 
