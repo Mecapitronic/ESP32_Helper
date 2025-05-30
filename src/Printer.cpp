@@ -385,9 +385,12 @@ namespace Printer
 
     void printChrono(Chrono chrono)
     {
-        println("Chrono " + chrono.name + " : ",
-                chrono.elapsedTime / chrono.loopNbr,
-                " µs/loop");
+        if (chrono.loopNbr != 0)
+        {
+            println("Chrono " + chrono.name + " : ",
+                    chrono.elapsedTime / chrono.loopNbr,
+                    " µs/loop");
+        }
     }
 
     void println(String data, Level level)
