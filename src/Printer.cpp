@@ -362,11 +362,18 @@ namespace Printer
     void print(String data, Level level)
     {
         if (!IsPrintable(level))
-            return;            
-        if(Wifi_Helper::IsEnable())
-            WIFI_DEBUG.print(data);
-        //else
-        SERIAL_DEBUG.print(data);
+            return;
+        try
+        {
+            if (Wifi_Helper::IsEnable())
+                WIFI_DEBUG.print(data);
+            // else
+            SERIAL_DEBUG.print(data);
+        }
+        catch (const std::exception &e)
+        {
+            SERIAL_DEBUG.println(e.what());
+        }
     }
 
     void println(String data, Level level)
