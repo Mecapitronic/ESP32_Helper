@@ -37,7 +37,10 @@ namespace Printer
     void PrintLevel(Level level);
     Enable PrintEnable();
     void PrintEnable(Enable enable);
-    
+
+    void printError(String error);
+    void printChrono(Chrono chrono);
+
     void println(Level level = Level::LEVEL_VERBOSE);
 
     //void print(String prefix, String suffix = "", Level level = Level::LEVEL_VERBOSE);

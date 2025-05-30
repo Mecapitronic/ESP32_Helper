@@ -372,8 +372,22 @@ namespace Printer
         }
         catch (const std::exception &e)
         {
-            SERIAL_DEBUG.println(e.what());
+            printError(e.what());
         }
+    }
+
+    void printError(String error)
+    {
+        SERIAL_DEBUG.println("!!!---------- ERROR ----------!!!");
+        SERIAL_DEBUG.println(error);
+        SERIAL_DEBUG.println("!!!---------- ERROR ----------!!!");
+    }
+
+    void printChrono(Chrono chrono)
+    {
+        println("Chrono " + chrono.name + " : ",
+                chrono.elapsedTime / chrono.loopNbr,
+                " µs/loop");
     }
 
     void println(String data, Level level)
