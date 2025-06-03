@@ -8,9 +8,9 @@
 class TaskThread
 {
 private:
-    TaskHandle_t _task;
-    TaskFunction_t _pvTaskCode;
-    String _pcName;
+    TaskHandle_t _task = nullptr;
+    TaskFunction_t _pvTaskCode = nullptr;
+    String _pcName = "";
 
 public:
     bool debugPrint = false;

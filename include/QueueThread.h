@@ -9,7 +9,7 @@ template <typename T>
 class QueueThread
 {
 private:
-    QueueHandle_t _queue;
+    QueueHandle_t _queue = nullptr;
     bool isInit = false;
 
 public:

@@ -8,10 +8,10 @@
 class TimerThread
 {
 private:
-    TimerHandle_t _timer;
-    TimerCallbackFunction_t _callBack;
-    String _pcName;
-    TickType_t _period;
+    TimerHandle_t _timer = nullptr;
+    TimerCallbackFunction_t _callBack = nullptr;
+    String _pcName = "";
+    TickType_t _period = 0;
     bool _enable = false;
     bool _isRunning = false;
 
