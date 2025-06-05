@@ -170,7 +170,7 @@ namespace ESP32_Helper
         uint16_t indexSeparator = 0;
         bool isString = false;
         // Start at 1 to let one letter for command at least
-        for (int32_t i = 1; i < read.size(); i++)
+        for (size_t i = 1; i < read.size(); i++)
         {
             if(read[i] != ';' && read[i] != ':' && read[i] != '\n')
             {
