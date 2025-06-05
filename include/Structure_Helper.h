@@ -365,7 +365,7 @@ struct Timeout
     void Start(int32_t _timeOut)
     {
         timeOut = _timeOut;
-        currentTime = millis();
+        currentTime = (int32_t)millis();
         previousTime = currentTime;
         isRunning = true;
     };
@@ -373,7 +373,7 @@ struct Timeout
     {
         if (isRunning)
         {
-            currentTime = millis();
+            currentTime = (int32_t)millis();
             if (currentTime - previousTime >= timeOut)
             {
                 previousTime = currentTime;
