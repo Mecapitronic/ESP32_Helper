@@ -14,6 +14,8 @@ typedef void (*TaskFunction_t)(void *);
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #endif
+static pthread_mutex_t mutex;
+
 static const bool debugPrint = false;
 
 class TaskThread
@@ -50,6 +52,10 @@ private:
             SERIAL_DEBUG.print(static_cast<TaskThread *>(_this)->_pcName);
             SERIAL_DEBUG.print("\n");
         }
+        if (pthread_mutex_unlock(&mutex) != 0)
+        {
+            perror("mutex_unlock");
+        }
         static_cast<TaskThread *>(_this)->_pvTaskCode(static_cast<TaskThread *>(_this));
         if (debugPrint)
         {
@@ -80,6 +86,10 @@ public:
                const BaseType_t xCoreID = 0)
         : _pvTaskCode(pvTaskCode), _pcName(pcName)
     {
+        if (pthread_mutex_lock(&mutex) != 0)
+        {
+            perror("mutex_lock");
+        }
         if (debugPrint)
         {
             SERIAL_DEBUG.print("Creating Task : ");
@@ -87,6 +97,14 @@ public:
         }
 
 #ifdef _VISUAL_STUDIO
+        if (mutex == NULL)
+        {
+            if (pthread_mutex_init(&mutex, NULL) != 0)
+            {
+                perror("mutex_lock");
+                exit(1);
+            }
+        }
         bool ret = pthread_create(&pthread, NULL, startThread, this);
         pthread_setname_np(pthread, pcName);
 #else
