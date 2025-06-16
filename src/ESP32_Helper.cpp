@@ -144,14 +144,12 @@ namespace ESP32_Helper
             {
                 if (cmdTmp.data[0] == 1)
                 {
-                    // Chrono chrono("", 0);
-                    // chrono.EnablePrint(true);
+                    Chrono::print = true;
                     println("Enable Chrono Print");
                 }
                 else
                 {
-                    // Chrono chrono("", 0);
-                    // chrono.EnablePrint(false);
+                    Chrono::print = false;
                     println("Disable Chrono Print");
                 }
             }
