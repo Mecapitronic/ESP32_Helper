@@ -12,6 +12,7 @@
 
 namespace Wifi_Helper
 {
+    bool IsOTARunning();
     void EnableWifi(Enable enable);
     bool IsEnable();
 
