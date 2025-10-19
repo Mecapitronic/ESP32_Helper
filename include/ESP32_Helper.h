@@ -27,6 +27,7 @@
 #include "TimerThread.h"
 #include "Printer.h"
 #include "Debugger.h"
+#include "FileSystem_Helper.h"
 
 namespace ESP32_Helper
 {

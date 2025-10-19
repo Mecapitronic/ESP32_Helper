@@ -153,6 +153,8 @@ namespace ESP32_Helper
                     println("Disable Chrono Print");
                 }
             }
+            else if (cmdTmp.cmd.startsWith("SPIFFS"))
+                FileSystem_Helper::HandleCommand(cmdTmp);
             else
             {
                 // If command is not for Lib, we send it to the main
