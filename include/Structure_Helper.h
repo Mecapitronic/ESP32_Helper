@@ -336,7 +336,8 @@ struct Command
     String cmd = "";
     int8_t size = 0;
     std::array<int32_t, length> data;
-    String dataStr = ""; // sizeof(String) = 16 BUT 1 is for string length and 1 for \0 so 14 in reality
+    String dataStr1 = ""; // sizeof(String) = 16 BUT 1 is for string length and 1 for \0 so 14 in reality
+    String dataStr2 = "";
 
     Command() noexcept
     {

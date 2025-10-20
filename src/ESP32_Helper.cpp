@@ -191,7 +191,14 @@ namespace ESP32_Helper
                         if(isString)
                         {
                             if(i - indexSeparator <= Command::sizeStr)
-                                    cmdTmp.dataStr = strToConvert;
+                            {
+                                if(cmdTmp.dataStr1=="")
+                                    cmdTmp.dataStr1 = strToConvert;
+                                else if(cmdTmp.dataStr2=="")
+                                    cmdTmp.dataStr2 = strToConvert;
+                                else
+                                    println("3rd String not saved", String(" : "), strToConvert, Level::LEVEL_ERROR);
+                            }
                             else
                                 println("String too long !", String(" : "), strToConvert, Level::LEVEL_ERROR);
                         }

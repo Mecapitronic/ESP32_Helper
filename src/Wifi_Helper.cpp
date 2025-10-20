@@ -399,10 +399,10 @@ namespace Wifi_Helper
         {
             // Password must be at least 8 char or empty
             // WifiPassword:********
-            if (cmdTmp.dataStr == "" || (cmdTmp.dataStr.length() >= 8 && cmdTmp.dataStr.length() <= 63))
+            if (cmdTmp.dataStr1 == "" || (cmdTmp.dataStr1.length() >= 8 && cmdTmp.dataStr1.length() <= 63))
             {
-                Preferences_Helper::SaveToPreference("wifi_password", cmdTmp.dataStr);
-                wifi_password = cmdTmp.dataStr;
+                Preferences_Helper::SaveToPreference("wifi_password", cmdTmp.dataStr1);
+                wifi_password = cmdTmp.dataStr1;
                 wifi_changed = true;
                 Printer::println("Wifi password Changed !");
             }
@@ -411,10 +411,10 @@ namespace Wifi_Helper
         }
         else if (cmdTmp.cmd == "WifiSsid")
         {
-            if (cmdTmp.dataStr != "" && cmdTmp.dataStr.length() <= 63)
+            if (cmdTmp.dataStr1 != "" && cmdTmp.dataStr1.length() <= 63)
             {
-                Preferences_Helper::SaveToPreference("wifi_ssid", cmdTmp.dataStr);
-                wifi_ssid = cmdTmp.dataStr;
+                Preferences_Helper::SaveToPreference("wifi_ssid", cmdTmp.dataStr1);
+                wifi_ssid = cmdTmp.dataStr1;
                 wifi_changed = true;
                 Printer::println("Wifi SSID Changed !");
             }

@@ -43,7 +43,7 @@ void loop(void)
         // Log;Message here
         if(command.cmd.startsWith("Log"))
         {
-            println("Log : ", command.dataStr);
+            println("Log : ", command.dataStr1);
         }
         // put your command here
     }

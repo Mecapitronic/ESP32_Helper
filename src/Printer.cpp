@@ -547,9 +547,13 @@ namespace Printer
                 print(",", data.data[size_data]);
             }
         }
-        if (data.dataStr != "")
+        if (data.dataStr1 != "")
         {
-            print(" DataStr=", String(data.dataStr));
+            print(" DataStr1=", String(data.dataStr1));
+        }
+        if (data.dataStr2 != "")
+        {
+            print(" DataStr2=", String(data.dataStr2));
         }
     }
 
