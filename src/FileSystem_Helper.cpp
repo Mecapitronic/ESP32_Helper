@@ -5,11 +5,6 @@ using namespace std;
 
 namespace FileSystem_Helper
 {
-    namespace
-    {
-        fs::FS &fs = SPIFFS;
-    }
-
     bool Initialisation()
     {
         if (!SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED))
@@ -70,7 +65,7 @@ namespace FileSystem_Helper
             return;
         }
 
-        File file = fs.open("/" + fileName, FILE_WRITE);
+        File file = SPIFFS.open("/" + fileName, FILE_WRITE);
         if (!file)
         {
             println("Failed to create file");
@@ -89,7 +84,7 @@ namespace FileSystem_Helper
             return "";
         }
         String content;
-        File file = fs.open("/" + fileName);
+        File file = SPIFFS.open("/" + fileName);
         if (!file)
         {
             println("Failed to open file for reading");
@@ -119,7 +114,7 @@ namespace FileSystem_Helper
                 return;
             }
         }
-        File file = fs.open("/" + fileName, FILE_WRITE);
+        File file = SPIFFS.open("/" + fileName, FILE_WRITE);
         if (!file)
         {
             println("Failed to open file for writing");
@@ -152,7 +147,7 @@ namespace FileSystem_Helper
                 return;
             }
         }
-        File file = fs.open("/" + fileName, FILE_APPEND);
+        File file = SPIFFS.open("/" + fileName, FILE_APPEND);
         if (!file)
         {
             println("Failed to open file for appending");
@@ -184,7 +179,7 @@ namespace FileSystem_Helper
             println("Target file already exists");
             return;
         }
-        if (fs.rename("/" + path1, "/" + path2))
+        if (SPIFFS.rename("/" + path1, "/" + path2))
         {
             println("File renamed");
         }
@@ -203,7 +198,7 @@ namespace FileSystem_Helper
             println("Source file does not exist");
             return;
         }
-        if (fs.remove("/" + fileName))
+        if (SPIFFS.remove("/" + fileName))
         {
             println("File deleted");
         }
@@ -219,7 +214,7 @@ namespace FileSystem_Helper
 
         static uint8_t buf[512];
         size_t len = 0;
-        File file = fs.open("/" + fileName, FILE_WRITE);
+        File file = SPIFFS.open("/" + fileName, FILE_WRITE);
         if (!file)
         {
             println("- failed to open file for writing");
@@ -242,7 +237,7 @@ namespace FileSystem_Helper
         printf(" - %u bytes written in %lu ms\r\n", 2048 * 512, end);
         file.close();
 
-        file = fs.open("/" + fileName);
+        file = SPIFFS.open("/" + fileName);
         start = millis();
         end = start;
         i = 0;

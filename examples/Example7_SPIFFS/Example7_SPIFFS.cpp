@@ -54,6 +54,6 @@ void setup(void)
 
 void loop(void)
 {
-    delay(1000);
+    delay(5000);
     FileSystem_Helper::AppendFile("cpt", String(cpt++)+"\r\n",true);
 }
