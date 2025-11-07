@@ -11,11 +11,14 @@ on:
 
 jobs:
   build:
+    name: Build Examples
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        pio-env: [ "Example1_FastStartup", "Example2_Debug", "Example3_WithWifi", "Example4_HandleCommand", "Example5_Preferences", "Example6_Teleplot"]
+        pio-env: [ "Example1_FastStartup", "Example2_Debug", "Example3_WithWifi", "Example4_HandleCommand", "Example5_Preferences", "Example6_Teleplot", "Example7_SPIFFS"]
+      # Ne pas arrêter la matrice si un environnement échoue
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v4
