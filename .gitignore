@@ -51,3 +51,6 @@
 *.exe
 *.out
 *.app
+
+# Folder
+bin/
