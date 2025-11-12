@@ -163,7 +163,7 @@ void MockSPIFFSClass::preload(const String& path, const String& content) {
 
 // preload only texte.txt
 static bool _mockspiffs_preload = []() {
-    MockSPIFFS.preload("texte.txt", "Hello World\n");
+    MockSPIFFS.preload("/texte.txt", "Hello World\n");
     String map_json = R"(
 {
   "map": {
@@ -184,7 +184,7 @@ static bool _mockspiffs_preload = []() {
   }
 }
 )";
-    MockSPIFFS.preload("map.json", map_json);
+    MockSPIFFS.preload("/map.json", map_json);
 
     return true;
 }();

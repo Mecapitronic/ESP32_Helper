@@ -1,14 +1,15 @@
 #ifndef FILE_SYSTEM_HELPER_H
 #define FILE_SYSTEM_HELPER_H
 
-#if defined(SIMULATOR)
+#include "ESP32_Helper.h"
+
+#ifdef SIMULATOR
 #include "MockSPIFFS.h"
 #define SPIFFS MockSPIFFS
 #define File MockFile
 #else
 #include "SPIFFS.h"
 #endif
-#include "ESP32_Helper.h"
 
 /* You only need to format SPIFFS the first time you run a
    test or else use the SPIFFS plugin to create a partition

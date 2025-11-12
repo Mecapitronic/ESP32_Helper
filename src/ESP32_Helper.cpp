@@ -63,6 +63,14 @@ namespace ESP32_Helper
         Debugger::Initialisation();
         Debugger::EnableDebugger(debugEnable);
         println("-- End of Debugger Initialisation --");
+        
+        println("-- Starting SPIFFS Initialisation --");
+        if (!FileSystem_Helper::Initialisation())
+        {
+            println("Error initialising the SPIFFS", Level::LEVEL_ERROR);
+        }
+        FileSystem_Helper::ListFiles();
+        println("-- End of SPIFFS Initialisation --");
 
         println("-- End of Helper Initialisation --");
         println();
