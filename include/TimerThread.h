@@ -6,10 +6,11 @@
 typedef void *TimerHandle_t;
 typedef void (*TimerCallbackFunction_t)(void *);
 #else
-#include "ESP32_Helper.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/timers.h"
 #endif
+#include "ESP32_Helper.h"
+#include "TaskThread.h" 
 
 class TimerThread
 {
@@ -37,9 +38,11 @@ private:
         {
             if (debugPrint)
             {
-                myprintf("Calling Timer : ");
-                myprintf(_pcName);
-                myprintf("\n");
+                SERIAL_DEBUG.print("Calling Timer : ");
+                SERIAL_DEBUG.print(_pcName);
+                SERIAL_DEBUG.print("   ");
+                SERIAL_DEBUG.print(millis());
+                SERIAL_DEBUG.print("\n");
             }
             _callBack(_timer);
             EspClass::timerSleep((double)_period / 1000);
@@ -55,19 +58,24 @@ private:
         tt._arret = ((TimerThread *)_this)->_arret;
 
         pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
-        myprintf("Start timer ");
-        myprintf(tt._pcName);
-        myprintf("\n");
+        if (debugPrint)
+        {
+            SERIAL_DEBUG.print("Start timer ");
+            SERIAL_DEBUG.print(tt._pcName);
+            SERIAL_DEBUG.print("\n");
+        }
         tt.timer();
-        myprintf("End timer ");
-        myprintf(tt._pcName);
-        myprintf("\n");
+        if (debugPrint)
+        {
+            SERIAL_DEBUG.print("End timer ");
+            SERIAL_DEBUG.print(tt._pcName);
+            SERIAL_DEBUG.print("\n");
+        }
         return NULL;
     }
 #endif
 
 public:
-    bool debugPrint = true;
     TimerThread() = default;
 
     TimerThread(TimerCallbackFunction_t callBack,

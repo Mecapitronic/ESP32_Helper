@@ -9,6 +9,7 @@
 #include "freertos/queue.h"
 #endif
 #include "ESP32_Helper.h"
+#include "TaskThread.h" 
 
 template <typename T> class QueueThread
 {
@@ -17,7 +18,6 @@ private:
     bool isInit = false;
 
 public:
-    bool debugPrint = false;
     QueueThread() = default;
 
     QueueThread(int32_t size)
@@ -26,7 +26,8 @@ public:
             SERIAL_DEBUG.println("Creating Queue : ");
 #ifdef _VISUAL_STUDIO
         _queue.reserve(size);
-        SERIAL_DEBUG.println("Init queue OK");
+        if (debugPrint)
+            SERIAL_DEBUG.println("Init queue OK");
         isInit = true;
 #else
         _queue = xQueueCreate(size, sizeof(T));

@@ -14,14 +14,14 @@ typedef void (*TaskFunction_t)(void *);
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #endif
+static const bool debugPrint = false;
 
 class TaskThread
 {
 private:
 #ifdef _VISUAL_STUDIO
     pthread_t pthread;
-    TaskHandle_t _task;
-    void (*_pvTaskCode)(void *);
+    TaskFunction_t _pvTaskCode = nullptr;
     const char *_pcName;
 #else
     TaskHandle_t _task = nullptr;
@@ -43,24 +43,25 @@ private:
 
     static void *startThread(void *_this)
     {
-        TaskThread tt;
-        tt._pvTaskCode = ((TaskThread *)_this)->_pvTaskCode;
-        tt._pcName = ((TaskThread *)_this)->_pcName;
-
         pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
-        myprintf("Start thread ");
-        myprintf(tt._pcName);
-        myprintf("\n");
-        tt.task();
-        myprintf("End thread ");
-        myprintf(tt._pcName);
-        myprintf("\n");
+        if (debugPrint)
+        {
+            SERIAL_DEBUG.print("Start thread ");
+            SERIAL_DEBUG.print(static_cast<TaskThread *>(_this)->_pcName);
+            SERIAL_DEBUG.print("\n");
+        }
+        static_cast<TaskThread *>(_this)->_pvTaskCode(static_cast<TaskThread *>(_this));
+        if (debugPrint)
+        {
+            SERIAL_DEBUG.print("End thread ");
+            SERIAL_DEBUG.print(static_cast<TaskThread *>(_this)->_pcName);
+            SERIAL_DEBUG.print("\n");
+        }
         return NULL;
     }
 #endif
 
 public:
-    bool debugPrint = false;
     TaskThread() = default;
 
     /**
@@ -112,6 +113,10 @@ public:
 
     static void DeleteTask(TaskHandle_t task)
     {
+        if (debugPrint)
+        {
+            SERIAL_DEBUG.print("Deleting Task.");
+        }
 #ifdef _VISUAL_STUDIO
         pthread_exit(NULL);
 #else
