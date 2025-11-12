@@ -32,16 +32,6 @@ private:
 #endif
 
 #ifdef _VISUAL_STUDIO
-    void task()
-    {
-        if (debugPrint)
-        {
-            myprintf("Calling Task : ");
-            myprintf(_pcName);
-            myprintf("\n");
-        }
-        _pvTaskCode(_task);
-    }
 
     static void *startThread(void *_this)
     {
