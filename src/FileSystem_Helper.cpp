@@ -29,7 +29,7 @@ namespace FileSystem_Helper
         }
     }
 
-    void ListFiles(String filter)
+    void ListFiles(const String &filter)
     {
         print("Listing files ");
         filter != "" ? println(" with filter : <", filter, ">") : println(" :");
@@ -42,22 +42,22 @@ namespace FileSystem_Helper
         }
 
         File file = root.openNextFile();
-        println("  FILE: \t SIZE: ");
+        println("  FILE: \t SIZE:");
         while (file)
         {
             if (filter == "" || (filter != "" && String(file.name()).indexOf(filter) != -1))
             {
-                print("  ", String(file.name()));
-                println(" \t ", String(file.size()));
+                print("  " + String(file.name()));
+                print(" \t " + String((int)file.size()) + "\n");
             }
             file = root.openNextFile();
         }
         root.close();
     }
 
-    void CreateFile(String fileName)
+    void CreateFile(const String &fileName)
     {
-        println("Creating file: ", fileName);
+        println("Creating file: " + fileName);
         
         if(SPIFFS.exists("/" + fileName))
         {
@@ -75,9 +75,9 @@ namespace FileSystem_Helper
         println("File created successfully");
     }
 
-    String ReadFile(String fileName)
+    String ReadFile(const String &fileName)
     {
-        println("Reading file: ", fileName);
+        println("Reading file: " + fileName);
         if(!SPIFFS.exists("/" + fileName))
         {
             println("Source file does not exist");
@@ -99,9 +99,9 @@ namespace FileSystem_Helper
         return content;
     }
 
-    void WriteFile(String fileName, String message, bool createFileIfNotExists)
+    void WriteFile(const String &fileName, const String &message, bool createFileIfNotExists)
     {
-        println("Writing file: ", fileName);
+        println("Writing file: " + fileName);
         if(!SPIFFS.exists("/" + fileName))
         {
             if (createFileIfNotExists)
@@ -131,9 +131,9 @@ namespace FileSystem_Helper
         file.close();
     }
 
-    void AppendFile(String fileName, String message, bool createFileIfNotExists)
+    void AppendFile(const String &fileName, const String &message, bool createFileIfNotExists)
     {
-        println("Appending to file: ", fileName);
+        println("Appending to file: " + fileName);
 
         if(!SPIFFS.exists("/" + fileName))
         {
@@ -164,7 +164,7 @@ namespace FileSystem_Helper
         file.close();
     }
 
-    void RenameFile(String path1, String path2)
+    void RenameFile(const String &path1, const String &path2)
     {
         print("Renaming file ", path1);
         println(" to file ", path2);
@@ -189,7 +189,7 @@ namespace FileSystem_Helper
         }
     }
 
-    void DeleteFile(String fileName)
+    void DeleteFile(const String &fileName)
     {
         println("Deleting file: ", fileName);
         
@@ -208,9 +208,9 @@ namespace FileSystem_Helper
         }
     }
 
-    void TestFileIO(String fileName)
+    void TestFileIO(const String &fileName)
     {
-        printf("Testing file I/O with %s\r\n", fileName);
+        println("Testing file I/O with " + fileName);
 
         static uint8_t buf[512];
         size_t len = 0;
@@ -263,7 +263,7 @@ namespace FileSystem_Helper
             }
             println("");
             end = millis() - start;
-            printf("- %u bytes read in %lu ms\r\n", flen, end);
+            println("- %u bytes read in %lu ms\r\n", flen, end);
             file.close();
         }
         else

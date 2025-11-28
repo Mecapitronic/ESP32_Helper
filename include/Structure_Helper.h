@@ -343,7 +343,7 @@ struct Command
     {
         data.fill(0);
     }
-    Command(String s)
+    Command(const String &s)
     {
         cmd = s;
         data.fill(0);
@@ -398,7 +398,7 @@ struct Chrono
     int32_t loopMax = 0;
     unsigned long startTime = 0;
     unsigned long elapsedTime = 0;
-    Chrono(String _name, int32_t _nbrLoop) : name(_name), loopMax(_nbrLoop) {};
+    Chrono(const String &_name, int32_t _nbrLoop) : name(_name), loopMax(_nbrLoop) {};
 
     void Start()
     {

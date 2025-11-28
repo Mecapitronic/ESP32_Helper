@@ -21,8 +21,8 @@ namespace Wifi_Helper
     void HandleCommand(Command cmdTmp);
     void PrintCommandHelp(void);
     
-    void SetLocalIP(String ip);
-    void SetServerIP(String ip);
+    void SetLocalIP(const String &ip);
+    void SetServerIP(const String &ip);
 }
 #endif
 #endif

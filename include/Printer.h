@@ -109,26 +109,26 @@ namespace Printer
     /**
      * Send data to be viewed on teleplot, eg: trace x and y in a graph
      */
-    void teleplot(String varName, float var, Level level = Level::LEVEL_VERBOSE);
-    void teleplot(String varName, Point point, Level level = Level::LEVEL_VERBOSE);
-    void teleplot(String varName, PointF point, Level level = Level::LEVEL_VERBOSE);
-    void teleplot(String varName, Pose point, Level level = Level::LEVEL_VERBOSE);
-    void teleplot(String varName, PoseF point, Level level = Level::LEVEL_VERBOSE);
+    void teleplot(const String &varName, float var);
+    void teleplot(const String &varName, Point point);
+    void teleplot(const String &varName, PointF point);
+    void teleplot(const String &varName, Pose point);
+    void teleplot(const String &varName, PoseF point);
     
-    //void teleplot(String varName, Point points[], uint16_t size, Level level = Level::LEVEL_VERBOSE);
+    //void teleplot(const String &varName, Point points[], uint16_t size);
 
-    void teleplot(String varName, PolarPoint polarPoint, Level level = Level::LEVEL_VERBOSE);
-    //void teleplot(String varName, PolarPoint polarPoint, int32_t timeStamp, Level level = Level::LEVEL_VERBOSE);
+    void teleplot(const String &varName, PolarPoint polarPoint);
+    //void teleplot(const String &varName, PolarPoint polarPoint, int32_t timeStamp);
 
-    //void teleplot(String varName, PolarPoint polarPoints[], uint16_t size, Level level = Level::LEVEL_VERBOSE);
-    //void teleplot(String varName, vector<PolarPoint> vec, Level level = Level::LEVEL_VERBOSE);
+    //void teleplot(const String &varName, PolarPoint polarPoints[], uint16_t size);
+    //void teleplot(const String &varName, vector<PolarPoint> vec);
 
-    //void teleplot(String varName, Point4D point, Level level = Level::LEVEL_VERBOSE);
+    //void teleplot(const String &varName, Point4D point);
 
     /**
      * send cloud point data on serial for teleplot to trace 3D shape
      */
-    //void plot3D(String varName, Point3D p);
+    //void plot3D(const String &varName, Point3D p);
     //void plot3Dpy(Point3D p);
 }
 #endif

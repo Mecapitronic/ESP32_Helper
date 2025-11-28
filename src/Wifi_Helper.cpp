@@ -467,7 +467,7 @@ namespace Wifi_Helper
         Printer::println();
     }
 
-    void SetLocalIP(String ip)
+    void SetLocalIP(const String &ip)
     {
         IPAddress local_IP;
         local_IP.fromString(ip);
@@ -480,7 +480,7 @@ namespace Wifi_Helper
         wifi_changed = true;
     }
 
-    void SetServerIP(String ip)
+    void SetServerIP(const String &ip)
     {
         IPAddress server_IP;
         server_IP.fromString(ip);

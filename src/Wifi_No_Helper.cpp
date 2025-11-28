@@ -38,12 +38,12 @@ namespace Wifi_Helper
         Printer::println("NO WIFI !");
     }
     
-    void SetLocalIP(String ip)
+    void SetLocalIP(const String &ip)
     {
         Printer::println("NO WIFI !");
     }
     
-    void SetServerIP(String ip)
+    void SetServerIP(const String &ip)
     {
         Printer::println("NO WIFI !");
     }

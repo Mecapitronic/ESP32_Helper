@@ -22,21 +22,21 @@ namespace FileSystem_Helper
 
     void FormatFS();
 
-    void ListFiles(String filter = "");
+    void ListFiles(const String &filter = "");
 
-    void CreateFile(String fileName);
+    void CreateFile(const String &fileName);
     
-    String ReadFile(String fileName);
+    String ReadFile(const String &fileName);
 
-    void WriteFile(String fileName, String message, bool createFile = false);
+    void WriteFile(const String &fileName, const String &message, bool createFile = false);
 
-    void AppendFile(String fileName, String message, bool createFile = false);
+    void AppendFile(const String &fileName, const String &message, bool createFile = false);
 
-    void RenameFile(String fileName1, String fileName2);
+    void RenameFile(const String &fileName1, const String &fileName2);
 
-    void DeleteFile(String fileName);
+    void DeleteFile(const String &fileName);
 
-    void TestFileIO(String fileName);
+    void TestFileIO(const String &fileName);
 
     void HandleCommand(Command cmdTmp);
 
