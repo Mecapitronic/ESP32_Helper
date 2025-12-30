@@ -13,10 +13,13 @@
 
 namespace Preferences_Helper
 {
-    int32_t LoadFromPreference(const String &pref, int32_t defValue = 0);
-    String LoadFromPreference(const String &pref, const String &defValue = "");
+    int32_t LoadFromPreference(const String &pref, int32_t defValue);
+    String LoadFromPreference(const String &pref, const String &defValue);
     void SaveToPreference(const String &pref, int32_t value);
     void SaveToPreference(const String &pref, const String &value);
+    void RemoveFromPreference(const String &pref);
+    void ListPreferences();
+    int32_t GetFreeEntries();
     void ClearPreferences();
     void HandleCommand(Command cmdTmp);
     void PrintCommandHelp(void);

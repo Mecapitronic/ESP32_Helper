@@ -91,8 +91,8 @@ namespace Wifi_Helper
         println(WiFi.macAddress());
 
         // Get the Local Static IP saved
-        String saved_wifi_local_ip = Preferences_Helper::LoadFromPreference("wifi_local_ip", wifi_local_ip);
-        if (saved_wifi_local_ip != wifi_local_ip)
+        String saved_wifi_local_ip = Preferences_Helper::LoadFromPreference("wifi_local_ip", "");
+        if (saved_wifi_local_ip != "")
         {
             wifi_local_ip = saved_wifi_local_ip;
             println("Wifi local ip saved : " + wifi_local_ip);
@@ -105,8 +105,8 @@ namespace Wifi_Helper
         local_IP.fromString(wifi_local_ip);
 
         // Get the Server Static IP saved
-        String saved_wifi_server_ip = Preferences_Helper::LoadFromPreference("wifi_server_ip", wifi_server_ip);
-        if (saved_wifi_server_ip != wifi_server_ip)
+        String saved_wifi_server_ip = Preferences_Helper::LoadFromPreference("wifi_server_ip", "");
+        if (saved_wifi_server_ip != "")
         {
             wifi_server_ip = saved_wifi_server_ip;
             println("Wifi server ip saved : " + wifi_server_ip);
@@ -119,8 +119,8 @@ namespace Wifi_Helper
         server_IP.fromString(wifi_server_ip);
 
         // Get the Server Port saved
-        int32_t saved_wifi_server_port = Preferences_Helper::LoadFromPreference("wifi_server_port", wifi_server_port);
-        if (saved_wifi_server_port != wifi_server_port)
+        int32_t saved_wifi_server_port = Preferences_Helper::LoadFromPreference("wifi_server_port", -1);
+        if (saved_wifi_server_port != -1)
         {
             wifi_server_port = saved_wifi_server_port;
             println("Wifi server port saved : " + String(wifi_server_port));
@@ -138,8 +138,8 @@ namespace Wifi_Helper
             println("STA Failed to configure");
         }
 
-        String saved_wifi_password = Preferences_Helper::LoadFromPreference("wifi_password", wifi_password);
-        if (saved_wifi_password != wifi_password)
+        String saved_wifi_password = Preferences_Helper::LoadFromPreference("wifi_password", "");
+        if (saved_wifi_password != "")
         {
             wifi_password = saved_wifi_password;
             println("Wifi server ip saved : " + wifi_password);
@@ -147,8 +147,8 @@ namespace Wifi_Helper
         else
             println("No wifi password saved, using default : " + wifi_password);
 
-        String saved_wifi_ssid = Preferences_Helper::LoadFromPreference("wifi_ssid", wifi_ssid);
-        if (saved_wifi_ssid != wifi_ssid)
+        String saved_wifi_ssid = Preferences_Helper::LoadFromPreference("wifi_ssid", "");
+        if (saved_wifi_ssid != "")
         {
             wifi_ssid = saved_wifi_ssid;
             println("Wifi ssid saved : " + wifi_ssid);

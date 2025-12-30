@@ -11,15 +11,17 @@ int32_t cpt;
 void setup(void)
 {
     ESP32_Helper::Initialisation();
+    Preferences_Helper::ListPreferences();
+    Preferences_Helper::GetFreeEntries();
     cpt = Preferences_Helper::LoadFromPreference("cpt", -1);
     println("Load cpt = %i", cpt);
 }
 
 void loop(void)
 {
+    cpt = Preferences_Helper::LoadFromPreference("cpt", cpt);
     // This will be print on Serial
     println("Hello World %i times !", cpt++);
-    delay(1000);
-
     Preferences_Helper::SaveToPreference("cpt", cpt);
+    delay(5000);
 }

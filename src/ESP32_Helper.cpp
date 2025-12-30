@@ -144,7 +144,7 @@ namespace ESP32_Helper
                 Debugger::HandleCommand(cmdTmp);
             else if (cmdTmp.cmd.startsWith("Print"))
                 Printer::HandleCommand(cmdTmp);
-            else if (cmdTmp.cmd.startsWith("Preferences"))
+            else if (cmdTmp.cmd.startsWith("Pref"))
                 Preferences_Helper::HandleCommand(cmdTmp);
             else if (cmdTmp.cmd.startsWith("Wifi"))
                 Wifi_Helper::HandleCommand(cmdTmp);
