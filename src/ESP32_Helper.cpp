@@ -212,7 +212,7 @@ namespace ESP32_Helper
                             else
                                 println("String too long: " + strToConvert);
                         }
-                        else
+                        else if(cmdTmp.size < Command::length)
                         {
                             std::size_t pos{};
                             try
@@ -232,6 +232,10 @@ namespace ESP32_Helper
                             {
                                 println("Exception error: " + String(e.what()) + " for data: " + strToConvert);
                             }
+                        }
+                        else
+                        {
+                            println("Data array full, data not saved: " + strToConvert);
                         }
                     }
                     indexSeparator = i + 1;
