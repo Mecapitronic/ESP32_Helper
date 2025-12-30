@@ -17,15 +17,16 @@ using namespace Printer;
 void setup(void)
 {
     ESP32_Helper::Initialisation();
+    Printer::teleplotUDPEnable = Enable::ENABLE_TRUE;
 }
 
-static int32_t cpt = 0;
+int32_t cpt = 0;
 Point point = Point(0, 0);
 
 void loop(void)
 {
     // This will be send over Wifi if enable and also on Serial
-    println("Hello World ", cpt++, " times !");
+    println("Hello World %i times !", cpt++);
     point.x = cpt + cpt;
     point.y = cpt * cpt;
     delay(1000);

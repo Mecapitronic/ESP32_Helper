@@ -14,13 +14,13 @@ void setup(void)
     Debugger::AddSteps(10);
 }
 
-static int32_t cpt = 0;
+int32_t cpt = 0;
 void loop(void)
 {
     // Send
     // DebugSteps:10/n
     // over Serial to unblock the loop
     Debugger::WaitForAvailableSteps();
-    println("Hello World ", cpt++, " times !");
+    println("Hello World %i times !", cpt++);
     delay(1000);
 }

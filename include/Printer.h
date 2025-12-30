@@ -1,8 +1,8 @@
 /**
  * @file Printer.h
  * @author Mecapitronic (mecapitronic@gmail.com)
- * @brief Used to print data over predefined serial for debug purpose
- * @date 2023-07-25
+ * @brief Simplified printer for serial/wifi output
+ * @date 2025-11-17
  */
 #ifndef PRINTER_H
 #define PRINTER_H
@@ -32,79 +32,21 @@ namespace Printer
     void Update(void *pvParameters);
     void HandleCommand(Command cmdTmp);
     void PrintCommandHelp();
-
+    
     Level PrintLevel();
     void PrintLevel(Level level);
     Enable PrintEnable();
     void PrintEnable(Enable enable);
+    
+    // Basic print functions
+    void print(const char *fmt, ...);
+    void println(const char *fmt, ...);
+    void println();
+    void print(const String &str);
+    void println(const String &str);
 
-    void printError(String error);
+    // Utility functions
     void printChrono(Chrono chrono);
-
-    void println(Level level = Level::LEVEL_VERBOSE);
-
-    //void print(String prefix, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    //void println(String prefix, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(int32_t data, Level level = Level::LEVEL_VERBOSE);
-    void println(int32_t data, Level level = Level::LEVEL_VERBOSE);
-    void print(String prefix, int32_t data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, int32_t data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(uint32_t data, Level level = Level::LEVEL_VERBOSE);
-    void println(uint32_t data, Level level = Level::LEVEL_VERBOSE);
-    void print(String prefix, uint32_t data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, uint32_t data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(char data, Level level = Level::LEVEL_VERBOSE);
-    void println(char data, Level level = Level::LEVEL_VERBOSE);
-    void print(String prefix, char data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, char data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(float data, Level level = Level::LEVEL_VERBOSE);
-    void println(float data, Level level = Level::LEVEL_VERBOSE);
-    void print(String prefix, float data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, float data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(long data, Level level = Level::LEVEL_VERBOSE);
-    void println(long data, Level level = Level::LEVEL_VERBOSE);
-    void print(String prefix, long data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, long data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(unsigned long data, Level level = Level::LEVEL_VERBOSE);
-    void println(unsigned long data, Level level = Level::LEVEL_VERBOSE);
-    void print(String prefix, unsigned long data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, unsigned long data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(String data, Level level = Level::LEVEL_VERBOSE);
-    void println(String data, Level level = Level::LEVEL_VERBOSE);
-    void print(String prefix, String data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, String data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(String prefix, Point data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, Point data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(String prefix, Point3D data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, Point3D data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(String prefix, Point4D data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, Point4D data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(String prefix, PolarPoint data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, PolarPoint data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(String prefix, PoseF data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, PoseF data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void print(String prefix, Command data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, Command data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    // bool needs to be the last because it overrides all functions
-    void print(String prefix, bool data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-    void println(String prefix, bool data, String suffix = "", Level level = Level::LEVEL_VERBOSE);
-
-    void printArray(String prefix, int32_t array[], size_t size, char separator = ',', String suffix = "",
-                    Level level = Level::LEVEL_VERBOSE);
 
     /**
      * Send data to be viewed on teleplot, eg: trace x and y in a graph

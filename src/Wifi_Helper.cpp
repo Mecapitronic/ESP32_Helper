@@ -202,13 +202,13 @@ namespace Wifi_Helper
             .onProgress(
                 [](unsigned int progress, unsigned int total)
                 {
-                    Printer::println("Progress: ", (progress / (total / 100)), " %");
+                    Printer::println("Progress: %i %%", (progress / (total / 100)));
                     Wifi_Helper::OTARunning = true;
                 })
             .onError(
                 [](ota_error_t error)
                 {
-                    Printer::println("Error[", error, "]: ");
+                    Printer::println("Error[" + String(error) + "]: ");
                     if (error == OTA_AUTH_ERROR)
                     {
                         Printer::println("Auth Failed");
@@ -375,23 +375,23 @@ namespace Wifi_Helper
 
         if (cmdTmp.cmd == "WifiStatus")
         {
-            Printer::println("Wifi status : ", (wl_status_t)WiFi.status());
-            Printer::println("Wifi SSID : ", WiFi.SSID());
-            Printer::println("Wifi SSID saved : ", wifi_ssid);
-            Printer::println("Wifi Password saved : ", wifi_password);
+            Printer::println("Wifi status : %i", (wl_status_t)WiFi.status());
+            Printer::println("Wifi SSID : %s", WiFi.SSID().c_str());
+            Printer::println("Wifi SSID saved : %s", wifi_ssid.c_str());
+            Printer::println("Wifi Password saved : %s", wifi_password.c_str());
 
-            Printer::println("Wifi IP : ", WiFi.localIP().toString());
-            Printer::println("Wifi MAC : ", WiFi.macAddress());
-            Printer::println("Wifi RSSI : ", WiFi.RSSI());
-            Printer::println("Wifi Local IP : ", wifi_local_ip);
-            Printer::println("Wifi Server IP : ", wifi_server_ip);
-            Printer::println("Wifi Server Port : ", wifi_server_port);
+            Printer::println("Wifi IP : %s", WiFi.localIP().toString().c_str());
+            Printer::println("Wifi MAC : %s", WiFi.macAddress().c_str());
+            Printer::println("Wifi RSSI : %i", WiFi.RSSI());
+            Printer::println("Wifi Local IP : %s", wifi_local_ip.c_str());
+            Printer::println("Wifi Server IP : %s", wifi_server_ip.c_str());
+            Printer::println("Wifi Server Port : %i", wifi_server_port);
         }
         else if (cmdTmp.cmd == "WifiEnable")
         {
             // WifiEnable:0
             // WifiEnable:1
-            Printer::println("Wifi status : ", WiFi.status());
+            Printer::println("Wifi status : %i", (wl_status_t)WiFi.status());
             if (cmdTmp.size == 1)
                 EnableWifi((Enable)cmdTmp.data[0]);
         }
@@ -500,8 +500,7 @@ namespace Wifi_Helper
 
     void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
     {
-        print("WiFi lost connection : ");
-        println((wifi_err_reason_t)info.wifi_sta_disconnected.reason);
+        println("WiFi lost connection : " + String((wifi_err_reason_t)info.wifi_sta_disconnected.reason));
     }
 }
 #endif

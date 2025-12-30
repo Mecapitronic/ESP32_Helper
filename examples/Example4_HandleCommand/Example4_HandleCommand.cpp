@@ -12,11 +12,11 @@ void setup(void)
     ESP32_Helper::Initialisation();
 }
 
-static int32_t cpt = 0;
+int32_t cpt = 0;
 void loop(void)
 {    
     // This will be print on Serial
-    println("Hello World ", cpt, " times !");
+    println("Hello World %i times !", cpt++);
     delay(1000);
 
     // Command is defined with a string first (14 char max),
@@ -43,7 +43,7 @@ void loop(void)
         // Log;Message here
         if(command.cmd.startsWith("Log"))
         {
-            println("Log : ", command.dataStr1);
+            println("Log : %s", command.ToString().c_str());
         }
         // put your command here
     }

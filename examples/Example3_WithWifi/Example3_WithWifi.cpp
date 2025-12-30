@@ -20,11 +20,11 @@ void setup(void)
     ESP32_Helper::Initialisation();
 }
 
-static int32_t cpt = 0;
+int32_t cpt = 0;
 void loop(void)
 {
     // This will be send over Wifi if enable and also on Serial
-    println("Hello World ", cpt++, " times !");
+    println("Hello World %i times !", cpt++);
     delay(1000);
 
     // you can Upload with platformio Over The Air on the IP address

@@ -348,6 +348,29 @@ struct Command
         cmd = s;
         data.fill(0);
     }
+    String ToString()
+    {
+        String toString = "";
+        toString+=(" Cmd=" + cmd);
+        if (size > 0)
+        {
+            toString+=(" Size=" + String(size));
+            toString+=(" Data=" + String(data[0]));
+            for (int8_t size_data = 1; size_data < size; size_data++)
+            {
+                toString +=("," + String(data[size_data]));
+            }
+        }
+        if (dataStr1 != "")
+        {
+            toString += (" DataStr1=" + String(dataStr1));
+        }
+        if (dataStr2 != "")
+        {
+            toString += (" DataStr2=" + String(dataStr2));
+        }
+        return toString;
+    }
 };
 
 // Use Start to specify the timeOut in ms,

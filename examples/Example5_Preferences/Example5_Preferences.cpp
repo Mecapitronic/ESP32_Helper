@@ -12,15 +12,14 @@ void setup(void)
 {
     ESP32_Helper::Initialisation();
     cpt = Preferences_Helper::LoadFromPreference("cpt", -1);
-    println("Load cpt = ", cpt);
+    println("Load cpt = %i", cpt);
 }
 
 void loop(void)
 {
     // This will be print on Serial
-    println("Hello World ", cpt, " times !");
+    println("Hello World %i times !", cpt++);
     delay(1000);
 
     Preferences_Helper::SaveToPreference("cpt", cpt);
-    println("Saved cpt = ", cpt);
 }

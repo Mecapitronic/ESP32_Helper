@@ -1,4 +1,5 @@
 #include "Printer.h"
+#include <cstdarg>
 
 namespace Printer
 {
@@ -140,564 +141,116 @@ namespace Printer
             ENUM_PRINT(Enable::ENABLE_NONE);
         }
     }
-    /*
-        void print(String prefix, String suffix, Level level)
-        {
-            if (!IsPrintable(level))
-                return;
-            print(prefix);
-            print(suffix);
-        }
 
-        void println(String prefix, String suffix, Level level)
-        {
-            if (!IsPrintable(level))
-                return;
-            print(prefix, suffix, level);
-            println();
-        }
-    */
-   
-    void println(Level level)
+    /**
+Format Specifier
+    %c    For character type.
+    %d    For signed integer type.
+    %e or %E    For scientific notation of floats.
+    %f    For float type.
+    %g or %G    For float type with the current precision.
+    %i    signed integer
+    %ld or %li    Long
+    %lf    Double
+    %Lf    Long double
+    %lu    Unsigned int or unsigned long
+    %lli or %lld    Long long
+    %llu    Unsigned long long
+    %o    Octal representation
+    %p    Pointer
+    %s    String  /!\ DOES NOT WORK WITH ARDUINO String OBJECT /!\
+    %u    Unsigned int
+    %x or %X    Hexadecimal representation
+    %n    Prints nothing
+    %%    Prints % character
+    **/
+    void print(const char *fmt, ...)
     {
-        if (!IsPrintable(level))
+        if (!IsEnable())
             return;
-        if(Wifi_Helper::IsEnable())
-            WIFI_DEBUG.println();
-        //else
+        if (!fmt)
+            fmt = "";
+        va_list args;
+        va_start(args, fmt);
+        SERIAL_DEBUG.vprintf(fmt, args);
+        if (Wifi_Helper::IsEnable())
+            WIFI_DEBUG.vprintf(fmt, args);
+        va_end(args);
+    }
+
+    void println(const char *fmt, ...)
+    {
+        if (!IsEnable())
+            return;
+        if (!fmt)
+            fmt = "";
+        va_list args;
+        va_start(args, fmt);
+        SERIAL_DEBUG.vprintf(fmt, args);
+        if (Wifi_Helper::IsEnable())
+            WIFI_DEBUG.vprintf(fmt, args);
+        va_end(args);
+        
         SERIAL_DEBUG.println();
+        if (Wifi_Helper::IsEnable())
+            WIFI_DEBUG.println();
     }
 
-    void print(int32_t data, Level level)
+    void println()
     {
-        if (!IsPrintable(level))
+        if (!IsEnable())
             return;
-        print(String(data));
+        SERIAL_DEBUG.println();
+        if (Wifi_Helper::IsEnable())
+            WIFI_DEBUG.println();
+    }
+        
+    void print(const String &str)
+    {
+        if (!IsEnable())
+            return;
+        SERIAL_DEBUG.print(str);
+        if (Wifi_Helper::IsEnable())
+            WIFI_DEBUG.print(str);
     }
 
-    void println(int32_t data, Level level)
+    void println(const String &str)
     {
-        if (!IsPrintable(level))
-            return;
-        print(data);
+        print(str);
         println();
-    }
-
-    void print(String prefix, int32_t data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print(data);
-        print(suffix);
-    }
-
-    void println(String prefix, int32_t data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(uint32_t data, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(String(data));
-    }
-
-    void println(uint32_t data, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(data);
-    }
-
-    void print(String prefix, uint32_t data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print(data);
-        print(suffix);
-    }
-
-    void println(String prefix, uint32_t data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(char data, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(String(data));
-    }
-
-    void println(char data, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(data);
-        println();
-    }
-
-    void print(String prefix, char data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print(data);
-        print(suffix);
-    }
-
-    void println(String prefix, char data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(float data, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(String(data));
-    }
-
-    void println(float data, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(data);
-        println();
-    }
-
-    void print(String prefix, float data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print(data);
-        print(suffix);
-    }
-
-    void println(String prefix, float data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(unsigned long data, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(String(data));
-    }
-
-    void println(unsigned long data, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(data);
-        println();
-    }
-
-    void print(String prefix, unsigned long data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print(data);
-        print(suffix);
-    }
-
-    void println(String prefix, unsigned long data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(long data, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(String(data));
-    }
-
-    void println(long data, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(data);
-        println();
-    }
-
-    void print(String prefix, long data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print(data);
-        print(suffix);
-    }
-
-    void println(String prefix, long data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(String data, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        try
-        {
-            if (Wifi_Helper::IsEnable())
-                WIFI_DEBUG.print(data);
-            // else
-            SERIAL_DEBUG.print(data);
-        }
-        catch (const std::exception &e)
-        {
-            printError(e.what());
-        }
-    }
-
-    void printError(String error)
-    {
-        SERIAL_DEBUG.println("!!!---------- ERROR ----------!!!");
-        SERIAL_DEBUG.println(error);
-        SERIAL_DEBUG.println("!!!---------- ERROR ----------!!!");
     }
 
     void printChrono(Chrono chrono)
     {
-        if (chrono.loopNbr != 0)
-        {
-            println("Chrono " + chrono.name + " : ",
-                    chrono.elapsedTime / chrono.loopNbr,
-                    " µs/loop");
-        }
+        println("Chrono ["+chrono.name+"]: " + String(chrono.elapsedTime) + " µs");
     }
 
-    void println(String data, Level level)
+    void teleplot(const String &varName, float var)
     {
-        if (!IsPrintable(level))
-            return;
-        print(data);
-        println();
-    }
-
-    void print(String prefix, String data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print(data);
-        print(suffix);
-    }
-
-    void println(String prefix, String data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(String prefix, Point data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print("x: ");
-        print(data.x);
-        print(" y: ");
-        print(data.y);
-        print(suffix);
-    }
-
-    void println(String prefix, Point data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(String prefix, Point3D data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print("x: ");
-        print(data.x);
-        print(" y: ");
-        print(data.y);
-        print(" z: ");
-        print(data.z);
-        print(suffix);
-    }
-
-    void println(String prefix, Point3D data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(String prefix, Point4D data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print("x: ");
-        print(data.x);
-        print(" y: ");
-        print(data.y);
-        print(" z: ");
-        print(data.z);
-        print(" w: ");
-        print(data.w);
-        print(suffix);
-    }
-
-    void println(String prefix, Point4D data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(String prefix, PolarPoint data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print("A: ");
-        print((int)(data.angle / 100));
-        print(" D: ");
-        print(data.distance);
-        print(" C: ");
-        print(data.confidence);
-        print(" X: ");
-        print(data.x);
-        print(" Y: ");
-        print(data.y);
-        print(suffix);
-    }
-
-    void println(String prefix, PoseF data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(String prefix, PoseF data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print(" X: ");
-        print(data.x);
-        print(" Y: ");
-        print(data.y);
-        print(" H: ");
-        print(data.h / 100);
-        print(suffix);
-    }
-
-    void println(String prefix, PolarPoint data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void print(String prefix, Command data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        print(" Cmd=" + data.cmd);
-        if (data.size > 0)
-        {
-            print(" Size=", data.size);
-            print(" Data=", data.data[0]);
-            for (int8_t size_data = 1; size_data < data.size; size_data++)
-            {
-                print(",", data.data[size_data]);
-            }
-        }
-        if (data.dataStr1 != "")
-        {
-            print(" DataStr1=", String(data.dataStr1));
-        }
-        if (data.dataStr2 != "")
-        {
-            print(" DataStr2=", String(data.dataStr2));
-        }
-    }
-
-    void println(String prefix, Command data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    // bool needs to be the last because it overrides all functions
-    void print(String prefix, bool data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        if (data)
-            print("true");
-        else
-            print("false");
-        print(suffix);
-    }
-
-    void println(String prefix, bool data, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix, data, suffix, level);
-        println();
-    }
-
-    void printArray(String prefix, int32_t array[], size_t size, char separator, String suffix, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        print(prefix);
-        if (size > 0)
-        {
-            for (size_t i = 0; i < size - 1; i++)
-            {
-                print(array[i]);
-                print(separator);
-            }
-            print(array[size - 1]);
-        }
-        println(suffix);
-    }
-
-    void teleplot(String varName, float var, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        String data = ">" + varName + ":" + var;
-        if(teleplotUDP.IsInitialized())
+        if (teleplotUDP.IsInitialized())
             teleplotUDP.update(varName.c_str(), var);
         else
-            println(data);
-    }
-    
-    void teleplot(String varName, Point point, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        String data = ">" + varName + ":" + point.x + ":" + point.y + "|xy";
-        if(teleplotUDP.IsInitialized())
-            teleplotUDP.update2D(varName.c_str(), point.x, point.y);
-        else
-            println(data);
+            println(">" + varName + ":" + String(var));
     }
 
-    void teleplot(String varName, PointF point, Level level)
+    void teleplot(const String &varName, Point point)
     {
-        if (!IsPrintable(level))
-            return;
-        String data = ">" + varName + ":" + point.x + ":" + point.y + "|xy";
-        if(teleplotUDP.IsInitialized())
-            teleplotUDP.update2D(varName.c_str(), point.x, point.y);
-        else
-            println(data);
-    }
-
-    void teleplot(String varName, Pose point, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        String data = ">" + varName + ":" + point.x + ":" + point.y + "|xy";
-        if(teleplotUDP.IsInitialized())
-            teleplotUDP.update2D(varName.c_str(), point.x, point.y);
-        else
-            println(data);
-    }
-
-    void teleplot(String varName, PoseF point, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        String data = ">" + varName + ":" + point.x + ":" + point.y + "|xy";
-        if(teleplotUDP.IsInitialized())
-            teleplotUDP.update2D(varName.c_str(), point.x, point.y);
-        else
-            println(data);
-    }
-
-/*
-    void teleplot(String varName, Point points[], uint16_t size, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        String data = ">" + varName + ":";
-        for (uint16_t i = 0; i < size; i++)
-        {
-            data += String() + (int)(points[i].x) + ":" + (int)(points[i].y) + ";";
-        }
-        data += "|xy";
-        println(data);
-    }
-*/
-
-    void teleplot(String varName, PolarPoint polarPoint, Level level)
-    {
-        if (!IsPrintable(level))
-            return;
-        String data = ">" + varName + ":" + (int)polarPoint.x + ":" + (int)polarPoint.y + "|xy";
         if (teleplotUDP.IsInitialized())
-            teleplotUDP.update2D(varName.c_str(), polarPoint.x, polarPoint.y);
+            teleplotUDP.update2D(varName.c_str(), point.x, point.y);
         else
-            println(data);
+            println(">" + varName + ":" + String((int)point.x) + ":" + String((int)point.y) + "|xy");
     }
 
 /*
-    void teleplot(String varName, PolarPoint polarPoint, int32_t timeStamp, Level level)
+    void teleplot(const String &varName, PolarPoint point, int32_t timeStamp)
     {
-        if (!IsPrintable(level))
-            return;
-        String data = ">" + varName + ":" + polarPoint.x + ":" + polarPoint.y + ":" + timeStamp + "|xy";
+        String data = ">" + varName + ":" + point.x + ":" + point.y + ":" + timeStamp + "|xy";
         println(data);
     }
 */
 /*
-    void teleplot(String varName, PolarPoint polarPoints[], uint16_t size, Level level)
+    void teleplot(const String &varName, PolarPoint polarPoints[], uint16_t size)
     {
-        if (!IsPrintable(level))
-            return;
         String data = ">" + varName + ":";
         for (uint16_t i = 0; i < size; i++)
         {
@@ -708,10 +261,8 @@ namespace Printer
     }
 */
 /*
-    void teleplot(String varName, vector<PolarPoint> vec, Level level)
+    void teleplot(const String &varName, vector<PolarPoint> vec)
     {
-        if (!IsPrintable(level))
-            return;
         // if (vec.size() == 0)
         //     return;
         print(">" + varName + ":");
@@ -723,16 +274,14 @@ namespace Printer
     }
 */
 /*
-    void teleplot(String varName, Point4D point, Level level)
+    void teleplot(const String &varName, Point4D point)
     {
-        if (!IsPrintable(level))
-            return;
         String data = ">" + varName + ":" + (int)point.x + ":" + (int)point.y + "|xy";
         println(data);
     }
 */
 /*
-    void plot3D(Point3D p, String varName)
+    void plot3D(const String &varName, Point3D p)
     {
         // 3D|A:B:C|E
         // '3D|sphere1,widget0:S:sphere:RA:'+ str(sphere1rad)+':P:'+ str(sphere1x) +':'+ str(sphere1y) +':'+

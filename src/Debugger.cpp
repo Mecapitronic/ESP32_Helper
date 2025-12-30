@@ -13,25 +13,17 @@ namespace Debugger
     {
         if (enable != Enable::ENABLE_NONE)
         {
-            Printer::print("Debugger : ");
-
+            String status = "";
             if (debuggerEnable == enable && enable == Enable::ENABLE_TRUE)
-            {
-                Printer::print("already Enable");
-            }
-            if (debuggerEnable == enable && enable == Enable::ENABLE_FALSE)
-            {
-                Printer::print("already Disable");
-            }
-            if (debuggerEnable != enable && enable == Enable::ENABLE_TRUE)
-            {
-                Printer::print(" Enable");
-            }
-            if (debuggerEnable != enable && enable == Enable::ENABLE_FALSE)
-            {
-                Printer::print(" Disable");
-            }
-            Printer::println();
+                status = "already Enabled";
+            else if (debuggerEnable == enable && enable == Enable::ENABLE_FALSE)
+                status = "already Disabled";
+            else if (debuggerEnable != enable && enable == Enable::ENABLE_TRUE)
+                status = "Enabled";
+            else if (debuggerEnable != enable && enable == Enable::ENABLE_FALSE)
+                status = "Disabled";
+            
+            Printer::println("Debugger: " + status);
             debuggerEnable = enable;
         }
     }
@@ -102,8 +94,8 @@ namespace Debugger
 
     void AddSteps(int16_t steps)
     {
+        Printer::println("Adding %d steps to Debugger.", steps);
         queueSteps.Send(steps);
-        Printer::println("Adding ", steps, " steps to Debugger.");
     }
 
     bool GetSteps()

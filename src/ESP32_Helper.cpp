@@ -67,7 +67,7 @@ namespace ESP32_Helper
         println("-- Starting SPIFFS Initialisation --");
         if (!FileSystem_Helper::Initialisation())
         {
-            println("Error initialising the SPIFFS", Level::LEVEL_ERROR);
+            println("Error initialising the SPIFFS");
         }
         FileSystem_Helper::ListFiles();
         println("-- End of SPIFFS Initialisation --");
@@ -207,10 +207,10 @@ namespace ESP32_Helper
                                 else if(cmdTmp.dataStr2=="")
                                     cmdTmp.dataStr2 = strToConvert;
                                 else
-                                    println("3rd String not saved", String(" : "), strToConvert, Level::LEVEL_ERROR);
+                                    println("3rd String not saved: " + strToConvert);
                             }
                             else
-                                println("String too long !", String(" : "), strToConvert, Level::LEVEL_ERROR);
+                                println("String too long: " + strToConvert);
                         }
                         else
                         {
@@ -225,12 +225,12 @@ namespace ESP32_Helper
                                 }
                                 else
                                 {
-                                    println("Conversion didn't consume entire string", String(" : "), strToConvert, Level::LEVEL_ERROR);
+                                    println("Conversion didn't consume entire string: " + strToConvert);
                                 }
                             }
                             catch(const std::exception& e)
                             {
-                                println(e.what(), String(" error : "), strToConvert, Level::LEVEL_ERROR);
+                                println("Exception error: " + String(e.what()) + " for data: " + strToConvert);
                             }
                         }
                     }
@@ -246,7 +246,7 @@ namespace ESP32_Helper
         }
         else
         {
-            Printer::println("Command Received : ", cmdTmp);
+            Printer::println("Command Received : %s", cmdTmp.ToString().c_str());
             HandleCommand(cmdTmp);
         }
     }
