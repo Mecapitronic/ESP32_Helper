@@ -220,6 +220,13 @@ Format Specifier
         println();
     }
 
+    void printError(const String &error)
+    {
+        println("!!!---------- ERROR ----------!!!");
+        println(error);
+        println("!!!---------- ERROR ----------!!!");
+    }
+
     void printChrono(Chrono chrono)
     {
         println("Chrono ["+chrono.name+"]: " + String(chrono.elapsedTime) + " µs");

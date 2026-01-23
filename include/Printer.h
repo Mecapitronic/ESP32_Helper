@@ -46,6 +46,7 @@ namespace Printer
     void println(const String &str);
 
     // Utility functions
+    void printError(const String &error);
     void printChrono(Chrono chrono);
 
     /**
