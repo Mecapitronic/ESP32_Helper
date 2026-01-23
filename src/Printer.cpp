@@ -170,11 +170,13 @@ Format Specifier
             return;
         if (!fmt)
             fmt = "";
+        char buff[256];
         va_list args;
         va_start(args, fmt);
-        SERIAL_DEBUG.vprintf(fmt, args);
+        vsnprintf(buff, 256, fmt, args);
+        SERIAL_DEBUG.print(buff);
         if (Wifi_Helper::IsEnable())
-            WIFI_DEBUG.vprintf(fmt, args);
+            WIFI_DEBUG.print(buff);
         va_end(args);
     }
 
@@ -184,16 +186,14 @@ Format Specifier
             return;
         if (!fmt)
             fmt = "";
+        char buff[256];
         va_list args;
         va_start(args, fmt);
-        SERIAL_DEBUG.vprintf(fmt, args);
+        vsnprintf(buff, 256, fmt, args);
+        SERIAL_DEBUG.println(buff);
         if (Wifi_Helper::IsEnable())
-            WIFI_DEBUG.vprintf(fmt, args);
+            WIFI_DEBUG.println(buff);
         va_end(args);
-        
-        SERIAL_DEBUG.println();
-        if (Wifi_Helper::IsEnable())
-            WIFI_DEBUG.println();
     }
 
     void println()
