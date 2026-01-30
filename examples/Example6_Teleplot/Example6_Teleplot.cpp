@@ -20,8 +20,10 @@ void setup(void)
     Printer::teleplotUDPEnable = Enable::ENABLE_TRUE;
 }
 
-int32_t cpt = 0;
+static int32_t cpt = 0;
 Point point = Point(0, 0);
+PoseF pose = PoseF(0.0f, 0.0f, 0.0f);
+int64_t timeSinceBoot = 0;
 
 void loop(void)
 {
@@ -29,8 +31,14 @@ void loop(void)
     println("Hello World %i times !", cpt++);
     point.x = cpt + cpt;
     point.y = cpt * cpt;
+    pose.x = cpt / 3.0f;
+    pose.y = cpt * 1.2f;
+    pose.h = pose.x + pose.y;
     delay(1000);
+    timeSinceBoot = esp_timer_get_time();
 
+    teleplot("time", timeSinceBoot);
     teleplot("cpt", cpt);
     teleplot("point", point);
+    teleplot("pose", pose);
 }
