@@ -245,7 +245,7 @@ Format Specifier
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update2D(varName.c_str(), point.x, point.y);
         else
-            println(">%s:%i:%i|xy", varName, point.x, point.y);
+            println(">%s:%i:%i|xy", varName.c_str(), point.x, point.y);
     }
 
     void teleplot(const String &varName, PointF point)
@@ -253,7 +253,7 @@ Format Specifier
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update2D(varName.c_str(), point.x, point.y);
         else
-            println(">%s:%f:%f|xy", varName, point.x, point.y);
+            println(">%s:%f:%f|xy", varName.c_str(), point.x, point.y);
     }
 
     void teleplot(const String &varName, Pose pose)
@@ -261,7 +261,7 @@ Format Specifier
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update2D(varName.c_str(), pose.x, pose.y);
         else
-            println(">%s:%i:%i|xy", varName, pose.x, pose.y);
+            println(">%s:%i:%i|xy", varName.c_str(), pose.x, pose.y);
     }
 
     void teleplot(const String &varName, PoseF pose)
@@ -269,7 +269,7 @@ Format Specifier
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update2D(varName.c_str(), pose.x, pose.y);
         else
-            println(">%s:%f:%f|xy", varName, pose.x, pose.y);
+            println(">%s:%f:%f|xy", varName.c_str(), pose.x, pose.y);
     }
 
     void teleplot(const String &varName, PolarPoint polarPoint)
@@ -277,7 +277,7 @@ Format Specifier
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update2D(varName.c_str(), polarPoint.x, polarPoint.y);
         else
-            println(">%s:%f:%f|xy", varName, polarPoint.x, polarPoint.y);
+            println(">%s:%f:%f|xy", varName.c_str(), polarPoint.x, polarPoint.y);
     }
 
 /*
