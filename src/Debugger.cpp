@@ -43,17 +43,22 @@ namespace Debugger
 
     void HandleCommand(Command cmdTmp)
     {
-        if (cmdTmp.cmd == "DebugSteps")
-        {
-            // DebugSteps:10
-            if (cmdTmp.size == 1 && cmdTmp.data.at(0) > 0)
-                Debugger::AddSteps(cmdTmp.data.at(0));
-        }
-        else if (cmdTmp.cmd == "DebugEnable")
+         if (cmdTmp.cmd == "DebugEnable")
         {
             // DebugEnable:1
             if (cmdTmp.size == 1)
-                Debugger::EnableDebugger((Enable)cmdTmp.data.at(0));
+                EnableDebugger((Enable)cmdTmp.data.at(0));
+        }
+        else if (cmdTmp.cmd == "DebugAddSteps")
+        {
+            // DebugAddSteps:10
+            if (cmdTmp.size == 1 && cmdTmp.data.at(0) > 0)
+                AddSteps(cmdTmp.data.at(0));
+        }
+        else if (cmdTmp.cmd == "DebugGetSteps")
+        {
+            // DebugGetSteps
+            Printer::println("Steps available : %i", GetSteps());
         }
         else
         {
@@ -65,10 +70,12 @@ namespace Debugger
     void PrintCommandHelp()
     {
         Printer::println("Debugger Command Help :");
-        Printer::println(" > DebugSteps:[int]");
-        Printer::println("      Add the number of steps to the debugger");
         Printer::println(" > DebugEnable:[int]");
         Printer::println("      0 Disable, 1 Enable Debugger");
+        Printer::println(" > DebugAddSteps:[int]");
+        Printer::println("      Add the number of steps to the debugger");
+        Printer::println(" > DebugGetSteps");
+        Printer::println("      Get the actual number of steps available");
         Printer::println();
     }
 
@@ -76,14 +83,14 @@ namespace Debugger
     {
         if (IsEnable())
         {
-            GetSteps();
+            ReceiveSteps();
 
             if (debugSteps <= 0)
                 Printer::println("Debugger : Wait For Available Steps");
 
             while (debugSteps <= 0 && IsEnable())
             {
-                GetSteps();
+                ReceiveSteps();
             }
             debugSteps--;
         }
@@ -98,7 +105,7 @@ namespace Debugger
         queueSteps.Send(steps);
     }
 
-    bool GetSteps()
+    void ReceiveSteps()
     {
         if (queueSteps.MessagesWaiting() > 0)
         {
@@ -106,10 +113,13 @@ namespace Debugger
             if (queueSteps.Receive(steps))
             {
                 debugSteps += steps;
-                return true;
             }
         }
-        return false;
+    }
+
+    int GetSteps()
+    {
+        return debugSteps;
     }
 
 }

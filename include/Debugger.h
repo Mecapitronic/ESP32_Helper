@@ -20,6 +20,7 @@ namespace Debugger
 
     bool WaitForAvailableSteps();
     void AddSteps(int16_t steps);
-    bool GetSteps(void);
+    void ReceiveSteps(void);
+    int GetSteps(void);
 }
 #endif
