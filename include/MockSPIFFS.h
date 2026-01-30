@@ -24,7 +24,7 @@ class MockSPIFFSClass; // forward
 
 class MockFile {
 public:
-    MockFile() : owner(nullptr), idx(-1), isDir(false), pos(0), writable(false), valid(false) {}
+    MockFile() {}
     MockFile(MockSPIFFSClass* owner, int index, bool writable=false, bool isDir=false);
 
     size_t print(const String& s);
@@ -42,12 +42,12 @@ public:
     operator bool() const { return valid; }
 
 private:
-    MockSPIFFSClass* owner;
-    int idx; // index into owner's files vector; -2 for directory handle
-    bool isDir;
-    int pos; // read position or dir iterator
-    bool writable;
-    bool valid;
+    MockSPIFFSClass* owner = nullptr;
+    int idx = -1; // index into owner's files vector; -2 for directory handle
+    bool isDir = false;
+    int pos = 0; // read position or dir iterator
+    bool writable = false;
+    bool valid = false;
 };
 
 class MockSPIFFSClass {

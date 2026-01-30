@@ -5,7 +5,7 @@ MockSPIFFSClass MockSPIFFS;
 
 // ---------------- MockFile ----------------
 MockFile::MockFile(MockSPIFFSClass* owner_, int index, bool writable_, bool isDir_)
-    : owner(owner_), idx(index), isDir(isDir_), pos(0), writable(writable_), valid(true)
+    : owner(owner_), idx(index), isDir(isDir_), writable(writable_), valid(true)
 {
     if (!owner_) { valid = false; return; }
     if (!isDir_ && (idx < 0 || idx >= (int)owner_->files.size())) { valid = false; }
