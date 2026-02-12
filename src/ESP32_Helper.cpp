@@ -163,6 +163,8 @@ namespace ESP32_Helper
             }
             else if (cmdTmp.cmd.startsWith("SPIFFS"))
                 FileSystem_Helper::HandleCommand(cmdTmp);
+            else if (cmdTmp.cmd.startsWith("AX12"))
+                ServoAX12::HandleCommand(cmdTmp);
             else
             {
                 // If command is not for Lib, we send it to the main

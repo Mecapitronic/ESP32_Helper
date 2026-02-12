@@ -28,6 +28,7 @@
 #include "Printer.h"
 #include "Debugger.h"
 #include "FileSystem_Helper.h"
+#include "ServoAX12.h"
 
 namespace ESP32_Helper
 {
