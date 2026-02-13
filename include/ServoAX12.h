@@ -120,8 +120,10 @@ namespace ServoAX12
     int16_t Scan(DxlProtocolVersion _protocol, BaudRate _dxlBaud);
     void PrintDxlInfo(uint8_t id = DXL_BROADCAST_ID);
 
-    void TeleplotPosition();
-    void PrintPosition();
+    void TeleplotAllPosition();
+    void TeleplotPosition(uint8_t id);
+    void PrintAllPosition();
+    void PrintPosition(uint8_t id);
 } // namespace ServoAX12
 
 namespace std

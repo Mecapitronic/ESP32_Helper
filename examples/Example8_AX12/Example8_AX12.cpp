@@ -16,6 +16,8 @@ void setup(void)
     int8_t dirPin = 14;
 
     ServoAX12::Initialisation(Serial1, rxPin, txPin, dirPin);
+
+    ServoAX12::Scan(ServoAX12::DxlProtocolVersion::PROTOCOL_1, BaudRate::BAUD_RATE_1000000);
     
     ServoAX12::AddServo(1, "Up", 0, 300);
     ServoAX12::AddServo(2, "Down", 0, 300);
@@ -27,25 +29,18 @@ int32_t cpt = 0;
 
 void loop(void)
 {
-    /*
-    ServoAX12::SetServoPosition(1, 100);
+    ServoAX12::SetServoPosition(1, 10);
     while (ServoAX12::IsServoMoving(1))
     {
-        //ServoAX12::PrintPosition();
-        ServoAX12::TeleplotPosition();
+        ServoAX12::TeleplotPosition(1);
         delay(5);
     }
-    ServoAX12::SetServoPosition(1, 200);
+    delay(1000);
+    ServoAX12::SetServoPosition(1, 250);
     while (ServoAX12::IsServoMoving(1))
     {
-        //ServoAX12::PrintPosition();
-        ServoAX12::TeleplotPosition();
+        ServoAX12::TeleplotPosition(1);
         delay(5);
-    }*/
-    delay(3000);
-    print(".");
-    ServoAX12::Scan(ServoAX12::DxlProtocolVersion::PROTOCOL_1, BaudRate::BAUD_RATE_1000000);
-
-    //ServoAX12::UpdateAllServo();
-    //ServoAX12::TeleplotPosition();
+    }
+    delay(1000);
 }

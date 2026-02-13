@@ -14,6 +14,9 @@ namespace ServoAX12
         DxlProtocolVersion _dxlProtocolVersion;
         Dynamixel2Arduino dxl;
 
+        bool scanning = false;
+
+        TaskThread taskUpdateServo;
         std::unordered_map<uint8_t, ServoMotion, std::hash<uint8_t>> Servos;
     }
 
@@ -25,29 +28,30 @@ namespace ServoAX12
         _baudRate = baudRate;
         _dxlProtocolVersion = dxlProtocolVersion;
         //_simulation = simulation;
-        Serial1.setPins(_rxPin, _txPin);
-        dxl = Dynamixel2Arduino(Serial1, _dirPin);
+        serial.setPins(_rxPin, _txPin);
+        dxl = Dynamixel2Arduino(serial, _dirPin);
         // Set Port baudrate. This has to match with DYNAMIXEL baudrate.
         dxl.begin((unsigned long)_baudRate);
         // Set Port Protocol Version. This has to match with DYNAMIXEL protocol version.
         dxl.setPortProtocolVersion((float)_dxlProtocolVersion);
 
         Servos.clear();
-
-        InitAllServo();
         
-        //TaskThread(TaskUpdateServo, "TaskUpdateServo", 2000, 15, 1);
+        taskUpdateServo = TaskThread(TaskUpdateServo, "TaskUpdateServo", 2000, 15, 1);
     }
     
     void TaskUpdateServo(void *pvParameters)
     {
-        println("Start TaskUpdateServo");
+        println("Start Task Update Servo");
         while (true)
         {
             try
             {
-                // take some time to update the servo
-                ServoAX12::UpdateAllServo();
+                if(!scanning)
+                {
+                    // take some time to update the servo
+                    ServoAX12::UpdateAllServo();
+                }
             }
             catch (const std::exception &e)
             {
@@ -55,6 +59,7 @@ namespace ServoAX12
             }
             vTaskDelay(10);
         }
+        println("Servo Update Task STOPPED !");
     }
 
     void AddServo(uint8_t id, String name, uint16_t positionMin, uint16_t positionMax)
@@ -262,22 +267,25 @@ namespace ServoAX12
                 // AX12Pos:1:100
                 uint8_t id = cmd.data[0];
                 print("AX12 Servo id: %i ", id);
-                if (Servos.count(id) == 0)
+                float position = static_cast<float>(cmd.data[1]);
+                if (Servos.find(id) != Servos.end())
                 {
-                    println("is not initialized");
+                    println("Set Position : %f", position);
+                    SetServoPosition(id, position);
                 }
                 else
                 {
-                    UpdateServo(Servos.at(id));
-                    println("Set Position : %i", cmd.data[1]);
-                    SetServoPosition(id, (float)cmd.data[1]);
+                    println("Servo ID %i is not initialized", id);
                 }
+            }
+            else if (cmd.size == 1)
+            {
+                //AX12Pos:1
+                PrintPosition(cmd.data[0]);
             }
             else
             {
-                UpdateAllServo();
-                // TeleplotPosition();
-                PrintPosition();
+                PrintAllPosition();
             }
         }
         else if (cmd.cmd == "AX12Stop")
@@ -311,6 +319,7 @@ namespace ServoAX12
         Printer::println("      Add a servo with the given id, name, min and max position");
         Printer::println(" > AX12Pos:[id]:[position]");
         Printer::println("      Set servo [id] to [position] (in degrees)");
+        Printer::println("      If only 1 argument, print current position of the servo with the given id");
         Printer::println("      If no argument, print all currents positions");
         Printer::println(" > AX12Stop");
         Printer::println("      Stop all servos (torque off)");
@@ -336,6 +345,7 @@ namespace ServoAX12
 
     int16_t Scan(DxlProtocolVersion _protocol, BaudRate _dxlBaud)
     {
+        scanning = true;
         //Save original protocol and version
         float version = dxl.getPortProtocolVersion();
         unsigned long baud = dxl.getPortBaud();
@@ -347,8 +357,7 @@ namespace ServoAX12
         // Set Port baudrate.
         dxl.begin((int)_dxlBaud);
         println("Scan Baudrate %i", (int)_dxlBaud);
-        //for (int id = 0; id < DXL_BROADCAST_ID; id++)
-        for (int id = 11; id < 13; id++)
+        for (int id = 0; id < DXL_BROADCAST_ID; id++)
         {
             // iterate until all ID in each baudrate is scanned.
             if (dxl.ping(id))
@@ -364,6 +373,7 @@ namespace ServoAX12
         dxl.setPortProtocolVersion(version);
         dxl.begin(baud);
 
+        scanning = false;
         return found_dynamixel;
     }
 
@@ -391,18 +401,36 @@ namespace ServoAX12
         }
     }
 
-    void TeleplotPosition()
+    void TeleplotAllPosition()
     {
         for (auto &[id, servo] : Servos)
         {
             teleplot("Servo " + servo.name + " " + String(servo.id), servo.position);
         }
     }
+    
+    void TeleplotPosition(uint8_t id)
+    {
+        if (Servos.find(id) != Servos.end())
+        {
+            auto &servo = Servos.at(id);
+            teleplot("Servo " + servo.name + " " + String(servo.id), servo.position);
+        }
+    }
 
-    void PrintPosition()
+    void PrintAllPosition()
     {
         for (auto &[id, servo] : Servos)
         {
+            println("Servo %s %d : %f", servo.name, servo.id, servo.position);
+        }
+    }
+
+    void PrintPosition(uint8_t id)
+    {
+        if (Servos.find(id) != Servos.end())
+        {
+            auto &servo = Servos.at(id);
             println("Servo %s %d : %f", servo.name, servo.id, servo.position);
         }
     }
