@@ -22,25 +22,31 @@ void setup(void)
     ServoAX12::AddServo(1, "Up", 0, 300);
     ServoAX12::AddServo(2, "Down", 0, 300);
     ServoAX12::AddServo(11, "Left", 0, 300);
-    ServoAX12::AddServo(12, "Right", 0, 300);
+    ServoAX12::AddServo(12, "TOP", 0, 300);
 }
 
 int32_t cpt = 0;
 
 void loop(void)
 {
-    ServoAX12::SetServoPosition(1, 10);
+    ServoAX12::SetServoPosition(11, 10);
+    ServoAX12::SetServoPosition(2, 10);
+    while (ServoAX12::IsServoMoving(2))
+    {
+        ServoAX12::TeleplotAllPosition();
+        vTaskDelay(10);
+    }
     while (ServoAX12::IsServoMoving(1))
     {
-        ServoAX12::TeleplotPosition(1);
-        delay(5);
+        ServoAX12::TeleplotAllPosition();
+        vTaskDelay(10);
     }
-    delay(1000);
-    ServoAX12::SetServoPosition(1, 250);
-    while (ServoAX12::IsServoMoving(1))
+
+    ServoAX12::SetServoPosition(11, 100);
+    ServoAX12::SetServoPosition(2, 290);
+    while (ServoAX12::AreAllServoMoving())
     {
-        ServoAX12::TeleplotPosition(1);
-        delay(5);
+        ServoAX12::TeleplotAllPosition();
+        vTaskDelay(10);
     }
-    delay(1000);
 }
