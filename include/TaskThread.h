@@ -22,7 +22,7 @@ public:
      * @param pcName The name of the thread
      * @param usStackDepth Length of stack
      * @param uxPriority Priority, from High (20) to Low (0)
-     * @param xCoreID Core affinity
+     * @param xCoreID Core affinity, setup and loop are on core 1
      */
     TaskThread(TaskFunction_t pvTaskCode, const char *const pcName, const uint32_t usStackDepth = 10000,
                UBaseType_t uxPriority = 5, const BaseType_t xCoreID = 0) : _pvTaskCode(pvTaskCode), _pcName(pcName)
