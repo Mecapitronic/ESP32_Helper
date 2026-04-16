@@ -32,7 +32,7 @@ namespace FileSystem_Helper
     void ListFiles(const String &filter)
     {
         print("Listing files ");
-        filter != "" ? println(" with filter : <", filter, ">") : println(" :");
+        filter != "" ? println(" with filter : <%s>", filter.c_str()) : println(" :");
 
         File root = SPIFFS.open("/");
         if (!root)
