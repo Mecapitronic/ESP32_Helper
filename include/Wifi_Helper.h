@@ -22,6 +22,8 @@ namespace Wifi_Helper
     bool IsOTARunning();
     void EnableWifi(Enable enable);
     bool IsEnable();
+    bool IsWifiConnected();
+    bool IsClientConnected();
 
     void Initialisation(void);
     void Update(void *pvParameters);

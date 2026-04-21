@@ -18,6 +18,10 @@ namespace Wifi_Helper
 
     bool IsEnable() { return false; }
 
+    bool IsWifiConnected() { return false; }
+
+    bool IsClientConnected() { return false; }
+
     void Initialisation()
     {
         Printer::println("-- NO Wifi initialisation --");

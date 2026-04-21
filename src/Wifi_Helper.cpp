@@ -75,6 +75,10 @@ namespace Wifi_Helper
 
     bool IsEnable() { return wifiEnable == Enable::ENABLE_TRUE; }
 
+    bool IsWifiConnected() { return WiFi.status() == WL_CONNECTED; }
+
+    bool IsClientConnected() { return wifiClient.connected(); }
+
     void Initialisation()
     {
         wifiEnable = Enable::ENABLE_TRUE;
