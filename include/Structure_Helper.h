@@ -418,6 +418,7 @@ struct Chrono
     String name = "";
     int32_t loopNbr = 0;
     static inline bool print = false;
+    static inline bool teleplot = false;
     int32_t loopMax = 0;
     unsigned long startTime = 0;
     unsigned long elapsedTime = 0;

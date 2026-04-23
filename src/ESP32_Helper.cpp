@@ -153,12 +153,26 @@ namespace ESP32_Helper
                 if (cmdTmp.data[0] == 1)
                 {
                     Chrono::print = true;
-                    println("Enable Chrono Print");
+                    Chrono::teleplot = false;
+                    println("Enable Chrono Print, Disable Teleplot");
+                }
+                else if (cmdTmp.data[0] == 2)
+                {
+                    Chrono::print = false;
+                    Chrono::teleplot = true;
+                    println("Disable Chrono Print, Enable Teleplot");
+                }
+                else if (cmdTmp.data[0] == 3)
+                {
+                    Chrono::print = true;
+                    Chrono::teleplot = true;
+                    println("Enable Chrono Print & Teleplot");
                 }
                 else
                 {
                     Chrono::print = false;
-                    println("Disable Chrono Print");
+                    Chrono::teleplot = false;
+                    println("Disable Chrono Print & Teleplot");
                 }
             }
             else if (cmdTmp.cmd.startsWith("SPIFFS"))

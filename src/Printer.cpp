@@ -229,7 +229,15 @@ Format Specifier
 
     void printChrono(Chrono chrono)
     {
-        println("Chrono ["+chrono.name+"]: " + String(chrono.elapsedTime) + " µs");
+        if(Chrono::print)
+        {
+            String name = "Chrono["+chrono.name+"]";
+            int time = (int)(chrono.elapsedTime/chrono.loopNbr);
+            if(Chrono::print)
+                println("Chrono [%s]: %d µs", chrono.name.c_str(), time);
+        }
+        //if(Chrono::teleplot)
+        //    teleplot(name,time);
     }
 
     void teleplot(const String &varName, float var)
