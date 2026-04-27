@@ -22,7 +22,7 @@ public:
      * @param pcName The name of the thread
      * @param usStackDepth Length of stack
      * @param uxPriority Priority, from High (20) to Low (0)
-     * @param xCoreID Core affinity, setup and loop are on core 1
+     * @param xCoreID Core affinity, setup and loop are on core ARDUINO_RUNNING_CORE = 1
      */
     TaskThread(TaskFunction_t pvTaskCode, const char *const pcName, const uint32_t usStackDepth = 10000,
                UBaseType_t uxPriority = 5, const BaseType_t xCoreID = 0) : _pvTaskCode(pvTaskCode), _pcName(pcName)
@@ -42,6 +42,10 @@ public:
         /* pin task to core x */
         xTaskCreatePinnedToCore(pvTaskCode, pcName, usStackDepth, this, uxPriority, &_task, xCoreID);
     }
+    // optimum stack size = the original stack size - (highwatermakrk + 2000 bytes)
+    // get stack size for task : unsigned int stackSize = uxTaskGetStackHighWaterMark(nullptr);
+    // uint stackSize = uxTaskGetStackHighWaterMark(nullptr);
+    // print("Stack Size: %u", stackSize);
 
     ~TaskThread()
     {

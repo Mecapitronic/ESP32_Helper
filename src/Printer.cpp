@@ -233,8 +233,7 @@ Format Specifier
         {
             String name = "Chrono["+chrono.name+"]";
             int time = (int)(chrono.elapsedTime/chrono.loopNbr);
-            if(Chrono::print)
-                println("Chrono [%s]: %d µs", chrono.name.c_str(), time);
+            print("Chrono [%s]: %d µs", chrono.name.c_str(), time);
         }
         //if(Chrono::teleplot)
         //    teleplot(name,time);

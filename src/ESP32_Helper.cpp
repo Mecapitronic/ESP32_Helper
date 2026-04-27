@@ -150,14 +150,16 @@ namespace ESP32_Helper
                 Wifi_Helper::HandleCommand(cmdTmp);
             else if (cmdTmp.cmd == "ChronoPrint" && cmdTmp.size == 1)
             {
+                // ChronoPrint:1
                 if (cmdTmp.data[0] == 1)
                 {
                     Chrono::print = true;
                     Chrono::teleplot = false;
                     println("Enable Chrono Print, Disable Teleplot");
-                }
+                }/*
                 else if (cmdTmp.data[0] == 2)
                 {
+                    //ChronoPrint:2
                     Chrono::print = false;
                     Chrono::teleplot = true;
                     println("Disable Chrono Print, Enable Teleplot");
@@ -167,7 +169,7 @@ namespace ESP32_Helper
                     Chrono::print = true;
                     Chrono::teleplot = true;
                     println("Enable Chrono Print & Teleplot");
-                }
+                }*/
                 else
                 {
                     Chrono::print = false;
