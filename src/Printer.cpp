@@ -228,6 +228,9 @@ Format Specifier
             String name = "Chrono["+chrono.name+"]";
             int time = (int)(chrono.elapsedTime/chrono.loopNbr);
             print("Chrono [%s]: %d µs", chrono.name.c_str(), time);
+                
+            uint stackSize = uxTaskGetStackHighWaterMark(nullptr);
+            println("  --  Stack Size: %u", stackSize);
         }
         //if(Chrono::teleplot)
         //    teleplot(name,time);
