@@ -11,6 +11,13 @@ namespace ESP32_Helper
         std::vector<char> readBuffer;
         TaskThread taskUpdate;
         QueueThread<Command> awaitingCommand;
+        TimerThread loggerFlushTimer;
+
+        void LoggerFlushCallback(TimerHandle_t xTimer)
+        {
+            //(void)xTimer;
+            Logger::Flush();
+        }
     }
 
     void Initialisation(BaudRate baud_speed, Enable printEnable, Level printLvl, Enable debugEnable)
@@ -20,6 +27,11 @@ namespace ESP32_Helper
         SERIAL_DEBUG.setTxBufferSize(1024);
         SERIAL_DEBUG.begin(static_cast<unsigned long>(baud_speed));
         delay(2000);
+
+        Logger::Initialisation();
+        loggerFlushTimer = TimerThread(LoggerFlushCallback, "LoggerFlush", pdMS_TO_TICKS(LOGGER_FLUSH_PERIOD_MS));
+        loggerFlushTimer.Start();
+
         println();
         println("-- Starting Helper Initialisation --");
 
@@ -100,11 +112,8 @@ namespace ESP32_Helper
             {
                 if (readBuffer.size() > 1)
                 {
-                    SERIAL_DEBUG.print("Received ");
-                    SERIAL_DEBUG.print(readBuffer.size());
-                    SERIAL_DEBUG.print(" : ");
-                    SERIAL_DEBUG.write(readBuffer.data(), readBuffer.size() - 1);
-                    SERIAL_DEBUG.println();
+                    Printer::print("Received %u : ", static_cast<unsigned int>(readBuffer.size()));
+                    Printer::println(String(readBuffer.data(), readBuffer.size() - 1));
                     ESP32_Helper::BufferReadCommand(readBuffer);
                 }
                 readBuffer.clear();
@@ -112,8 +121,7 @@ namespace ESP32_Helper
         }
         else
         {
-            SERIAL_DEBUG.print("SERIAL_DEBUG Read Buffer Overflow : ");
-            SERIAL_DEBUG.println(readBuffer.size());
+            Printer::println("SERIAL_DEBUG Read Buffer Overflow : %u", static_cast<unsigned int>(readBuffer.size()));
             readBuffer.clear();
         }
     }
@@ -131,6 +139,7 @@ namespace ESP32_Helper
                 Printer::println("     Reboot the ESP32");
                 Debugger::PrintCommandHelp();
                 Printer::PrintCommandHelp();
+                Logger::PrintCommandHelp();
                 Preferences_Helper::PrintCommandHelp();
                 Wifi_Helper::PrintCommandHelp();
             }
@@ -177,6 +186,8 @@ namespace ESP32_Helper
                     println("Disable Chrono Print & Teleplot");
                 }
             }
+            else if (cmdTmp.cmd.startsWith("Logger"))
+                Logger::HandleCommand(cmdTmp);
             else if (cmdTmp.cmd.startsWith("SPIFFS"))
                 FileSystem_Helper::HandleCommand(cmdTmp);
             else

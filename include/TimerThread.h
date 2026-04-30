@@ -16,7 +16,7 @@ private:
     bool _isRunning = false;
 
 public:
-    bool debugPrint = true;
+    bool debugPrint = false;
     TimerThread() = default;
     TimerThread(TimerCallbackFunction_t callBack, const char *const pcName, TickType_t period, bool autoReload = true, void *const id = 0)
         : _callBack(callBack), _pcName(pcName), _period(period)

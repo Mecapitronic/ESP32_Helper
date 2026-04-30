@@ -25,6 +25,7 @@
 #include "QueueThread.h"
 #include "TaskThread.h"
 #include "TimerThread.h"
+#include "Logger.h"
 #include "Printer.h"
 #include "Debugger.h"
 #include "FileSystem_Helper.h"

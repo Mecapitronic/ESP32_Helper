@@ -1,4 +1,5 @@
 #include "Printer.h"
+#include "Logger.h"
 #include <cstdarg>
 
 namespace Printer
@@ -174,10 +175,8 @@ Format Specifier
         va_list args;
         va_start(args, fmt);
         vsnprintf(buff, 256, fmt, args);
-        SERIAL_DEBUG.print(buff);
-        if (Wifi_Helper::IsEnable())
-            WIFI_DEBUG.print(buff);
         va_end(args);
+        Logger::Enqueue(buff, false);
     }
 
     void println(const char *fmt, ...)
@@ -190,34 +189,29 @@ Format Specifier
         va_list args;
         va_start(args, fmt);
         vsnprintf(buff, 256, fmt, args);
-        SERIAL_DEBUG.println(buff);
-        if (Wifi_Helper::IsEnable())
-            WIFI_DEBUG.println(buff);
         va_end(args);
+        Logger::Enqueue(buff, true);
     }
 
     void println()
     {
         if (!IsEnable())
             return;
-        SERIAL_DEBUG.println();
-        if (Wifi_Helper::IsEnable())
-            WIFI_DEBUG.println();
+        Logger::Enqueue("", true);
     }
         
     void print(const String &str)
     {
         if (!IsEnable())
             return;
-        SERIAL_DEBUG.print(str);
-        if (Wifi_Helper::IsEnable())
-            WIFI_DEBUG.print(str);
+        Logger::Enqueue(str.c_str(), false);
     }
 
     void println(const String &str)
     {
-        print(str);
-        println();
+        if (!IsEnable())
+            return;
+        Logger::Enqueue(str.c_str(), true);
     }
 
     void printError(const String &error)
