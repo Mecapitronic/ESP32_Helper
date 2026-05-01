@@ -33,7 +33,10 @@
 namespace ESP32_Helper
 {
     // Type definition for command handler function
-    typedef void (*CommandHandlerFunc)(Command);
+    // Returns true if the command was handled, false otherwise
+    typedef bool (*CommandHandlerFunc)(Command);
+    // Type definition for command help print function
+    typedef void (*CommandHelpFunc)();
 
     /**
      * Initialize serial/wifi for PC communication
@@ -47,10 +50,11 @@ namespace ESP32_Helper
 
     /**
      * @brief Register a custom command handler
-     * @param prefix Command prefix to match (e.g., "MyCmd")
-     * @param handler Function pointer to handle the command
+     * @param prefix    Command prefix to match (e.g., "MyCmd")
+     * @param handler   Function pointer to handle the command, returns true if handled
+     * @param helpFunc  Optional function pointer to print help for this handler
      */
-    void RegisterCommandHandler(const String& prefix, CommandHandlerFunc handler);
+    void RegisterCommandHandler(const String& prefix, CommandHandlerFunc handler, CommandHelpFunc helpFunc = nullptr);
 
     bool HasWaitingCommand();
     Command GetCommand();

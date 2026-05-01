@@ -11,6 +11,7 @@ namespace ESP32_Helper
         {
             String prefix;
             CommandHandlerFunc func;
+            CommandHelpFunc helpFunc;
         };
 
         const int8_t readBufferMax = 64;
@@ -133,9 +134,9 @@ namespace ESP32_Helper
         }
     }
 
-    void RegisterCommandHandler(const String& prefix, CommandHandlerFunc handler)
+    void RegisterCommandHandler(const String& prefix, CommandHandlerFunc handler, CommandHelpFunc helpFunc)
     {
-        customHandlers.push_back({prefix, handler});
+        customHandlers.push_back({prefix, handler, helpFunc});
     }
 
     void HandleCommand(Command cmdTmp)
@@ -154,6 +155,11 @@ namespace ESP32_Helper
                 Logger::PrintCommandHelp();
                 Preferences_Helper::PrintCommandHelp();
                 Wifi_Helper::PrintCommandHelp();
+                for (const auto& handler : customHandlers)
+                {
+                    if (handler.helpFunc != nullptr)
+                        handler.helpFunc();
+                }
             }
             else if (cmdTmp.cmd.startsWith("Reboot"))
             {
@@ -210,8 +216,10 @@ namespace ESP32_Helper
                 {
                     if (cmdTmp.cmd.startsWith(handler.prefix))
                     {
-                        handler.func(cmdTmp);
                         handlerFound = true;
+                        bool handled = handler.func(cmdTmp);
+                        if (!handled && handler.helpFunc != nullptr)
+                            handler.helpFunc();
                         break;
                     }
                 }

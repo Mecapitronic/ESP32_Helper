@@ -16,33 +16,59 @@ int32_t cpt = 0;
 
 // ============== Custom Command Handlers ==============
 
+// Help function for counter commands
+void printCounterHelp()
+{
+    println(" > cpt++");
+    println("     Increment counter");
+    println(" > cpt--");
+    println("     Decrement counter");
+    println(" > cpt:value");
+    println("     Set counter to value");
+}
+
 // Custom handler for counter commands
-void handleCounterCommand(Command cmd)
+// Returns true if the command was handled, false otherwise
+bool handleCounterCommand(Command cmd)
 {
     if(cmd.cmd.startsWith("cpt++"))
     {
         cpt++;
         println("Counter incremented: %i", cpt);
+        return true;
     }
     else if(cmd.cmd.startsWith("cpt--"))
     {
         cpt--;
         println("Counter decremented: %i", cpt);
+        return true;
     }
     else if(cmd.cmd == "cpt" && cmd.size == 1)
     {
         cpt = cmd.data[0];
         println("Counter set to: %i", cpt);
+        return true;
     }
+    return false;
+}
+
+// Help function for log commands
+void printLogHelp()
+{
+    println(" > Log:message");
+    println("     Print a log message");
 }
 
 // Custom handler for log commands
-void handleLogCommand(Command cmd)
+// Returns true if the command was handled, false otherwise
+bool handleLogCommand(Command cmd)
 {
     if(cmd.cmd.startsWith("Log"))
     {
         println("Log : %s", cmd.ToString().c_str());
+        return true;
     }
+    return false;
 }
 
 // ============== Setup ==============
@@ -51,12 +77,12 @@ void setup(void)
 {
     ESP32_Helper::Initialisation();
     
-    // Register custom command handlers
+    // Register custom command handlers with their help functions
     // Commands starting with "cpt" will be handled by handleCounterCommand
-    ESP32_Helper::RegisterCommandHandler("cpt", handleCounterCommand);
+    ESP32_Helper::RegisterCommandHandler("cpt", handleCounterCommand, printCounterHelp);
     
     // Commands starting with "Log" will be handled by handleLogCommand
-    ESP32_Helper::RegisterCommandHandler("Log", handleLogCommand);
+    ESP32_Helper::RegisterCommandHandler("Log", handleLogCommand, printLogHelp);
     
     println("Custom handlers registered!");
 }
