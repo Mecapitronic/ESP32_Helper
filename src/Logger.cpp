@@ -35,7 +35,7 @@ namespace Logger
 
             uint32_t maxQueueDepth = 0;
             uint32_t lastStatsPrintMs = 0;
-            bool statsEnabled = true;
+            bool statsEnabled = false;
         };
 
         LoggerStats stats;
@@ -46,8 +46,6 @@ namespace Logger
                 return true;
             return SERIAL_DEBUG.availableForWrite() > 0;
         }
-
-
     }
 
     void Initialisation()
@@ -63,7 +61,8 @@ namespace Logger
 
         if (!initialized)
         {
-            if (SERIAL_DEBUG) SERIAL_DEBUG.println("Logger init failed");
+            if (SERIAL_DEBUG)
+                SERIAL_DEBUG.println("Logger init failed");
         }
     }
 
@@ -166,11 +165,13 @@ namespace Logger
 
             if (msg.appendNewLine)
             {
-                if (SERIAL_DEBUG) SERIAL_DEBUG.println(msg.text);
+                if (SERIAL_DEBUG)
+                    SERIAL_DEBUG.println(msg.text);
             }
             else
             {
-                if (SERIAL_DEBUG) SERIAL_DEBUG.print(msg.text);
+                if (SERIAL_DEBUG)
+                    SERIAL_DEBUG.print(msg.text);
             }
 
             if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
@@ -281,7 +282,8 @@ namespace Logger
                  avgFlushTimeUs,
                  static_cast<unsigned long>(windowMaxFlushTimeUsSnapshot),
                  static_cast<unsigned long>(maxQueueDepthSnapshot));
-        if (SERIAL_DEBUG) SERIAL_DEBUG.println(line);
+        if (SERIAL_DEBUG)
+            SERIAL_DEBUG.println(line);
         if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
             WIFI_DEBUG.println(line);
 
@@ -292,7 +294,8 @@ namespace Logger
                  static_cast<unsigned long>(totalFlushedSnapshot),
                  static_cast<unsigned long>(totalDroppedSnapshot),
                  static_cast<long>(logQueue.MessagesWaiting()));
-        if (SERIAL_DEBUG) SERIAL_DEBUG.println(line);
+        if (SERIAL_DEBUG)
+            SERIAL_DEBUG.println(line);
         if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
             WIFI_DEBUG.println(line);
     }
@@ -353,7 +356,8 @@ namespace Logger
             stats.maxQueueDepth = 0;
             stats.lastStatsPrintMs = millis();
             portEXIT_CRITICAL(&statsMutex);
-            if (SERIAL_DEBUG) SERIAL_DEBUG.println("Logger stats reset.");
+            if (SERIAL_DEBUG)
+                SERIAL_DEBUG.println("Logger stats reset.");
             if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
                 WIFI_DEBUG.println("Logger stats reset.");
         }
