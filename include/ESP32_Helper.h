@@ -32,6 +32,9 @@
 
 namespace ESP32_Helper
 {
+    // Type definition for command handler function
+    typedef void (*CommandHandlerFunc)(Command);
+
     /**
      * Initialize serial/wifi for PC communication
      */
@@ -41,6 +44,13 @@ namespace ESP32_Helper
     void ProcessIncomingChar(char c);
     void HandleCommand(Command cmdTmp);
     void BufferReadCommand(std::vector<char> read);
+
+    /**
+     * @brief Register a custom command handler
+     * @param prefix Command prefix to match (e.g., "MyCmd")
+     * @param handler Function pointer to handle the command
+     */
+    void RegisterCommandHandler(const String& prefix, CommandHandlerFunc handler);
 
     bool HasWaitingCommand();
     Command GetCommand();

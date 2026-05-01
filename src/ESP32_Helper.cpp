@@ -7,8 +7,15 @@ namespace ESP32_Helper
 {
     namespace // anonymous nested namespace, cannot access outside this file
     {
+        struct CommandHandler
+        {
+            String prefix;
+            CommandHandlerFunc func;
+        };
+
         const int8_t readBufferMax = 64;
         std::vector<char> readBuffer;
+        std::vector<CommandHandler> customHandlers;
         TaskThread taskUpdate;
         QueueThread<Command> awaitingCommand;
         TimerThread loggerFlushTimer;
@@ -126,6 +133,11 @@ namespace ESP32_Helper
         }
     }
 
+    void RegisterCommandHandler(const String& prefix, CommandHandlerFunc handler)
+    {
+        customHandlers.push_back({prefix, handler});
+    }
+
     void HandleCommand(Command cmdTmp)
     {
         if(cmdTmp.cmd != "")
@@ -192,8 +204,23 @@ namespace ESP32_Helper
                 FileSystem_Helper::HandleCommand(cmdTmp);
             else
             {
-                // If command is not for Lib, we send it to the main
-                awaitingCommand.Send(cmdTmp);
+                // Check custom handlers registered by user
+                bool handlerFound = false;
+                for (const auto& handler : customHandlers)
+                {
+                    if (cmdTmp.cmd.startsWith(handler.prefix))
+                    {
+                        handler.func(cmdTmp);
+                        handlerFound = true;
+                        break;
+                    }
+                }
+                
+                // If no custom handler found, send to main application queue
+                if (!handlerFound)
+                {
+                    awaitingCommand.Send(cmdTmp);
+                }
             }
         }
     }
