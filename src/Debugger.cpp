@@ -41,21 +41,21 @@ namespace Debugger
         Printer::println("done.");
     }
 
-    void HandleCommand(Command cmdTmp)
+    bool HandleCommand(Command cmdTmp)
     {
-         if (cmdTmp.cmd == "DebugEnable")
+         if (cmdTmp.cmdEquals("DebugEnable"))
         {
             // DebugEnable:1
             if (cmdTmp.size == 1)
                 EnableDebugger((Enable)cmdTmp.data.at(0));
         }
-        else if (cmdTmp.cmd == "DebugAddSteps")
+        else if (cmdTmp.cmdEquals("DebugAddSteps"))
         {
             // DebugAddSteps:10
             if (cmdTmp.size == 1 && cmdTmp.data.at(0) > 0)
                 AddSteps(cmdTmp.data.at(0));
         }
-        else if (cmdTmp.cmd == "DebugGetSteps")
+        else if (cmdTmp.cmdEquals("DebugGetSteps"))
         {
             // DebugGetSteps
             Printer::println("Steps available : %i", GetSteps());
@@ -63,8 +63,9 @@ namespace Debugger
         else
         {
             Printer::println("Not a Debug command !");
-            PrintCommandHelp();
+            return false;
         }
+        return true;
     }
 
     void PrintCommandHelp()

@@ -374,10 +374,10 @@ namespace Wifi_Helper
         }
     }
 
-    void HandleCommand(Command cmdTmp)
+    bool HandleCommand(Command cmdTmp)
     {
 
-        if (cmdTmp.cmd == "WifiStatus")
+        if (cmdTmp.cmdEquals("WifiStatus"))
         {
             Printer::println("Wifi status : %i", (wl_status_t)WiFi.status());
             Printer::println("Wifi SSID : %s", WiFi.SSID().c_str());
@@ -391,7 +391,7 @@ namespace Wifi_Helper
             Printer::println("Wifi Server IP : %s", wifi_server_ip.c_str());
             Printer::println("Wifi Server Port : %i", wifi_server_port);
         }
-        else if (cmdTmp.cmd == "WifiEnable")
+        else if (cmdTmp.cmdEquals("WifiEnable"))
         {
             // WifiEnable:0
             // WifiEnable:1
@@ -399,47 +399,49 @@ namespace Wifi_Helper
             if (cmdTmp.size == 1)
                 EnableWifi((Enable)cmdTmp.data[0]);
         }
-        else if (cmdTmp.cmd == "WifiPassword")
+        else if (cmdTmp.cmdEquals("WifiPassword"))
         {
             // Password must be at least 8 char or empty
             // WifiPassword:********
-            if (cmdTmp.dataStr1 == "" || (cmdTmp.dataStr1.length() >= 8 && cmdTmp.dataStr1.length() <= 63))
+            size_t passLen = strlen(cmdTmp.dataStr1);
+            if (passLen == 0 || (passLen >= 8 && passLen <= 63))
             {
-                Preferences_Helper::SaveToPreference("wifi_password", cmdTmp.dataStr1);
-                wifi_password = cmdTmp.dataStr1;
+                Preferences_Helper::SaveToPreference("wifi_password", String(cmdTmp.dataStr1));
+                wifi_password = String(cmdTmp.dataStr1);
                 wifi_changed = true;
                 Printer::println("Wifi password Changed !");
             }
             else
                 Printer::println("Wifi Password must be at least 8 characters and max 63 char !");
         }
-        else if (cmdTmp.cmd == "WifiSsid")
+        else if (cmdTmp.cmdEquals("WifiSsid"))
         {
-            if (cmdTmp.dataStr1 != "" && cmdTmp.dataStr1.length() <= 63)
+            size_t ssidLen = strlen(cmdTmp.dataStr1);
+            if (ssidLen > 0 && ssidLen <= 63)
             {
-                Preferences_Helper::SaveToPreference("wifi_ssid", cmdTmp.dataStr1);
-                wifi_ssid = cmdTmp.dataStr1;
+                Preferences_Helper::SaveToPreference("wifi_ssid", String(cmdTmp.dataStr1));
+                wifi_ssid = String(cmdTmp.dataStr1);
                 wifi_changed = true;
                 Printer::println("Wifi SSID Changed !");
             }
             else
                 Printer::println("Wifi SSID is empty or is too long (max 63 char) !");
         }
-        else if (cmdTmp.cmd == "WifiLocalIP" && cmdTmp.size == 4)
+        else if (cmdTmp.cmdEquals("WifiLocalIP") && cmdTmp.size == 4)
         {
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
             SetLocalIP(ip);
             Preferences_Helper::SaveToPreference("wifi_local_ip", ip);
             Printer::println("Wifi local IP Changed !");
         }
-        else if (cmdTmp.cmd == "WifiServerIP" && cmdTmp.size == 4)
+        else if (cmdTmp.cmdEquals("WifiServerIP") && cmdTmp.size == 4)
         {
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
             SetServerIP(ip);
             Preferences_Helper::SaveToPreference("wifi_server_ip", ip);
             Printer::println("Wifi server IP Changed !");
         }
-        else if (cmdTmp.cmd == "WifiServerPort" && cmdTmp.size == 1)
+        else if (cmdTmp.cmdEquals("WifiServerPort") && cmdTmp.size == 1)
         {
             Preferences_Helper::SaveToPreference("wifi_server_port", cmdTmp.data[0]);
             Printer::println("Wifi server Port Changed !");
@@ -447,8 +449,9 @@ namespace Wifi_Helper
         else
         {
             Printer::println("Not a Wifi command !");
-            PrintCommandHelp();
+            return false;
         }
+        return true;
     }
 
     void PrintCommandHelp()

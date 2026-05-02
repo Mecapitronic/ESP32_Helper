@@ -51,7 +51,7 @@ namespace ESP32_Helper
                         Level printLvl = Level::LEVEL_VERBOSE, Enable debugEnable = Enable::ENABLE_FALSE);
     void Update(void *pvParameters);
     void ProcessIncomingChar(char c);
-    void HandleCommand(Command cmdTmp);
+    bool HandleCommand(Command cmdTmp);
     void BufferReadCommand(std::vector<char> read);
 
     /**

@@ -32,7 +32,7 @@ namespace Wifi_Helper
     void HandleClientConnection();
     void HandleTeleplotConnection();
 
-    void HandleCommand(Command cmdTmp);
+    bool HandleCommand(Command cmdTmp);
     void PrintCommandHelp(void);
 
     void SetLocalIP(const String &ip);

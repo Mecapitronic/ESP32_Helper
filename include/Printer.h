@@ -30,7 +30,7 @@ namespace Printer
 
     void Initialisation(Enable enable = Enable::ENABLE_TRUE, Level lvl = Level::LEVEL_VERBOSE);
     void Update(void *pvParameters);
-    void HandleCommand(Command cmdTmp);
+    bool HandleCommand(Command cmdTmp);
     void PrintCommandHelp();
     
     Level PrintLevel();

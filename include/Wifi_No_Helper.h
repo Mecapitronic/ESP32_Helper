@@ -20,7 +20,7 @@ namespace Wifi_Helper
 
     void Initialisation(void);
     void Update(void *pvParameters);
-    void HandleCommand(Command cmdTmp);
+    bool HandleCommand(Command cmdTmp);
     void PrintCommandHelp(void);
     
     void SetLocalIP(const String &ip);

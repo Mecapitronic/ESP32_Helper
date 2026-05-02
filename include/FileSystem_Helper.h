@@ -38,7 +38,7 @@ namespace FileSystem_Helper
 
     void TestFileIO(const String &fileName);
 
-    void HandleCommand(Command cmdTmp);
+    bool HandleCommand(Command cmdTmp);
 
     void PrintCommandHelp();
 }

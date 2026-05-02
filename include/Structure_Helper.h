@@ -329,29 +329,52 @@ struct PointTracker
 };
 
 // Command comming from User to be handle
+// Pure POD struct: no dynamic String, safe for FreeRTOS queue by value
 struct Command
 {
     static const int8_t length = 6;
-    static const int8_t sizeStr = 14;
-    String cmd = "";
+    static const int8_t sizeCmd = 25;    // Maximum command name length + null terminator
+    static const int8_t sizeStr = 25;    // Maximum string data length + null terminator
+    char cmd[sizeCmd] = {0};             // Fixed buffer, no String dynamic alloc
     int8_t size = 0;
     std::array<int32_t, length> data;
-    String dataStr1 = ""; // sizeof(String) = 16 BUT 1 is for string length and 1 for \0 so 14 in reality
-    String dataStr2 = "";
+    char dataStr1[sizeStr] = {0};        // Fixed buffer, no String dynamic alloc
+    char dataStr2[sizeStr] = {0};        // Fixed buffer, no String dynamic alloc
 
     Command() noexcept
     {
         data.fill(0);
+        memset(cmd, 0, sizeCmd);
+        memset(dataStr1, 0, sizeStr);
+        memset(dataStr2, 0, sizeStr);
     }
-    Command(const String &s)
+    Command(const char *s) noexcept
     {
-        cmd = s;
         data.fill(0);
+        memset(cmd, 0, sizeCmd);
+        memset(dataStr1, 0, sizeStr);
+        memset(dataStr2, 0, sizeStr);
+        if (s != nullptr)
+            snprintf(cmd, sizeCmd, "%s", s);
     }
+    
+    // Helper methods for char[] comparisons (replacing String operators)
+    bool cmdEquals(const char* other) const 
+    {
+        if (other == nullptr) return false;
+        return strcmp(cmd, other) == 0;
+    }
+    
+    bool cmdStartsWith(const char* prefix) const 
+    {
+        if (prefix == nullptr) return false;
+        return strncmp(cmd, prefix, strlen(prefix)) == 0;
+    }
+    
     String ToString()
     {
         String toString = "";
-        toString+=(" Cmd=" + cmd);
+        toString+=(" Cmd=" + String(cmd));
         if (size > 0)
         {
             toString+=(" Size=" + String(size));
@@ -361,11 +384,11 @@ struct Command
                 toString +=("," + String(data[size_data]));
             }
         }
-        if (dataStr1 != "")
+        if (strlen(dataStr1) > 0)
         {
             toString += (" DataStr1=" + String(dataStr1));
         }
-        if (dataStr2 != "")
+        if (strlen(dataStr2) > 0)
         {
             toString += (" DataStr2=" + String(dataStr2));
         }
@@ -418,7 +441,6 @@ struct Chrono
     String name = "";
     int32_t loopNbr = 0;
     static inline bool print = false;
-    static inline bool teleplot = false;
     int32_t loopMax = 0;
     unsigned long startTime = 0;
     unsigned long elapsedTime = 0;

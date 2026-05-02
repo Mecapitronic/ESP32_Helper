@@ -83,7 +83,7 @@ namespace ESP32_Helper
         Debugger::Initialisation();
         Debugger::EnableDebugger(debugEnable);
         println("-- End of Debugger Initialisation --");
-        
+
         println("-- Starting SPIFFS Initialisation --");
         if (!FileSystem_Helper::Initialisation())
         {
@@ -91,6 +91,15 @@ namespace ESP32_Helper
         }
         FileSystem_Helper::ListFiles();
         println("-- End of SPIFFS Initialisation --");
+
+        // Register default namespace handlers through the same extension mechanism.
+        customHandlers.clear();
+        RegisterCommandHandler("Debug", Debugger::HandleCommand, Debugger::PrintCommandHelp);
+        RegisterCommandHandler("Print", Printer::HandleCommand, Printer::PrintCommandHelp);
+        RegisterCommandHandler("Pref", Preferences_Helper::HandleCommand, Preferences_Helper::PrintCommandHelp);
+        RegisterCommandHandler("Wifi", Wifi_Helper::HandleCommand, Wifi_Helper::PrintCommandHelp);
+        RegisterCommandHandler("Logger", Logger::HandleCommand, Logger::PrintCommandHelp);
+        RegisterCommandHandler("SPIFFS", FileSystem_Helper::HandleCommand, FileSystem_Helper::PrintCommandHelp);
 
         println("-- End of Helper Initialisation --");
         println();
@@ -134,102 +143,60 @@ namespace ESP32_Helper
         }
     }
 
-    void RegisterCommandHandler(const String& prefix, CommandHandlerFunc handler, CommandHelpFunc helpFunc)
+    void RegisterCommandHandler(const String &prefix, CommandHandlerFunc handler, CommandHelpFunc helpFunc)
     {
+        if (prefix == "" || handler == nullptr)
+        {
+            Printer::println("Invalid Command Handler registration for prefix: " + prefix);
+            return;
+        }
         customHandlers.push_back({prefix, handler, helpFunc});
     }
 
-    void HandleCommand(Command cmdTmp)
+    bool HandleCommand(Command cmdTmp)
     {
-        if(cmdTmp.cmd != "")
+        if (cmdTmp.cmd[0] == '\0')
+            return false;
+
+        if (cmdTmp.cmdStartsWith("Help"))
         {
-            if (cmdTmp.cmd.startsWith("Help"))
+            Printer::println("Help Commands : ");
+            Printer::println(" > Help");
+            Printer::println("     Display this help");
+            Printer::println(" > Reboot");
+            Printer::println("     Reboot the ESP32");
+            for (const auto &handler : customHandlers)
             {
-                Printer::println("Help Commands : ");
-                Printer::println(" > Help");
-                Printer::println("     Display this help");
-                Printer::println(" > Reboot");
-                Printer::println("     Reboot the ESP32");
-                Debugger::PrintCommandHelp();
-                Printer::PrintCommandHelp();
-                Logger::PrintCommandHelp();
-                Preferences_Helper::PrintCommandHelp();
-                Wifi_Helper::PrintCommandHelp();
-                for (const auto& handler : customHandlers)
+                if (handler.helpFunc != nullptr)
+                    handler.helpFunc();
+            }
+            return true;
+        }
+        else if (cmdTmp.cmdStartsWith("Reboot"))
+        {
+            Printer::println("Rebooting...");
+            ESP.restart();
+            return true;
+        }
+        else
+        {
+            // Check all registered handlers (default namespaces + user custom handlers)
+            bool handled = false;
+            for (const auto &handler : customHandlers)
+            {
+                if (cmdTmp.cmdStartsWith(handler.prefix.c_str()))
                 {
-                    if (handler.helpFunc != nullptr)
+                    handled = handler.func(cmdTmp);
+                    if (!handled && handler.helpFunc != nullptr)
                         handler.helpFunc();
+                    return handled;
                 }
             }
-            else if (cmdTmp.cmd.startsWith("Reboot"))
-            {
-                Printer::println("Rebooting...");
-                ESP.restart();
-            }
-            // We first handle if the command is for the Lib
-            else if (cmdTmp.cmd.startsWith("Debug"))
-                Debugger::HandleCommand(cmdTmp);
-            else if (cmdTmp.cmd.startsWith("Print"))
-                Printer::HandleCommand(cmdTmp);
-            else if (cmdTmp.cmd.startsWith("Pref"))
-                Preferences_Helper::HandleCommand(cmdTmp);
-            else if (cmdTmp.cmd.startsWith("Wifi"))
-                Wifi_Helper::HandleCommand(cmdTmp);
-            else if (cmdTmp.cmd == "ChronoPrint" && cmdTmp.size == 1)
-            {
-                // ChronoPrint:1
-                if (cmdTmp.data[0] == 1)
-                {
-                    Chrono::print = true;
-                    Chrono::teleplot = false;
-                    println("Enable Chrono Print, Disable Teleplot");
-                }/*
-                else if (cmdTmp.data[0] == 2)
-                {
-                    //ChronoPrint:2
-                    Chrono::print = false;
-                    Chrono::teleplot = true;
-                    println("Disable Chrono Print, Enable Teleplot");
-                }
-                else if (cmdTmp.data[0] == 3)
-                {
-                    Chrono::print = true;
-                    Chrono::teleplot = true;
-                    println("Enable Chrono Print & Teleplot");
-                }*/
-                else
-                {
-                    Chrono::print = false;
-                    Chrono::teleplot = false;
-                    println("Disable Chrono Print & Teleplot");
-                }
-            }
-            else if (cmdTmp.cmd.startsWith("Logger"))
-                Logger::HandleCommand(cmdTmp);
-            else if (cmdTmp.cmd.startsWith("SPIFFS"))
-                FileSystem_Helper::HandleCommand(cmdTmp);
-            else
-            {
-                // Check custom handlers registered by user
-                bool handlerFound = false;
-                for (const auto& handler : customHandlers)
-                {
-                    if (cmdTmp.cmd.startsWith(handler.prefix))
-                    {
-                        handlerFound = true;
-                        bool handled = handler.func(cmdTmp);
-                        if (!handled && handler.helpFunc != nullptr)
-                            handler.helpFunc();
-                        break;
-                    }
-                }
-                
-                // If no custom handler found, send to main application queue
-                if (!handlerFound)
-                {
-                    awaitingCommand.Send(cmdTmp);
-                }
-            }
+
+            // If no custom handler found, send to main application queue
+            // Queue by value: Command is now pure POD (char arrays), safe for FreeRTOS
+            awaitingCommand.Send(cmdTmp);
+            return false;
         }
     }
 
@@ -242,39 +209,45 @@ namespace ESP32_Helper
         // Start at 1 to let one letter for command at least
         for (size_t i = 1; i < read.size(); i++)
         {
-            if(read[i] != ';' && read[i] != ':' && read[i] != '\n')
+            if (read[i] != ';' && read[i] != ':' && read[i] != '\n')
             {
                 if ((read[i] < 0x30 || read[i] > 0x39) && read[i] != '-' && read[i] != '+')
                     isString = true;
             }
             else
-            {        
-                if (cmdTmp.cmd == "")
+            {
+                if (cmdTmp.cmd[0] == '\0')
                 {
-                    cmdTmp.cmd = String(&read[0], i);
+                    if (i >= Command::sizeCmd)
+                    {
+                        println("Command name too long: max %i chars", Command::sizeCmd - 1);
+                        readBuffer.clear();
+                        return;
+                    }
+                    snprintf(cmdTmp.cmd, Command::sizeCmd, "%.*s", (int)i, &read[0]);
                     indexSeparator = i + 1;
                 }
                 else
                 {
-                    if(i - indexSeparator > 0)
+                    if (i - indexSeparator > 0)
                     {
                         // check if it's a string, if it's an integer : convert it
                         String strToConvert = String(&read[indexSeparator], i - indexSeparator);
-                        if(isString)
+                        if (isString)
                         {
-                            if(i - indexSeparator <= Command::sizeStr)
+                            if (i - indexSeparator < Command::sizeStr)
                             {
-                                if(cmdTmp.dataStr1=="")
-                                    cmdTmp.dataStr1 = strToConvert;
-                                else if(cmdTmp.dataStr2=="")
-                                    cmdTmp.dataStr2 = strToConvert;
+                                if (cmdTmp.dataStr1[0] == '\0')
+                                    snprintf(cmdTmp.dataStr1, Command::sizeStr, "%s", strToConvert.c_str());
+                                else if (cmdTmp.dataStr2[0] == '\0')
+                                    snprintf(cmdTmp.dataStr2, Command::sizeStr, "%s", strToConvert.c_str());
                                 else
                                     println("3rd String not saved: " + strToConvert);
                             }
                             else
                                 println("String too long: " + strToConvert);
                         }
-                        else if(cmdTmp.size < Command::length)
+                        else if (cmdTmp.size < Command::length)
                         {
                             std::size_t pos{};
                             try
@@ -290,7 +263,7 @@ namespace ESP32_Helper
                                     println("Conversion didn't consume entire string: " + strToConvert);
                                 }
                             }
-                            catch(const std::exception& e)
+                            catch (const std::exception &e)
                             {
                                 println("Exception error: " + String(e.what()) + " for data: " + strToConvert);
                             }
@@ -305,7 +278,7 @@ namespace ESP32_Helper
                 isString = false;
             }
         }
-        if (cmdTmp.cmd == "Ping")
+        if (cmdTmp.cmdEquals("Ping"))
         {
             // Handle Ping command
             println("Pong");
@@ -324,22 +297,19 @@ namespace ESP32_Helper
         Command cmd;
         if (HasWaitingCommand())
         {
-            if (awaitingCommand.Receive(cmd))
-            {
-                return cmd;
-            }
+            awaitingCommand.Receive(cmd);
         }
         return cmd;
     }
-    
+
     // converts character array
     // to string and returns it
-    String convertToString(char* a, int32_t size)
+    String convertToString(char *a, int32_t size)
     {
         String s = "";
         for (int32_t i = 0; i < size; i++)
         {
-            if(a[i] == '\0')
+            if (a[i] == '\0')
                 break;
             s = s + a[i];
         }

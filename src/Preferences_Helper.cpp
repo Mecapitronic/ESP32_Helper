@@ -117,68 +117,82 @@ namespace Preferences_Helper
         preferencesList.clear();
     }
     
-    void HandleCommand(Command cmdTmp)
+    bool HandleCommand(Command cmdTmp)
     {
-        if(cmdTmp.cmd == "PrefList")
+        if(cmdTmp.cmdEquals("PrefList"))
         {
             // PrefList
             Preferences_Helper::ListPreferences();
         }
-        else if(cmdTmp.cmd == "PrefSave")
+        else if(cmdTmp.cmdEquals("PrefSave"))
         {
             // PrefSave:cpt:123
             // PrefSave:str:data
-            if (cmdTmp.dataStr1 != "" && cmdTmp.size == 1)
+            if (strlen(cmdTmp.dataStr1) > 0 && cmdTmp.size == 1)
             {
-                String key = cmdTmp.dataStr1;
+                String key(cmdTmp.dataStr1);
                 int32_t value = cmdTmp.data[0];
                 println("Save preference : %s = %i", key.c_str(), value);
                 Preferences_Helper::SaveToPreference(key, value);
             }
-            else if (cmdTmp.dataStr1 != "" && cmdTmp.dataStr2 != "")
+            else if (strlen(cmdTmp.dataStr1) > 0 && strlen(cmdTmp.dataStr2) > 0)
             {
-                String key = cmdTmp.dataStr1;
-                String value = cmdTmp.dataStr2;
+                String key(cmdTmp.dataStr1);
+                String value(cmdTmp.dataStr2);
                 println("Save preference : %s = %s", key.c_str(), value.c_str());
                 Preferences_Helper::SaveToPreference(key, value);
             }
-
+            else
+            {
+                println("Invalid PrefSave arguments !");
+                return false;
+            }
         }
-        else if(cmdTmp.cmd == "PrefLoad")
+        else if(cmdTmp.cmdEquals("PrefLoad"))
         {
             // PrefLoad:cpt:0
             // PrefLoad:str:default
-            if (cmdTmp.dataStr1 != "" && cmdTmp.size == 1)
+            if (strlen(cmdTmp.dataStr1) > 0 && cmdTmp.size == 1)
             {
-                String key = cmdTmp.dataStr1;
+                String key(cmdTmp.dataStr1);
                 int32_t defValue = cmdTmp.data[0];
                 int32_t value = Preferences_Helper::LoadFromPreference(key, defValue);
                 println("Loaded preference : %s = %i", key.c_str(), value);
             }
-            else if (cmdTmp.dataStr1 != "" && cmdTmp.dataStr2 != "")
+            else if (strlen(cmdTmp.dataStr1) > 0 && strlen(cmdTmp.dataStr2) > 0)
             {
-                String key = cmdTmp.dataStr1;
-                String defValue = cmdTmp.dataStr2;
+                String key(cmdTmp.dataStr1);
+                String defValue(cmdTmp.dataStr2);
                 String value = Preferences_Helper::LoadFromPreference(key, defValue);
                 println("Loaded preference : %s = %s", key.c_str(), value.c_str());
             }
+            else
+            {
+                println("Invalid PrefLoad arguments !");
+                return false;
+            }
         }
-        else if(cmdTmp.cmd == "PrefRemove")
+        else if(cmdTmp.cmdEquals("PrefRemove"))
         {
             // PrefRemove:cpt
             // PrefRemove:str
-            if (cmdTmp.dataStr1 != "")
+            if (strlen(cmdTmp.dataStr1) > 0)
             {
-                println("Remove preference : %s", cmdTmp.dataStr1.c_str());
-                Preferences_Helper::RemoveFromPreference(cmdTmp.dataStr1);
+                println("Remove preference : %s", cmdTmp.dataStr1);
+                Preferences_Helper::RemoveFromPreference(String(cmdTmp.dataStr1));
+            }
+            else
+            {
+                println("Invalid PrefRemove arguments !");
+                return false;
             }
         }
-        else if(cmdTmp.cmd == "PrefFree")
+        else if(cmdTmp.cmdEquals("PrefFree"))
         {
             // PrefFree
             Preferences_Helper::GetFreeEntries();
         }
-        else if (cmdTmp.cmd == "PrefClear")
+        else if (cmdTmp.cmdEquals("PrefClear"))
         {
             // PrefClear:1
             if (cmdTmp.size == 1 && cmdTmp.data[0] == 1)
@@ -186,12 +200,18 @@ namespace Preferences_Helper
                 println("Clear all pref under: " + String(PREF_NAMESPACE));
                 Preferences_Helper::ClearPreferences();
             }
+            else
+            {
+                println("Invalid PrefClear arguments !");
+                return false;
+            }
         }
         else
         {
             println("Not a Preferences command !");            
-            PrintCommandHelp();
+            return false;
         }
+        return true;
     }
     
     void PrintCommandHelp()

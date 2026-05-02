@@ -39,7 +39,7 @@ namespace Logger
     bool Enqueue(const char *text, bool appendNewLine = false);
     void Flush(uint16_t maxMessages = LOGGER_MAX_FLUSH_BATCH);
     void PrintStats(bool force = false);
-    void HandleCommand(Command cmdTmp);
+    bool HandleCommand(Command cmdTmp);
     void PrintCommandHelp();
 
     uint32_t DroppedMessages();

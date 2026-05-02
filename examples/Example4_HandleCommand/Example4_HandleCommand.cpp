@@ -19,6 +19,7 @@ int32_t cpt = 0;
 // Help function for counter commands
 void printCounterHelp()
 {
+    println("Counter Commands :");
     println(" > cpt++");
     println("     Increment counter");
     println(" > cpt--");
@@ -31,19 +32,19 @@ void printCounterHelp()
 // Returns true if the command was handled, false otherwise
 bool handleCounterCommand(Command cmd)
 {
-    if(cmd.cmd.startsWith("cpt++"))
+    if(cmd.cmdStartsWith("cpt++"))
     {
         cpt++;
         println("Counter incremented: %i", cpt);
         return true;
     }
-    else if(cmd.cmd.startsWith("cpt--"))
+    else if(cmd.cmdStartsWith("cpt--"))
     {
         cpt--;
         println("Counter decremented: %i", cpt);
         return true;
     }
-    else if(cmd.cmd == "cpt" && cmd.size == 1)
+    else if(cmd.cmdEquals("cpt") && cmd.size == 1)
     {
         cpt = cmd.data[0];
         println("Counter set to: %i", cpt);
@@ -55,6 +56,7 @@ bool handleCounterCommand(Command cmd)
 // Help function for log commands
 void printLogHelp()
 {
+    println("Log Commands :");
     println(" > Log:message");
     println("     Print a log message");
 }
@@ -63,7 +65,7 @@ void printLogHelp()
 // Returns true if the command was handled, false otherwise
 bool handleLogCommand(Command cmd)
 {
-    if(cmd.cmd.startsWith("Log"))
+    if(cmd.cmdStartsWith("Log"))
     {
         println("Log : %s", cmd.ToString().c_str());
         return true;

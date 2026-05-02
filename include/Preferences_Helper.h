@@ -21,7 +21,7 @@ namespace Preferences_Helper
     void ListPreferences();
     int32_t GetFreeEntries();
     void ClearPreferences();
-    void HandleCommand(Command cmdTmp);
+    bool HandleCommand(Command cmdTmp);
     void PrintCommandHelp(void);
 }
 

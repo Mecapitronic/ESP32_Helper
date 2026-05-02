@@ -272,57 +272,58 @@ namespace FileSystem_Helper
         }
     }
 
-    void HandleCommand(Command cmdTmp)
+    bool HandleCommand(Command cmdTmp)
     {
-        if (cmdTmp.cmd == "SPIFFSFormat")
+        if (cmdTmp.cmdEquals("SPIFFSFormat"))
         {
             // SPIFFSFormat
             FormatFS();
         }
-        else if(cmdTmp.cmd == "SPIFFSListFiles")
+        else if(cmdTmp.cmdEquals("SPIFFSListFiles"))
         {
             // SPIFFSListFiles:<filter>
-            ListFiles(cmdTmp.dataStr1);
+            ListFiles(String(cmdTmp.dataStr1));
         }
-        else if(cmdTmp.cmd == "SPIFFSCreateFile")
+        else if(cmdTmp.cmdEquals("SPIFFSCreateFile"))
         {
             // SPIFFSCreateFile:<fileName>
-            CreateFile(cmdTmp.dataStr1);
+            CreateFile(String(cmdTmp.dataStr1));
         }
-        else if(cmdTmp.cmd == "SPIFFSReadFile")
+        else if(cmdTmp.cmdEquals("SPIFFSReadFile"))
         {
             // SPIFFSReadFile:<fileName>
-            println(ReadFile(cmdTmp.dataStr1));
+            println(ReadFile(String(cmdTmp.dataStr1)));
         }
-        else if(cmdTmp.cmd == "SPIFFSWriteFile")
+        else if(cmdTmp.cmdEquals("SPIFFSWriteFile"))
         {
             // SPIFFSWriteFile:<fileName>:<msg>
             // SPIFFSWriteFile:<fileName>:<msg>:1
             bool createFileIfNotExists = cmdTmp.size > 0 ? cmdTmp.data[0] : false;
-            WriteFile(cmdTmp.dataStr1, cmdTmp.dataStr2, createFileIfNotExists);
+            WriteFile(String(cmdTmp.dataStr1), String(cmdTmp.dataStr2), createFileIfNotExists);
         }
-        else if(cmdTmp.cmd == "SPIFFSAppendFile")
+        else if(cmdTmp.cmdEquals("SPIFFSAppendFile"))
         {
             // SPIFFSAppendFile:<fileName>:<msg>
             // SPIFFSAppendFile:<fileName>:<msg>:1
             bool createFileIfNotExists = cmdTmp.size > 0 ? cmdTmp.data[0] : false;
-            AppendFile(cmdTmp.dataStr1, cmdTmp.dataStr2, createFileIfNotExists);
+            AppendFile(String(cmdTmp.dataStr1), String(cmdTmp.dataStr2), createFileIfNotExists);
         }
-        else if(cmdTmp.cmd == "SPIFFSRenameFile")
+        else if(cmdTmp.cmdEquals("SPIFFSRenameFile"))
         {
             // SPIFFSRenameFile:<oldFileName>:<newFileName>
-            RenameFile(cmdTmp.dataStr1, cmdTmp.dataStr2);
+            RenameFile(String(cmdTmp.dataStr1), String(cmdTmp.dataStr2));
         }
-        else if(cmdTmp.cmd == "SPIFFSDeleteFile")
+        else if(cmdTmp.cmdEquals("SPIFFSDeleteFile"))
         {
             // SPIFFSDeleteFile:<fileName>
-            DeleteFile(cmdTmp.dataStr1);
+            DeleteFile(String(cmdTmp.dataStr1));
         }
         else
         {
             println("Not a SPIFFS command !");            
-            PrintCommandHelp();
+            return false;
         }
+        return true;
     }
     
     void PrintCommandHelp()

@@ -32,9 +32,10 @@ namespace Wifi_Helper
         Printer::println("Wifi Update Task STOPPED !");
     }
 
-    void HandleCommand(Command cmdTmp)
+    bool HandleCommand(Command cmdTmp)
     {
         Printer::println("NO WIFI !");
+        return true;
     }
     
     void PrintCommandHelp()

@@ -68,21 +68,21 @@ namespace Printer
         println("Printer Update");
     }
 
-    void HandleCommand(Command cmdTmp)
+    bool HandleCommand(Command cmdTmp)
     {
-        if (cmdTmp.cmd == "PrintLevel")
+        if (cmdTmp.cmdEquals("PrintLevel"))
         {
             // PrintLevel:0
             if (cmdTmp.size == 1)
                 SetLevel((Level)cmdTmp.data[0]);
         }
-        else if (cmdTmp.cmd == "PrintEnable")
+        else if (cmdTmp.cmdEquals("PrintEnable"))
         {
             // PrintEnable:1
             if (cmdTmp.size == 1)
                 EnablePrinter((Enable)cmdTmp.data[0]);
         }
-        else if (cmdTmp.cmd == "PrintTeleplotUDP" && cmdTmp.size == 1)
+        else if (cmdTmp.cmdEquals("PrintTeleplotUDP") && cmdTmp.size == 1)
         {
             // PrintTeleplotUDP:0
             if (cmdTmp.data[0] == 0)
@@ -96,11 +96,26 @@ namespace Printer
                 println("Teleplot UDP Enable");
             }
         }
+        else if (cmdTmp.cmdEquals("PrintChrono") && cmdTmp.size == 1)
+        {
+            // PrintChrono:1
+            if (cmdTmp.data[0] == 1)
+            {
+                Chrono::print = true;
+                println("Enable Chrono Print");
+            }
+            else
+            {
+                Chrono::print = false;
+                println("Disable Chrono Print");
+            }
+        }
         else
         {
             println("Not a Print command !");            
-            PrintCommandHelp();
+            return false;
         }
+        return true;
     }
 
     void PrintCommandHelp()
@@ -112,6 +127,8 @@ namespace Printer
         println("      0 Disable, 1 Enable Debugger");
         println(" > PrintTeleplotUDP:[int]");
         println("      0 Disable, 1 Enable");
+        println(" > PrintChrono:[int]");
+        println("      0 Disable, 1 Enable Chrono Print");
         println();
     }
 

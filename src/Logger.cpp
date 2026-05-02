@@ -305,9 +305,9 @@ namespace Logger
         return droppedMessages;
     }
 
-    void HandleCommand(Command cmdTmp)
+    bool HandleCommand(Command cmdTmp)
     {
-        if (cmdTmp.cmd == "LoggerStats")
+        if (cmdTmp.cmdEquals("LoggerStats"))
         {
             // LoggerStats:1  -> activer impression auto toutes les LOGGER_STATS_PERIOD_MS
             // LoggerStats:0  -> désactiver
@@ -316,7 +316,7 @@ namespace Logger
             {
                 PrintStats(true);
             }
-            else if (cmdTmp.size == 1)
+            else if (cmdTmp.size >= 1)
             {
                 portENTER_CRITICAL(&statsMutex);
                 stats.statsEnabled = (cmdTmp.data[0] != 0);
@@ -332,13 +332,8 @@ namespace Logger
                     WIFI_DEBUG.println(cmdTmp.data[0] != 0 ? "enabled" : "disabled");
                 }
             }
-            else
-            {
-                Printer::println("Not a Logger command !");
-                PrintCommandHelp();
-            }
         }
-        else if (cmdTmp.cmd == "LoggerResetStats")
+        else if (cmdTmp.cmdEquals("LoggerResetStats"))
         {
             // LoggerResetStats
             portENTER_CRITICAL(&statsMutex);
@@ -364,8 +359,9 @@ namespace Logger
         else
         {
             Printer::println("Not a Logger command !");
-            PrintCommandHelp();
+            return false;
         }
+        return true;
     }
 
     void PrintCommandHelp()
