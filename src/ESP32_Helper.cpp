@@ -178,6 +178,12 @@ namespace ESP32_Helper
             ESP.restart();
             return true;
         }
+        else if (cmdTmp.cmdEquals("Ping"))
+        {
+            // Handle Ping command
+            println("Pong");
+            return true;
+        }
         else
         {
             // Check all registered handlers (default namespaces + user custom handlers)
@@ -278,27 +284,20 @@ namespace ESP32_Helper
                 isString = false;
             }
         }
-        if (cmdTmp.cmdEquals("Ping"))
-        {
-            // Handle Ping command
-            println("Pong");
-        }
-        else
-        {
-            Printer::println("Command Received : %s", cmdTmp.ToString().c_str());
-            HandleCommand(cmdTmp);
-        }
+        Printer::println("Command Received : %s", cmdTmp.ToString().c_str());
+        HandleCommand(cmdTmp);
     }
 
     bool HasWaitingCommand() { return awaitingCommand.MessagesWaiting() > 0; }
 
     Command GetCommand()
     {
-        Command cmd;
-        if (HasWaitingCommand())
+        if (!HasWaitingCommand())
         {
-            awaitingCommand.Receive(cmd);
+            return nullptr; // No command available
         }
+        Command cmd;
+        awaitingCommand.Receive(cmd);
         return cmd;
     }
 
