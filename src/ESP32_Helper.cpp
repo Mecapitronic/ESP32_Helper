@@ -201,6 +201,7 @@ namespace ESP32_Helper
 
             // If no custom handler found, send to main application queue
             // Queue by value: Command is now pure POD (char arrays), safe for FreeRTOS
+            Printer::println("No custom handler found for : " + cmdTmp.ToString());
             awaitingCommand.Send(cmdTmp);
             return false;
         }
