@@ -396,6 +396,20 @@ struct Command
     }
 };
 
+// Type definition for command handler function
+// Returns true if the command was handled, false otherwise
+typedef bool (*CommandHandlerFunc)(Command);
+// Type definition for command help print function
+typedef void (*CommandHelpFunc)();
+
+// Used to store all custom command
+struct CommandHandler
+{
+    String prefix;
+    CommandHandlerFunc func;
+    CommandHelpFunc helpFunc;
+};
+
 // Use Start to specify the timeOut in ms,
 // Use IsTimeOut to check if the timer has passed the timeOut value
 struct Timeout

@@ -7,13 +7,6 @@ namespace ESP32_Helper
 {
     namespace // anonymous nested namespace, cannot access outside this file
     {
-        struct CommandHandler
-        {
-            String prefix;
-            CommandHandlerFunc func;
-            CommandHelpFunc helpFunc;
-        };
-
         const int8_t readBufferMax = 64;
         std::vector<char> readBuffer;
         std::vector<CommandHandler> customHandlers;
@@ -74,9 +67,7 @@ namespace ESP32_Helper
         println("¦  M E C A P I  ¦");
         println("+---------------+");
         println();
-        print(__DATE__);
-        print(" at ");
-        println(__TIME__);
+        println("%s at %s", __DATE__, __TIME__);
         println();
 
         println("-- Starting Debugger Initialisation --");
@@ -129,8 +120,8 @@ namespace ESP32_Helper
             {
                 if (readBuffer.size() > 1)
                 {
-                    Printer::print("Received %u : ", static_cast<unsigned int>(readBuffer.size()));
-                    Printer::println(String(readBuffer.data(), readBuffer.size() - 1));
+                    String receivedCmd(readBuffer.data(), readBuffer.size() - 1);
+                    Printer::println("Received %u : %s", static_cast<unsigned int>(readBuffer.size()), receivedCmd.c_str());
                     ESP32_Helper::BufferReadCommand(readBuffer);
                 }
                 readBuffer.clear();

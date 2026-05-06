@@ -31,8 +31,10 @@ namespace FileSystem_Helper
 
     void ListFiles(const String &filter)
     {
-        print("Listing files ");
-        filter != "" ? println(" with filter : <%s>", filter.c_str()) : println(" :");
+        if (filter != "")
+            println("Listing files with filter : <%s>", filter.c_str());
+        else
+            println("Listing files :");
 
         File root = SPIFFS.open("/");
         if (!root)
@@ -47,8 +49,7 @@ namespace FileSystem_Helper
         {
             if (filter == "" || (filter != "" && String(file.name()).indexOf(filter) != -1))
             {
-                print("  " + String(file.name()));
-                print(" \t " + String((int)file.size()) + "\n");
+                println("  %s \t %i", file.name(), (int)file.size());
             }
             file = root.openNextFile();
         }
@@ -166,8 +167,7 @@ namespace FileSystem_Helper
 
     void RenameFile(const String &path1, const String &path2)
     {
-        print("Renaming file ", path1);
-        println(" to file ", path2);
+        println("Renaming file %s to file %s", path1.c_str(), path2.c_str());
 
         if(!SPIFFS.exists("/" + path1))
         {
@@ -191,7 +191,7 @@ namespace FileSystem_Helper
 
     void DeleteFile(const String &fileName)
     {
-        println("Deleting file: ", fileName);
+        println("Deleting file: %s", fileName.c_str());
         
         if(!SPIFFS.exists("/" + fileName))
         {

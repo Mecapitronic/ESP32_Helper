@@ -38,12 +38,6 @@
 
 namespace ESP32_Helper
 {
-    // Type definition for command handler function
-    // Returns true if the command was handled, false otherwise
-    typedef bool (*CommandHandlerFunc)(Command);
-    // Type definition for command help print function
-    typedef void (*CommandHelpFunc)();
-
     /**
      * Initialize serial/wifi for PC communication
      */

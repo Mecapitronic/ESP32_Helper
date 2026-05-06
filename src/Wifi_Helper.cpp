@@ -46,29 +46,29 @@ namespace Wifi_Helper
     {
         if (enable != Enable::ENABLE_NONE)
         {
-            Printer::print("Wifi : ");
+            const char *status = "unknown";
 
             if (wifiEnable == enable && enable == Enable::ENABLE_TRUE)
             {
-                Printer::print("already Enable");
+                status = "already Enable";
             }
             if (wifiEnable == enable && enable == Enable::ENABLE_FALSE)
             {
-                Printer::print("already Disable");
+                status = "already Disable";
                 wifiClient.stop();
                 WiFi.disconnect();
             }
             if (wifiEnable != enable && enable == Enable::ENABLE_TRUE)
             {
-                Printer::print(" Enable");
+                status = "Enable";
             }
             if (wifiEnable != enable && enable == Enable::ENABLE_FALSE)
             {
-                Printer::print(" Disable");
+                status = "Disable";
                 wifiClient.stop();
                 WiFi.disconnect();
             }
-            Printer::println();
+            Printer::println("Wifi : %s", status);
             wifiEnable = enable;
         }
     }
@@ -89,10 +89,8 @@ namespace Wifi_Helper
 
         WiFi.mode(WIFI_STA);
 
-        print("AP MAC : ");
-        println(WiFi.softAPmacAddress());
-        print("Wifi MAC : ");
-        println(WiFi.macAddress());
+        println("AP MAC : %s", WiFi.softAPmacAddress().c_str());
+        println("Wifi MAC : %s", WiFi.macAddress().c_str());
 
         // Get the Local Static IP saved
         String saved_wifi_local_ip = Preferences_Helper::LoadFromPreference("wifi_local_ip", "");

@@ -32,13 +32,13 @@ namespace Debugger
 
     void Initialisation()
     {
-        Printer::print("Preparing queueSteps : ");
         queueSteps = QueueThread<int16_t>(100);
         if (!queueSteps.IsInit())
         {
-            Printer::println("Error creating the queueSteps !");
+            Printer::println("Preparing queueSteps : Error creating the queueSteps !");
+            return;
         }
-        Printer::println("done.");
+        Printer::println("Preparing queueSteps : done.");
     }
 
     bool HandleCommand(Command cmdTmp)

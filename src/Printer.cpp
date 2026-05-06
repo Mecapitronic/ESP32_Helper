@@ -8,47 +8,60 @@ namespace Printer
     Enable teleplotUDPEnable = Enable::ENABLE_FALSE;
     namespace
     {
-        Level printLevel = Level::LEVEL_VERBOSE;
-        Enable printEnable = Enable::ENABLE_TRUE;
+        Level printLevel = Level::LEVEL_NONE;
+        Enable printEnable = Enable::ENABLE_NONE;
     }
 
     void SetLevel(Level level)
     {
         printLevel = level;
-        print("Printer Level : ");
+        const char *levelName = "LEVEL_UNKNOWN";
         switch (level)
         {
-            ENUM_PRINT(Level::LEVEL_VERBOSE);
-            ENUM_PRINT(Level::LEVEL_INFO);
-            ENUM_PRINT(Level::LEVEL_WARN);
-            ENUM_PRINT(Level::LEVEL_ERROR);
-            ENUM_PRINT(Level::LEVEL_NONE);
+            case Level::LEVEL_VERBOSE:
+                levelName = "LEVEL_VERBOSE";
+                break;
+            case Level::LEVEL_INFO:
+                levelName = "LEVEL_INFO";
+                break;
+            case Level::LEVEL_WARN:
+                levelName = "LEVEL_WARN";
+                break;
+            case Level::LEVEL_ERROR:
+                levelName = "LEVEL_ERROR";
+                break;
+            case Level::LEVEL_NONE:
+                levelName = "LEVEL_NONE";
+                break;
+            default:
+                break;
         }
+        println("Printer Level : %s", levelName);
     }
 
     void EnablePrinter(Enable enable)
     {
         if (enable != Enable::ENABLE_NONE)
         {
-            print("Printer : ");
+            const char *status = "unknown";
 
             if (printEnable == enable && enable == Enable::ENABLE_TRUE)
             {
-                print("already Enable");
+                status = "already Enable";
             }
             if (printEnable == enable && enable == Enable::ENABLE_FALSE)
             {
-                print("already Disable");
+                status = "already Disable";
             }
             if (printEnable != enable && enable == Enable::ENABLE_TRUE)
             {
-                print(" Enable");
+                status = "Enable";
             }
             if (printEnable != enable && enable == Enable::ENABLE_FALSE)
             {
-                print(" Disable");
+                status = "Disable";
             }
-            println();
+            println("Printer : %s", status);
             printEnable = enable;
         }
     }
@@ -136,28 +149,50 @@ namespace Printer
     void PrintLevel(Level level)
     {
         printLevel = level;
-        print("PrintLevel : ");
+        const char *levelName = "LEVEL_UNKNOWN";
         switch (level)
         {
-            ENUM_PRINT(Level::LEVEL_VERBOSE);
-            ENUM_PRINT(Level::LEVEL_INFO);
-            ENUM_PRINT(Level::LEVEL_WARN);
-            ENUM_PRINT(Level::LEVEL_ERROR);
-            ENUM_PRINT(Level::LEVEL_NONE);
+            case Level::LEVEL_VERBOSE:
+                levelName = "LEVEL_VERBOSE";
+                break;
+            case Level::LEVEL_INFO:
+                levelName = "LEVEL_INFO";
+                break;
+            case Level::LEVEL_WARN:
+                levelName = "LEVEL_WARN";
+                break;
+            case Level::LEVEL_ERROR:
+                levelName = "LEVEL_ERROR";
+                break;
+            case Level::LEVEL_NONE:
+                levelName = "LEVEL_NONE";
+                break;
+            default:
+                break;
         }
+        println("PrintLevel : %s", levelName);
     }
 
     Enable PrintEnable() { return printEnable; }
     void PrintEnable(Enable enable)
     {
         printEnable = enable;
-        print("PrintEnable : ");
+        const char *enableName = "ENABLE_UNKNOWN";
         switch (enable)
         {
-            ENUM_PRINT(Enable::ENABLE_FALSE);
-            ENUM_PRINT(Enable::ENABLE_TRUE);
-            ENUM_PRINT(Enable::ENABLE_NONE);
+            case Enable::ENABLE_FALSE:
+                enableName = "ENABLE_FALSE";
+                break;
+            case Enable::ENABLE_TRUE:
+                enableName = "ENABLE_TRUE";
+                break;
+            case Enable::ENABLE_NONE:
+                enableName = "ENABLE_NONE";
+                break;
+            default:
+                break;
         }
+        println("PrintEnable : %s", enableName);
     }
 
     /**
@@ -242,12 +277,9 @@ Format Specifier
     {
         if(Chrono::print)
         {
-            String name = "Chrono["+chrono.name+"]";
             int time = (int)(chrono.elapsedTime/chrono.loopNbr);
-            print("Chrono [%s]: %d µs", chrono.name.c_str(), time);
-                
             uint stackSize = uxTaskGetStackHighWaterMark(nullptr);
-            println("  --  Stack Size: %u", stackSize);
+            println("Chrono [%s]: %d µs  --  Stack Size: %u", chrono.name.c_str(), time, stackSize);
         }
         //if(Chrono::teleplot)
         //    teleplot(name,time);
