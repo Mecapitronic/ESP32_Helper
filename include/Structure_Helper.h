@@ -454,10 +454,12 @@ struct Chrono
 {
     String name = "";
     int32_t loopNbr = 0;
-    static inline bool print = false;
+    static inline bool print = true;
     int32_t loopMax = 0;
     unsigned long startTime = 0;
     unsigned long elapsedTime = 0;
+    unsigned long maxTime = 0;      // Maximum time reached in a loop
+    unsigned long minTime = ULONG_MAX;  // Minimum time reached in a loop
     Chrono(const String &_name, int32_t _nbrLoop) : name(_name), loopMax(_nbrLoop) {};
 
     void Start()
@@ -467,12 +469,25 @@ struct Chrono
         {
             loopNbr = 0;
             elapsedTime = 0;
+            maxTime = 0;
+            minTime = ULONG_MAX;
         }
     };
     bool Check()
     {
-        elapsedTime += micros() - startTime;
+        unsigned long loopTime = micros() - startTime;
+        elapsedTime += loopTime;
         loopNbr++;
+        
+        // Update min and max times
+        if (loopTime > maxTime)
+        {
+            maxTime = loopTime;
+        }
+        if (loopTime < minTime)
+        {
+            minTime = loopTime;
+        }        
         if (loopNbr >= loopMax)
         {
             return true;

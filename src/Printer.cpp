@@ -278,8 +278,10 @@ Format Specifier
         if(Chrono::print)
         {
             int time = (int)(chrono.elapsedTime/chrono.loopNbr);
+            int maxTime = (int)chrono.maxTime;
+            int minTime = (int)chrono.minTime;
             uint stackSize = uxTaskGetStackHighWaterMark(nullptr);
-            println("Chrono [%s]: %d µs  --  Stack Size: %u", chrono.name.c_str(), time, stackSize);
+            println("Chrono [%s]: avg=%d µs, max=%d µs, min=%d µs  --  Stack Size: %u", chrono.name.c_str(), time, maxTime, minTime, stackSize);
         }
         //if(Chrono::teleplot)
         //    teleplot(name,time);
