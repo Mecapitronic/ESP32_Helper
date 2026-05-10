@@ -329,8 +329,9 @@ namespace Wifi_Helper
         if (Printer::teleplotUDP.IsInitialized())
         {
             // We need to un-init in case of wifi lost
-            println("Deleting Teleplot");
-            Printer::teleplotUDP.~Teleplot();
+            println("Deleting Teleplot because WiFi is down");
+            Printer::teleplotUDP.Reset();
+            println("Teleplot reset complete after WiFi loss");
         }
     }
 
@@ -362,13 +363,16 @@ namespace Wifi_Helper
 
         if (!Printer::teleplotUDP.IsInitialized() && teleplotTO.IsTimeOut() && Printer::teleplotUDPEnable == Enable::ENABLE_TRUE)
         {
-            println("Initialising Teleplot");
+            println("Initialising Teleplot on %s:%i", wifi_teleplot_ip.c_str(), wifi_teleplot_port);
             Printer::teleplotUDP = Teleplot(wifi_teleplot_ip.c_str(), wifi_teleplot_port);
+            println("Teleplot init state: %s", Printer::teleplotUDP.IsInitialized() ? "ready" : "not ready");
         }
 
         if (Printer::teleplotUDP.IsInitialized() && Printer::teleplotUDPEnable == Enable::ENABLE_FALSE)
         {
-            Printer::teleplotUDP.~Teleplot();
+            println("Resetting Teleplot because Teleplot UDP was disabled");
+            Printer::teleplotUDP.Reset();
+            println("Teleplot reset complete after disable request");
         }
     }
 

@@ -210,7 +210,7 @@ private:
 
 class Teleplot {
 public:
-    Teleplot(){};
+    Teleplot() { Reset(); };
     #ifndef TELEPLOT_DISABLE
     Teleplot(std::string address, uint32_t port=47269, uint32_t bufferingFrequencyHz = 30)
         : address_(address)
@@ -228,8 +228,30 @@ public:
         #endif
     };
     #endif
-    ~Teleplot() {initialized_ = false;};
+    ~Teleplot() { Reset(); };
     bool IsInitialized() {return initialized_;}
+    void Reset()
+    {
+        initialized_ = false;
+    #ifndef TELEPLOT_DISABLE
+        if (sockfd_ >= 0)
+        {
+            close(sockfd_);
+        }
+        sockfd_ = -1;
+        address_.clear();
+        memset(&serv_, 0, sizeof(serv_));
+        bufferingFrequencyHz_ = 0;
+        lastBufferingFlushTimestampUs_ = 0;
+    #ifdef TELEPLOT_USE_BUFFERING
+        bufferingMap_.clear();
+        bufferingFlushTimestampsUs_.clear();
+    #endif
+    #ifdef TELEPLOT_USE_FREQUENCY
+        updateTimestampsUs_.clear();
+    #endif
+    #endif
+    }
 
     #ifndef TELEPLOT_DISABLE
     // Static localhost instance

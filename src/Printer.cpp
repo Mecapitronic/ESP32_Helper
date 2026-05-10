@@ -292,7 +292,7 @@ Format Specifier
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update(varName.c_str(), var);
         else
-            println(">%s:%f", varName, var);            
+            println(">%s:%f", varName.c_str(), var);            
     }
 
     void teleplot(const String &varName, Point point)
