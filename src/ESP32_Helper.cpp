@@ -27,7 +27,12 @@ namespace ESP32_Helper
         SERIAL_DEBUG.setRxBufferSize(1024);
         SERIAL_DEBUG.setTxBufferSize(1024);
         SERIAL_DEBUG.begin(static_cast<unsigned long>(baud_speed));
-        delay(2000);
+        Timeout serialStartTimeout;
+        serialStartTimeout.Start(2000);
+        while (!SERIAL_DEBUG && !serialStartTimeout.IsTimeOut())
+        {
+            vTaskDelay(10);
+        }
 
         Logger::Initialisation();
         loggerFlushTimer = TimerThread(LoggerFlushCallback, "LoggerFlush", pdMS_TO_TICKS(LOGGER_FLUSH_PERIOD_MS));

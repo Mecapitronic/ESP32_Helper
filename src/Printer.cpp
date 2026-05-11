@@ -8,8 +8,8 @@ namespace Printer
     Enable teleplotUDPEnable = Enable::ENABLE_FALSE;
     namespace
     {
-        Level printLevel = Level::LEVEL_NONE;
-        Enable printEnable = Enable::ENABLE_NONE;
+        Level printLevel = Level::LEVEL_VERBOSE;
+        Enable printEnable = Enable::ENABLE_TRUE;
     }
 
     void SetLevel(Level level)
