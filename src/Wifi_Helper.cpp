@@ -30,8 +30,8 @@ namespace Wifi_Helper
         String wifi_ssid = "Mecapi";
         // The password must be at least 8 to 63 characters long
         String wifi_password = "Mecapi2025";
-        String wifi_local_ip = "192.168.137.110";
-        String wifi_server_ip = "192.168.137.1";
+        String wifi_local_ip = "192.168.43.110"; // Local IP will be 192.168.43.(100 + numPami), default is 110 for Robot
+        String wifi_server_ip = "192.168.43.1";
         String wifi_teleplot_ip = wifi_server_ip;
         int32_t wifi_server_port = 20240;
         int32_t wifi_teleplot_port = 47269;
@@ -431,16 +431,16 @@ namespace Wifi_Helper
         }
         else if (cmdTmp.cmdEquals("WifiLocalIP") && cmdTmp.size == 4)
         {
+            //WifiLocalIP:192:168:43:110
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
             SetLocalIP(ip);
-            Preferences_Helper::SaveToPreference("wifi_local_ip", ip);
             Printer::println("Wifi local IP Changed !");
         }
         else if (cmdTmp.cmdEquals("WifiServerIP") && cmdTmp.size == 4)
         {
+            //WifiServerIP:192:168:43:1
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
             SetServerIP(ip);
-            Preferences_Helper::SaveToPreference("wifi_server_ip", ip);
             Printer::println("Wifi server IP Changed !");
         }
         else if (cmdTmp.cmdEquals("WifiServerPort") && cmdTmp.size == 1)
@@ -478,6 +478,11 @@ namespace Wifi_Helper
 
     void SetLocalIP(const String &ip)
     {
+        if(ip == wifi_local_ip)
+        {
+            println("Local IP is the same as the current one, no change needed");
+            return;
+        }
         IPAddress local_IP;
         local_IP.fromString(ip);
         wifi_local_ip = ip;
@@ -486,11 +491,17 @@ namespace Wifi_Helper
         {
             println("STA Failed to configure");
         }
+        Preferences_Helper::SaveToPreference("wifi_local_ip", ip);
         wifi_changed = true;
     }
 
     void SetServerIP(const String &ip)
     {
+        if(ip == wifi_server_ip)
+        {
+            println("Server IP is the same as the current one, no change needed");
+            return;
+        }
         IPAddress server_IP;
         server_IP.fromString(ip);
         wifi_server_ip = ip;
@@ -499,6 +510,7 @@ namespace Wifi_Helper
         {
             println("STA Failed to configure");
         }
+        Preferences_Helper::SaveToPreference("wifi_server_ip", ip);
         wifi_changed = true;
     }
 
