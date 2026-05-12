@@ -33,7 +33,7 @@ namespace ESP32_Helper
         {
             vTaskDelay(10);
         }
-
+        Preferences_Helper::Initialisation();
         Logger::Initialisation();
         loggerFlushTimer = TimerThread(LoggerFlushCallback, "LoggerFlush", pdMS_TO_TICKS(LOGGER_FLUSH_PERIOD_MS));
         loggerFlushTimer.Start();

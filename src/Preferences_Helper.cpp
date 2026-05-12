@@ -10,6 +10,16 @@ namespace Preferences_Helper
     vector<String> preferencesList;
     const char * const PREF_NAMESPACE = "Mecapi";
 
+    void Initialisation()
+    {
+        println("Initialisation of Preferences Helper");
+        // First boot can fail in read-only mode if the namespace does not exist yet.
+        if (preferences.begin(PREF_NAMESPACE))
+        {
+            preferences.end();
+        }
+    }
+
     int32_t LoadFromPreference(const String &pref, int32_t defValue)
     {
         preferences.begin(PREF_NAMESPACE, true);
@@ -115,6 +125,7 @@ namespace Preferences_Helper
         preferences.clear();
         preferences.end();
         preferencesList.clear();
+        println("Preferences cleared for namespace: " + String(PREF_NAMESPACE));
     }
     
     bool HandleCommand(Command cmdTmp)

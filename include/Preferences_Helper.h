@@ -13,6 +13,7 @@
 
 namespace Preferences_Helper
 {
+    void Initialisation();
     int32_t LoadFromPreference(const String &pref, int32_t defValue);
     String LoadFromPreference(const String &pref, const String &defValue);
     void SaveToPreference(const String &pref, int32_t value);
