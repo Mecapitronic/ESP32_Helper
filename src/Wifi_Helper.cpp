@@ -31,7 +31,7 @@ namespace Wifi_Helper
         // The password must be at least 8 to 63 characters long
         String wifi_password = "Mecapi2025";
         String wifi_local_ip = "192.168.43.110"; // Local IP will be 192.168.43.(100 + numPami), default is 110 for Robot
-        String wifi_server_ip = "192.168.43.1";
+        String wifi_server_ip = "192.168.43.215";
         String wifi_teleplot_ip = wifi_server_ip;
         int32_t wifi_server_port = 20240;
         int32_t wifi_teleplot_port = 47269;
@@ -144,7 +144,7 @@ namespace Wifi_Helper
         if (saved_wifi_password != "")
         {
             wifi_password = saved_wifi_password;
-            println("Wifi server ip saved : " + wifi_password);
+            println("Wifi password saved : " + wifi_password);
         }
         else
             println("No wifi password saved, using default : " + wifi_password);
@@ -252,7 +252,7 @@ namespace Wifi_Helper
                     // Try to initialise UDP teleplot
                     HandleTeleplotConnection();
                 }
-                else
+                if (WiFi.status() != WL_CONNECTED || wifi_changed)
                 {
                     // if WiFi is down, try reconnecting
                     HandleWifiConnection();
@@ -269,7 +269,7 @@ namespace Wifi_Helper
                 ArduinoOTA.handle();
 #endif
             }
-            vTaskDelay(1);
+            vTaskDelay(100);
         }
         println("Wifi Update Task STOPPED !");
     }
@@ -316,6 +316,7 @@ namespace Wifi_Helper
                 wifi_changed = false;
                 println("Connecting to new WiFi : " + wifi_ssid);
                 println("With password : " + wifi_password);
+                wifiClient.stop();
                 WiFi.disconnect();
                 WiFi.begin(wifi_ssid, wifi_password);
             }
