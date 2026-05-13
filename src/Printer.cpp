@@ -228,7 +228,12 @@ Format Specifier
         va_start(args, fmt);
         vsnprintf(buff, 256, fmt, args);
         va_end(args);
-        Logger::Enqueue(buff, false);
+
+        if(SERIAL_DEBUG && buff[0] != '>')
+            SERIAL_DEBUG.print(buff);
+        if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
+            WIFI_DEBUG.print(buff);
+        //Logger::Enqueue(buff, false);
     }
 
     void println(const char *fmt, ...)
@@ -242,28 +247,48 @@ Format Specifier
         va_start(args, fmt);
         vsnprintf(buff, 256, fmt, args);
         va_end(args);
-        Logger::Enqueue(buff, true);
+        
+        if(SERIAL_DEBUG && buff[0] != '>')
+            SERIAL_DEBUG.println(buff);
+        if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
+            WIFI_DEBUG.println(buff);
+        //Logger::Enqueue(buff, true);
     }
 
     void println()
     {
         if (!IsEnable())
             return;
-        Logger::Enqueue("", true);
+            
+        if(SERIAL_DEBUG)
+            SERIAL_DEBUG.println();
+        if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
+            WIFI_DEBUG.println();
+        //Logger::Enqueue("", true);
     }
         
     void print(const String &str)
     {
         if (!IsEnable())
             return;
-        Logger::Enqueue(str.c_str(), false);
+            
+        if(SERIAL_DEBUG && str[0] != '>')
+            SERIAL_DEBUG.print(str);
+        if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
+            WIFI_DEBUG.print(str);
+        //Logger::Enqueue(str.c_str(), false);
     }
 
     void println(const String &str)
     {
         if (!IsEnable())
             return;
-        Logger::Enqueue(str.c_str(), true);
+            
+        if(SERIAL_DEBUG && str[0] != '>')
+            SERIAL_DEBUG.println(str);
+        if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
+            WIFI_DEBUG.println(str);
+        //Logger::Enqueue(str.c_str(), true);
     }
 
     void printError(const String &error)

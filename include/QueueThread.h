@@ -50,14 +50,15 @@ public:
         return isInit;
     }
 
-    void Send(const T &item)
+    bool Send(const T &item)
     {
         if (isInit)
         {
             if (debugPrint)
                 SERIAL_DEBUG.println("Sending to Queue");
-            xQueueSend(_queue, &item, 0);
+            return xQueueSend(_queue, &item, 0) == pdTRUE;
         }
+        return false;
     }
 
     bool Receive(T &item)

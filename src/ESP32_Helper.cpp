@@ -34,9 +34,9 @@ namespace ESP32_Helper
             vTaskDelay(10);
         }
         Preferences_Helper::Initialisation();
-        Logger::Initialisation();
-        loggerFlushTimer = TimerThread(LoggerFlushCallback, "LoggerFlush", pdMS_TO_TICKS(LOGGER_FLUSH_PERIOD_MS));
-        loggerFlushTimer.Start();
+        //Logger::Initialisation();
+        //loggerFlushTimer = TimerThread(LoggerFlushCallback, "LoggerFlush", pdMS_TO_TICKS(LOGGER_FLUSH_PERIOD_MS));
+        //loggerFlushTimer.Start();
 
         println();
         println("-- Starting Helper Initialisation --");
@@ -94,7 +94,7 @@ namespace ESP32_Helper
         RegisterCommandHandler("Print", Printer::HandleCommand, Printer::PrintCommandHelp);
         RegisterCommandHandler("Pref", Preferences_Helper::HandleCommand, Preferences_Helper::PrintCommandHelp);
         RegisterCommandHandler("Wifi", Wifi_Helper::HandleCommand, Wifi_Helper::PrintCommandHelp);
-        RegisterCommandHandler("Logger", Logger::HandleCommand, Logger::PrintCommandHelp);
+        //RegisterCommandHandler("Logger", Logger::HandleCommand, Logger::PrintCommandHelp);
         RegisterCommandHandler("SPIFFS", FileSystem_Helper::HandleCommand, FileSystem_Helper::PrintCommandHelp);
 
         println("-- End of Helper Initialisation --");

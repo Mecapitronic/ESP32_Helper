@@ -103,17 +103,15 @@ namespace Logger
 
         snprintf(msg.text, LOGGER_MESSAGE_SIZE, "%s", text);
 
-        if (logQueue.MessagesWaiting() >= LOGGER_QUEUE_SIZE)
+        if (!logQueue.Send(msg))
         {
-            droppedMessages++;
             portENTER_CRITICAL(&statsMutex);
+            droppedMessages++;
             stats.totalDropped++;
             stats.windowDropped++;
             portEXIT_CRITICAL(&statsMutex);
             return false;
         }
-
-        logQueue.Send(msg);
 
         portENTER_CRITICAL(&statsMutex);
         stats.totalEnqueued++;

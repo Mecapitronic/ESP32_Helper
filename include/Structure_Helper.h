@@ -454,7 +454,7 @@ struct Chrono
 {
     String name = "";
     int32_t loopNbr = 0;
-    static inline bool print = true;
+    static inline bool print = false;
     int32_t loopMax = 0;
     unsigned long startTime = 0;
     unsigned long elapsedTime = 0;
