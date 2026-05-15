@@ -420,7 +420,7 @@ struct Timeout
     int32_t currentTime = 0;
     // Don't touch this value
     int32_t previousTime = 0;
-    // Retturn true if the timeout is running
+    // Return true if the timeout is running
     bool isRunning = false;
 
     void Start(int32_t _timeOut)
