@@ -6,6 +6,7 @@ namespace Printer
 {
     Teleplot teleplotUDP;
     Enable teleplotUDPEnable = Enable::ENABLE_FALSE;
+    Enable teleplotEnable = Enable::ENABLE_FALSE;
     namespace
     {
         Level printLevel = Level::LEVEL_VERBOSE;
@@ -94,6 +95,23 @@ namespace Printer
             // PrintEnable:1
             if (cmdTmp.size == 1)
                 EnablePrinter((Enable)cmdTmp.data[0]);
+        }
+        
+        else if (cmdTmp.cmdEquals("PrintTeleplot") && cmdTmp.size == 1)
+        {
+            // PrintTeleplot:0
+            // PrintTeleplot:1
+            if (cmdTmp.data[0] == 0)
+            {
+                teleplotEnable = Enable::ENABLE_FALSE;
+                println("Teleplot Disable");
+            }
+            else
+            {
+                teleplotEnable = Enable::ENABLE_TRUE;
+                println("Teleplot Enable");
+            }
+
         }
         else if (cmdTmp.cmdEquals("PrintTeleplotUDP") && cmdTmp.size == 1)
         {
@@ -229,7 +247,7 @@ Format Specifier
         vsnprintf(buff, 256, fmt, args);
         va_end(args);
 
-        if(SERIAL_DEBUG && buff[0] != '>')
+        if(SERIAL_DEBUG && buff[0] != '>' || teleplotEnable == Enable::ENABLE_TRUE)
             SERIAL_DEBUG.print(buff);
         if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
             WIFI_DEBUG.print(buff);
@@ -248,7 +266,7 @@ Format Specifier
         vsnprintf(buff, 256, fmt, args);
         va_end(args);
         
-        if(SERIAL_DEBUG && buff[0] != '>')
+        if(SERIAL_DEBUG && buff[0] != '>' || teleplotEnable == Enable::ENABLE_TRUE)
             SERIAL_DEBUG.println(buff);
         if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
             WIFI_DEBUG.println(buff);
@@ -272,7 +290,7 @@ Format Specifier
         if (!IsEnable())
             return;
             
-        if(SERIAL_DEBUG && str[0] != '>')
+        if(SERIAL_DEBUG && str[0] != '>' || teleplotEnable == Enable::ENABLE_TRUE)
             SERIAL_DEBUG.print(str);
         if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
             WIFI_DEBUG.print(str);
@@ -284,7 +302,7 @@ Format Specifier
         if (!IsEnable())
             return;
             
-        if(SERIAL_DEBUG && str[0] != '>')
+        if(SERIAL_DEBUG && str[0] != '>' || teleplotEnable == Enable::ENABLE_TRUE)
             SERIAL_DEBUG.println(str);
         if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
             WIFI_DEBUG.println(str);
@@ -310,6 +328,14 @@ Format Specifier
         }
         //if(Chrono::teleplot)
         //    teleplot(name,time);
+    }
+
+    void teleplot(const String &varName, int var)
+    {
+        if (teleplotUDP.IsInitialized())
+            teleplotUDP.update(varName.c_str(), var);
+        else
+            println(">%s:%d", varName.c_str(), var);            
     }
 
     void teleplot(const String &varName, float var)
