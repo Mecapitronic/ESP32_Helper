@@ -121,7 +121,7 @@ namespace ESP32_Helper
         if (readBuffer.size() < readBuffer.capacity())
         {
             readBuffer.push_back(c);
-            if (c == '\n')
+            if (c == '\n' || c == ';')
             {
                 if (readBuffer.size() > 1)
                 {
