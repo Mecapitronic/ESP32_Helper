@@ -159,6 +159,8 @@ namespace ESP32_Helper
             Printer::println("Help Commands : ");
             Printer::println(" > Help");
             Printer::println("     Display this help");
+            Printer::println(" > Delay:[int]");
+            Printer::println("     Start Delay in ms");
             Printer::println(" > Reboot");
             Printer::println("     Reboot the ESP32");
             for (const auto &handler : customHandlers)
@@ -167,6 +169,21 @@ namespace ESP32_Helper
                     handler.helpFunc();
             }
             return true;
+        }
+        else if (cmdTmp.cmdStartsWith("Delay"))
+        {
+            if (cmdTmp.size > 0 && cmdTmp.data[0] > 0)
+            {
+                Printer::println("Delaying for %d ms...", cmdTmp.data[0]);
+                vTaskDelay(cmdTmp.data[0]);
+                Printer::println("Delay complete.");
+                return true;
+            }
+            else
+            {
+                Printer::println("Delay command requires a duration in ms as data.");
+                return false;
+            }
         }
         else if (cmdTmp.cmdStartsWith("Reboot"))
         {
