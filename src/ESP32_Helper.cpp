@@ -51,7 +51,7 @@ namespace ESP32_Helper
         awaitingCommand = QueueThread<Command>(20);
         if (!awaitingCommand.IsInit())
         {
-            println("Error creating the queue : awaitingCommand");
+            println("Error creating the queue awaitingCommand");
         }
 
         readBuffer.reserve(readBufferMax);
@@ -126,7 +126,7 @@ namespace ESP32_Helper
                 if (readBuffer.size() > 1)
                 {
                     String receivedCmd(readBuffer.data(), readBuffer.size() - 1);
-                    Printer::println("Received %u : %s", static_cast<unsigned int>(readBuffer.size()), receivedCmd.c_str());
+                    Printer::println("Received %u %s", static_cast<unsigned int>(readBuffer.size()), receivedCmd.c_str());
                     ESP32_Helper::BufferReadCommand(readBuffer);
                 }
                 readBuffer.clear();
@@ -134,7 +134,7 @@ namespace ESP32_Helper
         }
         else
         {
-            Printer::println("SERIAL_DEBUG Read Buffer Overflow : %u", static_cast<unsigned int>(readBuffer.size()));
+            Printer::println("SERIAL_DEBUG Read Buffer Overflow %u", static_cast<unsigned int>(readBuffer.size()));
             readBuffer.clear();
         }
     }
@@ -143,7 +143,7 @@ namespace ESP32_Helper
     {
         if (prefix == "" || handler == nullptr)
         {
-            Printer::println("Invalid Command Handler registration for prefix: " + prefix);
+            Printer::println("Invalid Command Handler registration for prefix " + prefix);
             return;
         }
         customHandlers.push_back({prefix, handler, helpFunc});
@@ -156,7 +156,7 @@ namespace ESP32_Helper
 
         if (cmdTmp.cmdStartsWith("Help"))
         {
-            Printer::println("Help Commands : ");
+            Printer::println("Help Commands");
             Printer::println(" > Help");
             Printer::println("     Display this help");
             Printer::println(" > Delay:[int]");
@@ -214,7 +214,7 @@ namespace ESP32_Helper
 
             // If no custom handler found, send to main application queue
             // Queue by value: Command is now pure POD (char arrays), safe for FreeRTOS
-            Printer::println("No custom handler found for : " + cmdTmp.ToString());
+            Printer::println("No custom handler found for " + cmdTmp.ToString());
             awaitingCommand.Send(cmdTmp);
             return false;
         }
@@ -240,7 +240,7 @@ namespace ESP32_Helper
                 {
                     if (i >= Command::sizeCmd)
                     {
-                        println("Command name too long: max %i chars", Command::sizeCmd - 1);
+                        println("Command name too long max %i chars", Command::sizeCmd - 1);
                         readBuffer.clear();
                         return;
                     }
@@ -251,7 +251,7 @@ namespace ESP32_Helper
                 {
                     if (i - indexSeparator > 0)
                     {
-                        // check if it's a string, if it's an integer : convert it
+                        // check if it's a string, if it's an integer convert it
                         String strToConvert = String(&read[indexSeparator], i - indexSeparator);
                         if (isString)
                         {
@@ -262,10 +262,10 @@ namespace ESP32_Helper
                                 else if (cmdTmp.dataStr2[0] == '\0')
                                     snprintf(cmdTmp.dataStr2, Command::sizeStr, "%s", strToConvert.c_str());
                                 else
-                                    println("3rd String not saved: " + strToConvert);
+                                    println("3rd String not saved " + strToConvert);
                             }
                             else
-                                println("String too long: " + strToConvert);
+                                println("String too long " + strToConvert);
                         }
                         else if (cmdTmp.size < Command::length)
                         {
@@ -280,17 +280,17 @@ namespace ESP32_Helper
                                 }
                                 else
                                 {
-                                    println("Conversion didn't consume entire string: " + strToConvert);
+                                    println("Conversion didn't consume entire string " + strToConvert);
                                 }
                             }
                             catch (const std::exception &e)
                             {
-                                println("Exception error: " + String(e.what()) + " for data: " + strToConvert);
+                                println("Exception error " + String(e.what()) + " for data " + strToConvert);
                             }
                         }
                         else
                         {
-                            println("Data array full, data not saved: " + strToConvert);
+                            println("Data array full, data not saved " + strToConvert);
                         }
                     }
                     indexSeparator = i + 1;
@@ -298,7 +298,7 @@ namespace ESP32_Helper
                 isString = false;
             }
         }
-        Printer::println("Command Received : %s", cmdTmp.ToString().c_str());
+        Printer::println("Command Received %s", cmdTmp.ToString().c_str());
         HandleCommand(cmdTmp);
     }
 

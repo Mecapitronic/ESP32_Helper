@@ -37,7 +37,7 @@ namespace Printer
             default:
                 break;
         }
-        println("Printer Level : %s", levelName);
+        println("Printer Level %s", levelName);
     }
 
     void EnablePrinter(Enable enable)
@@ -62,7 +62,7 @@ namespace Printer
             {
                 status = "Disable";
             }
-            println("Printer : %s", status);
+            println("Printer %s", status);
             printEnable = enable;
         }
     }
@@ -151,7 +151,7 @@ namespace Printer
 
     void PrintCommandHelp()
     {
-        println("Printer Command Help :");
+        println("Printer Command Help");
         println(" > PrintLevel:[int]");
         println("      0 VERBOSE, 1 INFO, 2 WARN, 3 ERROR");
         println(" > PrintEnable:[int]");
@@ -188,7 +188,7 @@ namespace Printer
             default:
                 break;
         }
-        println("PrintLevel : %s", levelName);
+        println("PrintLevel %s", levelName);
     }
 
     Enable PrintEnable() { return printEnable; }
@@ -210,7 +210,7 @@ namespace Printer
             default:
                 break;
         }
-        println("PrintEnable : %s", enableName);
+        println("PrintEnable %s", enableName);
     }
 
     /**
@@ -324,7 +324,7 @@ Format Specifier
             int maxTime = (int)chrono.maxTime;
             int minTime = (int)chrono.minTime;
             uint stackSize = uxTaskGetStackHighWaterMark(nullptr);
-            println("Chrono [%s]: avg=%d µs, max=%d µs, min=%d µs  --  Stack Size: %u", chrono.name.c_str(), time, maxTime, minTime, stackSize);
+            println("Chrono [%s] avg=%d µs, max=%d µs, min=%d µs  --  Stack Size %u", chrono.name.c_str(), time, maxTime, minTime, stackSize);
         }
         //if(Chrono::teleplot)
         //    teleplot(name,time);

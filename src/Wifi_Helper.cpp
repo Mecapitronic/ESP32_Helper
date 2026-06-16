@@ -68,7 +68,7 @@ namespace Wifi_Helper
                 wifiClient.stop();
                 WiFi.disconnect();
             }
-            Printer::println("Wifi : %s", status);
+            Printer::println("Wifi %s", status);
             wifiEnable = enable;
         }
     }
@@ -84,23 +84,23 @@ namespace Wifi_Helper
         wifiEnable = Enable::ENABLE_TRUE;
         println("-- Starting Wifi initialisation --");
 
-        // delete old config only if wifi is connected, if not : does nothing
+        // delete old config only if wifi is connected, if not does nothing
         WiFi.disconnect(true);
 
         WiFi.mode(WIFI_STA);
 
-        println("AP MAC : %s", WiFi.softAPmacAddress().c_str());
-        println("Wifi MAC : %s", WiFi.macAddress().c_str());
+        println("AP MAC %s", WiFi.softAPmacAddress().c_str());
+        println("Wifi MAC %s", WiFi.macAddress().c_str());
 
         // Get the Local Static IP saved
         String saved_wifi_local_ip = Preferences_Helper::LoadFromPreference("wifi_local_ip", "");
         if (saved_wifi_local_ip != "")
         {
             wifi_local_ip = saved_wifi_local_ip;
-            println("Wifi local ip saved : " + wifi_local_ip);
+            println("Wifi local ip saved " + wifi_local_ip);
         }
         else
-            println("No wifi local ip saved, using default : " + wifi_local_ip);
+            println("No wifi local ip saved, using default " + wifi_local_ip);
 
         // Set the Local Static IP address
         IPAddress local_IP;
@@ -111,10 +111,10 @@ namespace Wifi_Helper
         if (saved_wifi_server_ip != "")
         {
             wifi_server_ip = saved_wifi_server_ip;
-            println("Wifi server ip saved : " + wifi_server_ip);
+            println("Wifi server ip saved " + wifi_server_ip);
         }
         else
-            println("No wifi server ip saved, using default : " + wifi_server_ip);
+            println("No wifi server ip saved, using default " + wifi_server_ip);
 
         // Set the Server Static IP address
         IPAddress server_IP;
@@ -125,10 +125,10 @@ namespace Wifi_Helper
         if (saved_wifi_server_port != -1)
         {
             wifi_server_port = saved_wifi_server_port;
-            println("Wifi server port saved : " + String(wifi_server_port));
+            println("Wifi server port saved " + String(wifi_server_port));
         }
         else
-            println("No wifi server port saved, using default : " + String(wifi_server_port));
+            println("No wifi server port saved, using default " + String(wifi_server_port));
 
         IPAddress subnet(255, 255, 255, 0);
         // IPAddress primaryDNS(8, 8, 8, 8);   //optional
@@ -144,19 +144,19 @@ namespace Wifi_Helper
         if (saved_wifi_password != "")
         {
             wifi_password = saved_wifi_password;
-            println("Wifi password saved : " + wifi_password);
+            println("Wifi password saved " + wifi_password);
         }
         else
-            println("No wifi password saved, using default : " + wifi_password);
+            println("No wifi password saved, using default " + wifi_password);
 
         String saved_wifi_ssid = Preferences_Helper::LoadFromPreference("wifi_ssid", "");
         if (saved_wifi_ssid != "")
         {
             wifi_ssid = saved_wifi_ssid;
-            println("Wifi ssid saved : " + wifi_ssid);
+            println("Wifi ssid saved " + wifi_ssid);
         }
         else
-            println("No wifi ssid saved, using default : " + wifi_ssid);
+            println("No wifi ssid saved, using default " + wifi_ssid);
 
         // Events callback (to reconnect)
         WiFi.onEvent(WiFiStationConnected, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
@@ -204,7 +204,7 @@ namespace Wifi_Helper
             .onProgress(
                 [](unsigned int progress, unsigned int total)
                 {
-                    Printer::println("Progress: %i %%", (progress / (total / 100)));
+                    Printer::println("Progress %i %%", (progress / (total / 100)));
                     Wifi_Helper::OTARunning = true;
                 })
             .onError(
@@ -287,7 +287,7 @@ namespace Wifi_Helper
                 {
                     wifiClient.print("Received ");
                     wifiClient.print(readBuffer.size());
-                    wifiClient.print(" : ");
+                    wifiClient.print(" ");
                     wifiClient.write(readBuffer.data(), readBuffer.size());
                     wifiClient.println();
                     ESP32_Helper::BufferReadCommand(readBuffer);
@@ -297,7 +297,7 @@ namespace Wifi_Helper
         }
         else
         {
-            wifiClient.print("wifiClient Read Buffer Overflow : ");
+            wifiClient.print("wifiClient Read Buffer Overflow ");
             wifiClient.println(readBuffer.size());
             readBuffer.clear();
         }
@@ -314,8 +314,8 @@ namespace Wifi_Helper
             if (wifi_changed)
             {
                 wifi_changed = false;
-                println("Connecting to new WiFi : " + wifi_ssid);
-                println("With password : " + wifi_password);
+                println("Connecting to new WiFi " + wifi_ssid);
+                println("With password " + wifi_password);
                 wifiClient.stop();
                 WiFi.disconnect();
                 WiFi.begin(wifi_ssid, wifi_password);
@@ -364,9 +364,9 @@ namespace Wifi_Helper
 
         if (!Printer::teleplotUDP.IsInitialized() && teleplotTO.IsTimeOut() && Printer::teleplotUDPEnable == Enable::ENABLE_TRUE)
         {
-            println("Initialising Teleplot on %s:%i", wifi_teleplot_ip.c_str(), wifi_teleplot_port);
+            println("Initialising Teleplot on %s %i", wifi_teleplot_ip.c_str(), wifi_teleplot_port);
             Printer::teleplotUDP = Teleplot(wifi_teleplot_ip.c_str(), wifi_teleplot_port);
-            println("Teleplot init state: %s", Printer::teleplotUDP.IsInitialized() ? "ready" : "not ready");
+            println("Teleplot init state %s", Printer::teleplotUDP.IsInitialized() ? "ready" : "not ready");
         }
 
         if (Printer::teleplotUDP.IsInitialized() && Printer::teleplotUDPEnable == Enable::ENABLE_FALSE)
@@ -382,23 +382,23 @@ namespace Wifi_Helper
 
         if (cmdTmp.cmdEquals("WifiStatus"))
         {
-            Printer::println("Wifi status : %i", (wl_status_t)WiFi.status());
-            Printer::println("Wifi SSID : %s", WiFi.SSID().c_str());
-            Printer::println("Wifi SSID saved : %s", wifi_ssid.c_str());
-            Printer::println("Wifi Password saved : %s", wifi_password.c_str());
+            Printer::println("Wifi status %i", (wl_status_t)WiFi.status());
+            Printer::println("Wifi SSID %s", WiFi.SSID().c_str());
+            Printer::println("Wifi SSID saved %s", wifi_ssid.c_str());
+            Printer::println("Wifi Password saved %s", wifi_password.c_str());
 
-            Printer::println("Wifi IP : %s", WiFi.localIP().toString().c_str());
-            Printer::println("Wifi MAC : %s", WiFi.macAddress().c_str());
-            Printer::println("Wifi RSSI : %i", WiFi.RSSI());
-            Printer::println("Wifi Local IP : %s", wifi_local_ip.c_str());
-            Printer::println("Wifi Server IP : %s", wifi_server_ip.c_str());
-            Printer::println("Wifi Server Port : %i", wifi_server_port);
+            Printer::println("Wifi IP %s", WiFi.localIP().toString().c_str());
+            Printer::println("Wifi MAC %s", WiFi.macAddress().c_str());
+            Printer::println("Wifi RSSI %i", WiFi.RSSI());
+            Printer::println("Wifi Local IP %s", wifi_local_ip.c_str());
+            Printer::println("Wifi Server IP %s", wifi_server_ip.c_str());
+            Printer::println("Wifi Server Port %i", wifi_server_port);
         }
         else if (cmdTmp.cmdEquals("WifiEnable"))
         {
             // WifiEnable:0
             // WifiEnable:1
-            Printer::println("Wifi status : %i", (wl_status_t)WiFi.status());
+            Printer::println("Wifi status %i", (wl_status_t)WiFi.status());
             if (cmdTmp.size == 1)
                 EnableWifi((Enable)cmdTmp.data[0]);
         }
@@ -459,7 +459,7 @@ namespace Wifi_Helper
 
     void PrintCommandHelp()
     {
-        Printer::println("Wifi Command Help :");
+        Printer::println("Wifi Command Help");
         Printer::println(" > WifiStatus");
         Printer::println("      Print the Wifi status");
         Printer::println(" > WifiEnable:[bool]");
@@ -522,7 +522,7 @@ namespace Wifi_Helper
 
     void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
     {
-        println("WiFi lost connection : " + String((wifi_err_reason_t)info.wifi_sta_disconnected.reason));
+        println("WiFi lost connection " + String((wifi_err_reason_t)info.wifi_sta_disconnected.reason));
     }
 }
 #endif

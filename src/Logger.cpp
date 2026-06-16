@@ -140,7 +140,7 @@ namespace Logger
             {
                 if (SERIAL_DEBUG)
                 {
-                    SERIAL_DEBUG.print("Logger dropped messages: ");
+                    SERIAL_DEBUG.print("Logger dropped messages ");
                     SERIAL_DEBUG.println(droppedMessages);
                 }
                 droppedMessages = 0;
@@ -321,12 +321,12 @@ namespace Logger
                 portEXIT_CRITICAL(&statsMutex);
                 if (SERIAL_DEBUG)
                 {
-                    SERIAL_DEBUG.print("Logger stats auto print: ");
+                    SERIAL_DEBUG.print("Logger stats auto print ");
                     SERIAL_DEBUG.println(cmdTmp.data[0] != 0 ? "enabled" : "disabled");
                 }
                 if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
                 {
-                    WIFI_DEBUG.print("Logger stats auto print: ");
+                    WIFI_DEBUG.print("Logger stats auto print ");
                     WIFI_DEBUG.println(cmdTmp.data[0] != 0 ? "enabled" : "disabled");
                 }
             }
@@ -364,7 +364,7 @@ namespace Logger
 
     void PrintCommandHelp()
     {
-        Printer::println("Logger Command Help :");
+        Printer::println("Logger Command Help");
         Printer::println(" > LoggerStats");
         Printer::println("      Affiche les stats maintenant");
         Printer::println(" > LoggerStats:[int]");

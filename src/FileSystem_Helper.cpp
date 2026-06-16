@@ -32,9 +32,9 @@ namespace FileSystem_Helper
     void ListFiles(const String &filter)
     {
         if (filter != "")
-            println("Listing files with filter : <%s>", filter.c_str());
+            println("Listing files with filter <%s>", filter.c_str());
         else
-            println("Listing files :");
+            println("Listing files");
 
         File root = SPIFFS.open("/");
         if (!root)
@@ -44,7 +44,7 @@ namespace FileSystem_Helper
         }
 
         File file = root.openNextFile();
-        println("  FILE: \t SIZE:");
+        println("  FILE \t SIZE");
         while (file)
         {
             if (filter == "" || (filter != "" && String(file.name()).indexOf(filter) != -1))
@@ -58,7 +58,7 @@ namespace FileSystem_Helper
 
     void CreateFile(const String &fileName)
     {
-        println("Creating file: " + fileName);
+        println("Creating file " + fileName);
         
         if(SPIFFS.exists("/" + fileName))
         {
@@ -78,7 +78,7 @@ namespace FileSystem_Helper
 
     String ReadFile(const String &fileName)
     {
-        println("Reading file: " + fileName);
+        println("Reading file " + fileName);
         if(!SPIFFS.exists("/" + fileName))
         {
             println("Source file does not exist");
@@ -102,7 +102,7 @@ namespace FileSystem_Helper
 
     void WriteFile(const String &fileName, const String &message, bool createFileIfNotExists)
     {
-        println("Writing file: " + fileName);
+        println("Writing file " + fileName);
         if(!SPIFFS.exists("/" + fileName))
         {
             if (createFileIfNotExists)
@@ -134,7 +134,7 @@ namespace FileSystem_Helper
 
     void AppendFile(const String &fileName, const String &message, bool createFileIfNotExists)
     {
-        println("Appending to file: " + fileName);
+        println("Appending to file " + fileName);
 
         if(!SPIFFS.exists("/" + fileName))
         {
@@ -191,7 +191,7 @@ namespace FileSystem_Helper
 
     void DeleteFile(const String &fileName)
     {
-        println("Deleting file: %s", fileName.c_str());
+        println("Deleting file %s", fileName.c_str());
         
         if(!SPIFFS.exists("/" + fileName))
         {
@@ -328,7 +328,7 @@ namespace FileSystem_Helper
     
     void PrintCommandHelp()
     {
-        println("SPIFFS Command Help :");
+        println("SPIFFS Command Help");
         println(" > SPIFFSFormat");
         println("      Format SPIFFS");
         println(" > SPIFFSListFiles:<filter>");

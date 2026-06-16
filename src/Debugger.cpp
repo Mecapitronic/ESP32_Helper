@@ -23,7 +23,7 @@ namespace Debugger
             else if (debuggerEnable != enable && enable == Enable::ENABLE_FALSE)
                 status = "Disabled";
             
-            Printer::println("Debugger: " + status);
+            Printer::println("Debugger " + status);
             debuggerEnable = enable;
         }
     }
@@ -35,10 +35,10 @@ namespace Debugger
         queueSteps = QueueThread<int16_t>(100);
         if (!queueSteps.IsInit())
         {
-            Printer::println("Preparing queueSteps : Error creating the queueSteps !");
+            Printer::println("Preparing queueSteps Error creating the queueSteps !");
             return;
         }
-        Printer::println("Preparing queueSteps : done.");
+        Printer::println("Preparing queueSteps done.");
     }
 
     bool HandleCommand(Command cmdTmp)
@@ -58,7 +58,7 @@ namespace Debugger
         else if (cmdTmp.cmdEquals("DebugGetSteps"))
         {
             // DebugGetSteps
-            Printer::println("Steps available : %i", GetSteps());
+            Printer::println("Steps available %i", GetSteps());
         }
         else
         {
@@ -70,7 +70,7 @@ namespace Debugger
 
     void PrintCommandHelp()
     {
-        Printer::println("Debugger Command Help :");
+        Printer::println("Debugger Command Help");
         Printer::println(" > DebugEnable:[int]");
         Printer::println("      0 Disable, 1 Enable Debugger");
         Printer::println(" > DebugAddSteps:[int]");
@@ -87,7 +87,7 @@ namespace Debugger
             ReceiveSteps();
 
             if (debugSteps <= 0)
-                Printer::println("Debugger : Wait For Available Steps");
+                Printer::println("Debugger Wait For Available Steps");
 
             while (debugSteps <= 0 && IsEnable())
             {

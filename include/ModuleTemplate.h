@@ -22,8 +22,8 @@ public:
     // These bases functions() {} will be called only if not implemented by derived class
     virtual ~IModule() { Printer::println("Deleting IModule"); }
     virtual void SetConfig() { Printer::println("SetConfig IModule"); }
-    // virtual bool ReadSerial() { Printer::println("ReadSerial IModule : not implemented !"); }
-    // virtual void SendSerial() { Printer::println("SendSerial IModule : not implemented !"); }
+    // virtual bool ReadSerial() { Printer::println("ReadSerial IModule not implemented !"); }
+    // virtual void SendSerial() { Printer::println("SendSerial IModule not implemented !"); }
 
 };
 #endif

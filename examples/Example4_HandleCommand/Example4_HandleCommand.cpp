@@ -1,5 +1,5 @@
 /*
-    Start the serial communication at default baud rate speed : 921600
+    Start the serial communication at default baud rate speed 921600
     SERIAL_DEBUG is the Serial port used for communication with the PC
     You can redefine it to change the Serial port used
     
@@ -19,7 +19,7 @@ int32_t cpt = 0;
 // Help function for counter commands
 void printCounterHelp()
 {
-    println("Counter Commands :");
+    println("Counter Commands");
     println(" > cpt++");
     println("     Increment counter");
     println(" > cpt--");
@@ -35,19 +35,19 @@ bool handleCounterCommand(Command cmd)
     if(cmd.cmdStartsWith("cpt++"))
     {
         cpt++;
-        println("Counter incremented: %i", cpt);
+        println("Counter incremented %i", cpt);
         return true;
     }
     else if(cmd.cmdStartsWith("cpt--"))
     {
         cpt--;
-        println("Counter decremented: %i", cpt);
+        println("Counter decremented %i", cpt);
         return true;
     }
     else if(cmd.cmdEquals("cpt") && cmd.size == 1)
     {
         cpt = cmd.data[0];
-        println("Counter set to: %i", cpt);
+        println("Counter set to %i", cpt);
         return true;
     }
     return false;
@@ -56,7 +56,7 @@ bool handleCounterCommand(Command cmd)
 // Help function for log commands
 void printLogHelp()
 {
-    println("Log Commands :");
+    println("Log Commands");
     println(" > Log:message");
     println("     Print a log message");
 }
@@ -67,7 +67,7 @@ bool handleLogCommand(Command cmd)
 {
     if(cmd.cmdStartsWith("Log"))
     {
-        println("Log : %s", cmd.ToString().c_str());
+        println("Log %s", cmd.ToString().c_str());
         return true;
     }
     return false;
@@ -108,7 +108,7 @@ void loop(void)
     if (ESP32_Helper::HasWaitingCommand())
     {
         Command command = ESP32_Helper::GetCommand();
-        println("Unhandled command received: %s", command.ToString().c_str());
+        println("Unhandled command received %s", command.ToString().c_str());
     }
 
     // Try sending "Help" to see the list of commands available from the Lib

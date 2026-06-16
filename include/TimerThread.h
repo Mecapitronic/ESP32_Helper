@@ -23,7 +23,7 @@ public:
     {
         if (debugPrint)
         {
-            SERIAL_DEBUG.print("Creating Timer : ");
+            SERIAL_DEBUG.print("Creating Timer ");
             SERIAL_DEBUG.println(_pcName);
         }
 
@@ -44,7 +44,7 @@ public:
     {
         if (debugPrint)
         {
-            SERIAL_DEBUG.print("Deleting Timer : ");
+            SERIAL_DEBUG.print("Deleting Timer ");
             SERIAL_DEBUG.println(_pcName);
         }
     }
@@ -60,7 +60,7 @@ public:
         {
             if (debugPrint)
             {
-                SERIAL_DEBUG.print("Starting Timer : ");
+                SERIAL_DEBUG.print("Starting Timer ");
                 SERIAL_DEBUG.println(_pcName);
             }
             Enable();
@@ -83,7 +83,7 @@ public:
         {
             if (debugPrint)
             {
-                SERIAL_DEBUG.print("Stopping Timer : ");
+                SERIAL_DEBUG.print("Stopping Timer ");
                 SERIAL_DEBUG.println(_pcName);
             }
             xTimerStop(_timer, portMAX_DELAY);
@@ -103,7 +103,7 @@ public:
     {
         if (debugPrint)
         {
-            SERIAL_DEBUG.print("Timer OFF : ");
+            SERIAL_DEBUG.print("Timer OFF ");
             SERIAL_DEBUG.println(_pcName);
         }
         _enable = false;
@@ -111,7 +111,7 @@ public:
         {
             if (debugPrint)
             {
-                SERIAL_DEBUG.print("Wait Timer stop running : ");
+                SERIAL_DEBUG.print("Wait Timer stop running ");
                 SERIAL_DEBUG.println(_pcName);
             }
         }
@@ -125,7 +125,7 @@ public:
     {
         if (debugPrint)
         {
-            SERIAL_DEBUG.print("Timer ON : ");
+            SERIAL_DEBUG.print("Timer ON ");
             SERIAL_DEBUG.println(_pcName);
         }
         _enable = true;

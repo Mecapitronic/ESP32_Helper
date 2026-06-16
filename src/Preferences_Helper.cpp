@@ -26,7 +26,7 @@ namespace Preferences_Helper
         int32_t value = preferences.getInt(pref.c_str(), defValue);
         if(preferencesList.size() == 0 || std::find(preferencesList.begin(), preferencesList.end(), pref) == preferencesList.end())
             preferencesList.push_back(pref);
-        println("Load Preferences : " + pref + " = " + String(value));
+        println("Load Preferences " + pref + " = " + String(value));
         preferences.end();
         return value;
     }
@@ -37,7 +37,7 @@ namespace Preferences_Helper
         String value = preferences.getString(pref.c_str(), defValue.c_str());
         if(preferencesList.size() == 0 || std::find(preferencesList.begin(), preferencesList.end(), pref) == preferencesList.end())
             preferencesList.push_back(pref);
-        println("Load Preferences : " + pref + " = " + value);
+        println("Load Preferences " + pref + " = " + value);
         preferences.end();
         return value;
     }
@@ -48,7 +48,7 @@ namespace Preferences_Helper
         preferences.putInt(pref.c_str(), value);
         if(preferencesList.size() == 0 || std::find(preferencesList.begin(), preferencesList.end(), pref) == preferencesList.end())
             preferencesList.push_back(pref);
-        println("Save Preferences : " + pref + " = " + value);
+        println("Save Preferences " + pref + " = " + value);
         preferences.end();
     }
 
@@ -58,7 +58,7 @@ namespace Preferences_Helper
         preferences.putString(pref.c_str(), value.c_str());
         if(preferencesList.size() == 0 || std::find(preferencesList.begin(), preferencesList.end(), pref) == preferencesList.end())
             preferencesList.push_back(pref);
-        println("Save Preferences : " + pref + " = " + value);
+        println("Save Preferences " + pref + " = " + value);
         preferences.end();
     }
 
@@ -69,13 +69,13 @@ namespace Preferences_Helper
         auto it = std::find(preferencesList.begin(), preferencesList.end(), pref);
         if(it != preferencesList.end())
             preferencesList.erase(it);
-        println("Remove Preferences : %s %s", pref.c_str(), deleted ? "deleted" : "not found");
+        println("Remove Preferences %s %s", pref.c_str(), deleted ? "deleted" : "not found");
         preferences.end();
     }
 
     void ListPreferences()
     {
-        println("Preferences List : %i", preferencesList.size());
+        println("Preferences List %i", preferencesList.size());
         preferences.begin(PREF_NAMESPACE, true);
         for (size_t i = 0; i < preferencesList.size(); i++)
         {
@@ -85,15 +85,15 @@ namespace Preferences_Helper
                 if(type == PreferenceType::PT_I32)
                 {
                     int32_t value = preferences.getInt(preferencesList[i].c_str());
-                    println("  " + preferencesList[i] + " - Type: int32 = " + String(value));
+                    println("  " + preferencesList[i] + " - Type int32 = " + String(value));
                 }
                 else if(type == PreferenceType::PT_STR)
                 {
                     String value = preferences.getString(preferencesList[i].c_str());
-                    println("  " + preferencesList[i] + " - Type: String = " + value );
+                    println("  " + preferencesList[i] + " - Type String = " + value );
                 }
                 else
-                println("  " + preferencesList[i] + " - Type: " + String((int)type));
+                println("  " + preferencesList[i] + " - Type " + String((int)type));
             }
             else
             {
@@ -114,7 +114,7 @@ namespace Preferences_Helper
     {
         preferences.begin(PREF_NAMESPACE, true);
         int32_t freeEntries = preferences.freeEntries();
-        println("Preferences Free Entries : %i", freeEntries);
+        println("Preferences Free Entries %i", freeEntries);
         preferences.end();
         return freeEntries;
     }
@@ -125,7 +125,7 @@ namespace Preferences_Helper
         preferences.clear();
         preferences.end();
         preferencesList.clear();
-        println("Preferences cleared for namespace: " + String(PREF_NAMESPACE));
+        println("Preferences cleared for namespace " + String(PREF_NAMESPACE));
     }
     
     bool HandleCommand(Command cmdTmp)
@@ -143,14 +143,14 @@ namespace Preferences_Helper
             {
                 String key(cmdTmp.dataStr1);
                 int32_t value = cmdTmp.data[0];
-                println("Save preference : %s = %i", key.c_str(), value);
+                println("Save preference %s = %i", key.c_str(), value);
                 Preferences_Helper::SaveToPreference(key, value);
             }
             else if (strlen(cmdTmp.dataStr1) > 0 && strlen(cmdTmp.dataStr2) > 0)
             {
                 String key(cmdTmp.dataStr1);
                 String value(cmdTmp.dataStr2);
-                println("Save preference : %s = %s", key.c_str(), value.c_str());
+                println("Save preference %s = %s", key.c_str(), value.c_str());
                 Preferences_Helper::SaveToPreference(key, value);
             }
             else
@@ -168,14 +168,14 @@ namespace Preferences_Helper
                 String key(cmdTmp.dataStr1);
                 int32_t defValue = cmdTmp.data[0];
                 int32_t value = Preferences_Helper::LoadFromPreference(key, defValue);
-                println("Loaded preference : %s = %i", key.c_str(), value);
+                println("Loaded preference %s = %i", key.c_str(), value);
             }
             else if (strlen(cmdTmp.dataStr1) > 0 && strlen(cmdTmp.dataStr2) > 0)
             {
                 String key(cmdTmp.dataStr1);
                 String defValue(cmdTmp.dataStr2);
                 String value = Preferences_Helper::LoadFromPreference(key, defValue);
-                println("Loaded preference : %s = %s", key.c_str(), value.c_str());
+                println("Loaded preference %s = %s", key.c_str(), value.c_str());
             }
             else
             {
@@ -189,7 +189,7 @@ namespace Preferences_Helper
             // PrefRemove:str
             if (strlen(cmdTmp.dataStr1) > 0)
             {
-                println("Remove preference : %s", cmdTmp.dataStr1);
+                println("Remove preference %s", cmdTmp.dataStr1);
                 Preferences_Helper::RemoveFromPreference(String(cmdTmp.dataStr1));
             }
             else
@@ -208,7 +208,7 @@ namespace Preferences_Helper
             // PrefClear:1
             if (cmdTmp.size == 1 && cmdTmp.data[0] == 1)
             {
-                println("Clear all pref under: " + String(PREF_NAMESPACE));
+                println("Clear all pref under " + String(PREF_NAMESPACE));
                 Preferences_Helper::ClearPreferences();
             }
             else
@@ -227,7 +227,7 @@ namespace Preferences_Helper
     
     void PrintCommandHelp()
     {
-        println("Preferences Command Help :");
+        println("Preferences Command Help");
         println(" > PrefList");
         println("      List all key preferences");
         println(" > PrefSave:[string]:[int]");

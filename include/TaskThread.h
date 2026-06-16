@@ -29,7 +29,7 @@ public:
     {
         if (debugPrint)
         {
-            SERIAL_DEBUG.print("Creating Task : ");
+            SERIAL_DEBUG.print("Creating Task ");
             SERIAL_DEBUG.println(_pcName);
         }
 
@@ -43,15 +43,15 @@ public:
         xTaskCreatePinnedToCore(pvTaskCode, pcName, usStackDepth, this, uxPriority, &_task, xCoreID);
     }
     // optimum stack size = the original stack size - (highwatermakrk + 2000 bytes)
-    // get stack size for task : unsigned int stackSize = uxTaskGetStackHighWaterMark(nullptr);
+    // get stack size for task unsigned int stackSize = uxTaskGetStackHighWaterMark(nullptr);
     // uint stackSize = uxTaskGetStackHighWaterMark(nullptr);
-    // print("Stack Size: %u", stackSize);
+    // print("Stack Size %u", stackSize);
 
     ~TaskThread()
     {
         if (debugPrint)
         {
-            SERIAL_DEBUG.print("Deleting Task : ");
+            SERIAL_DEBUG.print("Deleting Task ");
             SERIAL_DEBUG.println(_pcName);
         }
     }

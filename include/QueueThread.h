@@ -18,7 +18,7 @@ public:
     QueueThread(int32_t size)
     {
         if (debugPrint)
-            SERIAL_DEBUG.println("Creating Queue : ");
+            SERIAL_DEBUG.println("Creating Queue ");
         _queue = xQueueCreate(size, sizeof(T));
         if (_queue == nullptr)
         {
@@ -79,7 +79,7 @@ public:
             int32_t msgWait = uxQueueMessagesWaiting(_queue);
             if (debugPrint)
             {
-                SERIAL_DEBUG.print("Waiting in Queue : ");
+                SERIAL_DEBUG.print("Waiting in Queue ");
                 SERIAL_DEBUG.println(msgWait);
             }
             return msgWait;
