@@ -1,5 +1,5 @@
 #ifndef WITH_WIFI
-#include "Wifi_No_Helper.h"
+#include "Wifi_Helper.h"
 
 namespace Wifi_Helper
 {
@@ -47,8 +47,28 @@ namespace Wifi_Helper
     {
         Printer::println("NO WIFI !");
     }
+
+    void SetLocalIP(int lastDigit)
+    {
+        Printer::println("NO WIFI !");
+    }
     
     void SetServerIP(const String &ip)
+    {
+        Printer::println("NO WIFI !");
+    }
+
+    void SetServerIP(int lastDigit)
+    {
+        Printer::println("NO WIFI !");
+    }
+    
+    void SetTeleplotIP(const String &ip)
+    {
+        Printer::println("NO WIFI !");
+    }
+
+    void SetTeleplotIP(int lastDigit)
     {
         Printer::println("NO WIFI !");
     }

@@ -30,6 +30,7 @@ namespace Wifi_Helper
         String wifi_ssid = "Mecapi";
         // The password must be at least 8 to 63 characters long
         String wifi_password = "Mecapi2025";
+        String wifi_base_ip = "192.168.43";
         String wifi_local_ip = "192.168.43.110"; // Local IP will be 192.168.43.(100 + numPami), default is 110 for Robot
         String wifi_server_ip = "192.168.43.215";
         String wifi_teleplot_ip = wifi_server_ip;
@@ -119,6 +120,16 @@ namespace Wifi_Helper
         // Set the Server Static IP address
         IPAddress server_IP;
         server_IP.fromString(wifi_server_ip);
+
+        // Get the Teleplot Static IP saved
+        String saved_wifi_teleplot_ip = Preferences_Helper::LoadFromPreference("wifi_tlp_ip", "");
+        if (saved_wifi_teleplot_ip != "")
+        {
+            wifi_teleplot_ip = saved_wifi_teleplot_ip;
+            println("Wifi teleplot ip saved " + wifi_teleplot_ip);
+        }
+        else
+            println("No wifi teleplot ip saved, using default " + wifi_teleplot_ip);
 
         // Get the Server Port saved
         int32_t saved_wifi_server_port = Preferences_Helper::LoadFromPreference("wifi_server_port", -1);
@@ -392,6 +403,7 @@ namespace Wifi_Helper
             Printer::println("Wifi RSSI %i", WiFi.RSSI());
             Printer::println("Wifi Local IP %s", wifi_local_ip.c_str());
             Printer::println("Wifi Server IP %s", wifi_server_ip.c_str());
+            Printer::println("Wifi Teleplot IP %s", wifi_teleplot_ip.c_str());
             Printer::println("Wifi Server Port %i", wifi_server_port);
         }
         else if (cmdTmp.cmdEquals("WifiEnable"))
@@ -430,6 +442,13 @@ namespace Wifi_Helper
             else
                 Printer::println("Wifi SSID is empty or is too long (max 63 char) !");
         }
+        else if (cmdTmp.cmdEquals("WifiBaseIP") && cmdTmp.size == 3)
+        {
+            //WifiBaseIP:192:168:43
+            String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]);
+            wifi_base_ip = ip;
+            Printer::println("Wifi base IP Changed !");
+        }
         else if (cmdTmp.cmdEquals("WifiLocalIP") && cmdTmp.size == 4)
         {
             //WifiLocalIP:192:168:43:110
@@ -439,10 +458,17 @@ namespace Wifi_Helper
         }
         else if (cmdTmp.cmdEquals("WifiServerIP") && cmdTmp.size == 4)
         {
-            //WifiServerIP:192:168:43:1
+            //WifiServerIP:192:168:43:215
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
             SetServerIP(ip);
             Printer::println("Wifi server IP Changed !");
+        }
+        else if (cmdTmp.cmdEquals("WifiTeleplotIP") && cmdTmp.size == 4)
+        {
+            //WifiTeleplotIP:192:168:43:1
+            String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
+            SetTeleplotIP(ip);
+            Printer::println("Wifi teleplot IP Changed !");
         }
         else if (cmdTmp.cmdEquals("WifiServerPort") && cmdTmp.size == 1)
         {
@@ -468,10 +494,14 @@ namespace Wifi_Helper
         Printer::println("      Change the Wifi password (min 8, max 63 characters)");
         Printer::println(" > WifiSsid:[string]");
         Printer::println("      Change the Wifi SSID (max 63 characters)");
+        Printer::println(" > WifiBaseIP:[int]:[int]:[int]");
+        Printer::println("      Set the base IP of the ESP");
         Printer::println(" > WifiLocalIP:[int]:[int]:[int]:[int]");
         Printer::println("      Set the local IP of the ESP");
         Printer::println(" > WifiServerIP:[int]:[int]:[int]:[int]");
         Printer::println("      Set the server IP for the ESP to connect");
+        Printer::println(" > WifiTeleplotIP:[int]:[int]:[int]:[int]");
+        Printer::println("      Set the teleplot IP the ESP sends to");
         Printer::println(" > WifiServerPort:[int]");
         Printer::println("      Set the server Port for the ESP to connect");
         Printer::println();
@@ -496,6 +526,11 @@ namespace Wifi_Helper
         wifi_changed = true;
     }
 
+    void SetLocalIP(int lastDigit)
+    {
+        SetLocalIP(wifi_base_ip + "." + String(lastDigit));
+    }
+
     void SetServerIP(const String &ip)
     {
         if(ip == wifi_server_ip)
@@ -513,6 +548,28 @@ namespace Wifi_Helper
         }
         Preferences_Helper::SaveToPreference("wifi_server_ip", ip);
         wifi_changed = true;
+    }
+
+    void SetServerIP(int lastDigit)
+    {
+        SetServerIP(wifi_base_ip + "." + String(lastDigit));
+    }
+
+    void SetTeleplotIP(const String &ip)
+    {
+        if(ip == wifi_teleplot_ip)
+        {
+            println("Teleplot IP is the same as the current one, no change needed");
+            return;
+        }
+        wifi_teleplot_ip = ip;
+        Preferences_Helper::SaveToPreference("wifi_tlp_ip", ip);
+        Printer::teleplotUDP.Reset();
+    }
+
+    void SetTeleplotIP(int lastDigit)
+    {
+        SetTeleplotIP(wifi_base_ip + "." + String(lastDigit));
     }
 
     void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)

@@ -116,6 +116,7 @@ namespace Printer
         else if (cmdTmp.cmdEquals("PrintTeleplotUDP") && cmdTmp.size == 1)
         {
             // PrintTeleplotUDP:0
+            // PrintTeleplotUDP:1
             if (cmdTmp.data[0] == 0)
             {
                 teleplotUDPEnable = Enable::ENABLE_FALSE;
@@ -247,7 +248,7 @@ Format Specifier
         vsnprintf(buff, 256, fmt, args);
         va_end(args);
 
-        if(SERIAL_DEBUG && buff[0] != '>' || teleplotEnable == Enable::ENABLE_TRUE)
+        if(SERIAL_DEBUG)
             SERIAL_DEBUG.print(buff);
         if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
             WIFI_DEBUG.print(buff);
@@ -266,7 +267,7 @@ Format Specifier
         vsnprintf(buff, 256, fmt, args);
         va_end(args);
         
-        if(SERIAL_DEBUG && buff[0] != '>' || teleplotEnable == Enable::ENABLE_TRUE)
+        if(SERIAL_DEBUG)
             SERIAL_DEBUG.println(buff);
         if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
             WIFI_DEBUG.println(buff);
@@ -290,7 +291,7 @@ Format Specifier
         if (!IsEnable())
             return;
             
-        if(SERIAL_DEBUG && str[0] != '>' || teleplotEnable == Enable::ENABLE_TRUE)
+        if(SERIAL_DEBUG)
             SERIAL_DEBUG.print(str);
         if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
             WIFI_DEBUG.print(str);
@@ -302,7 +303,7 @@ Format Specifier
         if (!IsEnable())
             return;
             
-        if(SERIAL_DEBUG && str[0] != '>' || teleplotEnable == Enable::ENABLE_TRUE)
+        if(SERIAL_DEBUG)
             SERIAL_DEBUG.println(str);
         if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
             WIFI_DEBUG.println(str);
@@ -334,7 +335,7 @@ Format Specifier
     {
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update(varName.c_str(), var);
-        else
+        else if (teleplotEnable == Enable::ENABLE_TRUE)
             println(">%s:%d", varName.c_str(), var);            
     }
 
@@ -342,7 +343,7 @@ Format Specifier
     {
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update(varName.c_str(), var);
-        else
+        else if (teleplotEnable == Enable::ENABLE_TRUE)
             println(">%s:%f", varName.c_str(), var);            
     }
 
@@ -350,7 +351,7 @@ Format Specifier
     {
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update2D(varName.c_str(), point.x, point.y);
-        else
+        else if (teleplotEnable == Enable::ENABLE_TRUE)
             println(">%s:%i:%i|xy", varName.c_str(), point.x, point.y);
     }
 
@@ -358,7 +359,7 @@ Format Specifier
     {
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update2D(varName.c_str(), point.x, point.y);
-        else
+        else if (teleplotEnable == Enable::ENABLE_TRUE)
             println(">%s:%f:%f|xy", varName.c_str(), point.x, point.y);
     }
 
@@ -366,7 +367,7 @@ Format Specifier
     {
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update2D(varName.c_str(), pose.x, pose.y);
-        else
+        else if (teleplotEnable == Enable::ENABLE_TRUE)
             println(">%s:%i:%i|xy", varName.c_str(), pose.x, pose.y);
     }
 
@@ -374,7 +375,7 @@ Format Specifier
     {
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update2D(varName.c_str(), pose.x, pose.y);
-        else
+        else if (teleplotEnable == Enable::ENABLE_TRUE)
             println(">%s:%f:%f|xy", varName.c_str(), pose.x, pose.y);
     }
 
@@ -382,7 +383,7 @@ Format Specifier
     {
         if (teleplotUDP.IsInitialized())
             teleplotUDP.update2D(varName.c_str(), polarPoint.x, polarPoint.y);
-        else
+        else if (teleplotEnable == Enable::ENABLE_TRUE)
             println(">%s:%f:%f|xy", varName.c_str(), polarPoint.x, polarPoint.y);
     }
 

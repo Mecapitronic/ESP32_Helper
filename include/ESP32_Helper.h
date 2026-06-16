@@ -9,11 +9,10 @@
 
 #include "Structure_Helper.h"
 
-#ifdef WITH_WIFI
 #include "Wifi_Helper.h"
+#ifdef WITH_WIFI
 #define WIFI_DEBUG Wifi_Helper::wifiClient
 #else
-#include "Wifi_No_Helper.h"
 #define WIFI_DEBUG Serial
 #endif
 

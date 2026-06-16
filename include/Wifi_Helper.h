@@ -7,17 +7,24 @@
 
 #ifndef WIFI_HELPER_H
 #define WIFI_HELPER_H
+#include "ESP32_Helper.h"
+
 #ifdef WITH_WIFI
 #include <WiFi.h>
-#include "ESP32_Helper.h"
 
 #ifdef WITH_OTA
 #include <ArduinoOTA.h>
 #endif
+#endif
 
 namespace Wifi_Helper
 {
+    
+#ifdef WITH_WIFI
     extern WiFiClient wifiClient;
+    void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info);
+    void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info);
+#endif
 
     bool IsOTARunning();
     void EnableWifi(Enable enable);
@@ -36,11 +43,10 @@ namespace Wifi_Helper
     void PrintCommandHelp(void);
 
     void SetLocalIP(const String &ip);
+    void SetLocalIP(int lastDigit);
     void SetServerIP(const String &ip);
-
-
-    void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info);
-    void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info);
+    void SetServerIP(int lastDigit);
+    void SetTeleplotIP(const String &ip);
+    void SetTeleplotIP(int lastDigit);
 }
-#endif
 #endif
