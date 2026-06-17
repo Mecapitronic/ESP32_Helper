@@ -96,7 +96,6 @@ namespace Printer
             if (cmdTmp.size == 1)
                 EnablePrinter((Enable)cmdTmp.data[0]);
         }
-        
         else if (cmdTmp.cmdEquals("PrintTeleplot") && cmdTmp.size == 1)
         {
             // PrintTeleplot:0
@@ -156,7 +155,9 @@ namespace Printer
         println(" > PrintLevel:[int]");
         println("      0 VERBOSE, 1 INFO, 2 WARN, 3 ERROR");
         println(" > PrintEnable:[int]");
-        println("      0 Disable, 1 Enable Debugger");
+        println("      0 Disable, 1 Enable printer");
+        println(" > PrintTeleplot:[int]");
+        println("      0 Disable, 1 Enable");
         println(" > PrintTeleplotUDP:[int]");
         println("      0 Disable, 1 Enable");
         println(" > PrintChrono:[int]");

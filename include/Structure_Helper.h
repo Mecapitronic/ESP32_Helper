@@ -348,7 +348,7 @@ struct Command
         memset(dataStr1, 0, sizeStr);
         memset(dataStr2, 0, sizeStr);
     }
-    Command(const char *s) noexcept
+    Command(const char *s, const std::array<int32_t, length> &_data = {}, int8_t _size = 0, const char *str1 = nullptr, const char *str2 = nullptr) noexcept
     {
         data.fill(0);
         memset(cmd, 0, sizeCmd);
@@ -356,6 +356,12 @@ struct Command
         memset(dataStr2, 0, sizeStr);
         if (s != nullptr)
             snprintf(cmd, sizeCmd, "%s", s);
+        data = _data;
+        size = (_size < 0) ? 0 : ((_size > length) ? length : _size);
+        if (str1 != nullptr)
+            snprintf(dataStr1, sizeStr, "%s", str1);
+        if (str2 != nullptr)
+            snprintf(dataStr2, sizeStr, "%s", str2);
     }
     
     // Helper methods for char[] comparisons (replacing String operators)
