@@ -16,15 +16,10 @@
 #define WIFI_DEBUG Serial
 #endif
 
-// https://community.platformio.org/t/esp32-s3-native-usb-interface-and-serial-monitor-missing-first-messages/40377/10
-// Serial used for USB CDC
+#ifdef SERIAL_DEBUG
 #undef SERIAL_DEBUG
-#if (((ARDUINO_ESP32S3_DEV && ARDUINO_USB_MODE) && (WOKWI || ARDUINO_USB_CDC_ON_BOOT)) || (!ARDUINO_ESP32S3_DEV && WOKWI))
-// HWCDC Serial;
-#define SERIAL_DEBUG Serial
-#else
-#error "USB Serial not working"
 #endif
+#define SERIAL_DEBUG Serial
 
 #include "Preferences_Helper.h"
 #include "QueueThread.h"

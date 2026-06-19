@@ -37,7 +37,7 @@ void loop(void)
     delay(1000);
     timeSinceBoot = esp_timer_get_time();
 
-    teleplot("time", timeSinceBoot);
+    teleplot("time", (int32_t)(timeSinceBoot/1000));
     teleplot("cpt", cpt);
     teleplot("point", point);
     teleplot("pose", pose);
