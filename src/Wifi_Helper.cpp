@@ -317,7 +317,7 @@ namespace Wifi_Helper
     void HandleWifiConnection()
     {
         static Timeout wifiTO;
-        if (!wifiTO.isRunning)
+        if (!wifiTO.IsRunning())
             wifiTO.Start(5000);
 
         if (wifiTO.IsTimeOut())
@@ -350,7 +350,7 @@ namespace Wifi_Helper
     void HandleClientConnection()
     {
         static Timeout clientTo;
-        if (!clientTo.isRunning)
+        if (!clientTo.IsRunning())
             clientTo.Start(5000);
 
         if (!wifiClient.connected() && clientTo.IsTimeOut())
@@ -370,7 +370,7 @@ namespace Wifi_Helper
     void HandleTeleplotConnection()
     {
         static Timeout teleplotTO;
-        if (!teleplotTO.isRunning)
+        if (!teleplotTO.IsRunning())
             teleplotTO.Start(5000);
 
         if (!Printer::teleplotUDP.IsInitialized() && teleplotTO.IsTimeOut() && Printer::teleplotUDPEnable == Enable::ENABLE_TRUE)

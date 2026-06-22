@@ -418,8 +418,9 @@ struct CommandHandler
 
 // Use Start to specify the timeOut in ms,
 // Use IsTimeOut to check if the timer has passed the timeOut value
-struct Timeout
+class Timeout
 {
+private:
     // Timeout in ms
     int32_t timeOut = 0;
     // Don't touch this value
@@ -428,14 +429,28 @@ struct Timeout
     int32_t previousTime = 0;
     // Return true if the timeout is running
     bool isRunning = false;
-
-    void Start(int32_t _timeOut)
+public:
+    Timeout() = default;
+    Timeout(int32_t _timeOut, bool _start = false) : timeOut(_timeOut) {
+        if (_start)
+        {
+            Start();
+        }
+    }
+    bool IsRunning() const
     {
-        timeOut = _timeOut;
+        return isRunning;
+    }
+    void Start(int32_t _timeOut = -1)
+    {
+        if (_timeOut != -1)
+        {
+            timeOut = _timeOut;
+        }
         currentTime = (int32_t)millis();
         previousTime = currentTime;
         isRunning = true;
-    };
+    }
     bool IsTimeOut()
     {
         if (isRunning)
@@ -448,11 +463,11 @@ struct Timeout
             }
         }
         return false;
-    };
+    }
     void Stop()
     {
         isRunning = false;
-    };
+    }
 };
 
 // Use to calcul the time elapsed between two calls at a given number of loop
