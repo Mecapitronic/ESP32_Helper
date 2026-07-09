@@ -332,6 +332,14 @@ Format Specifier
         //    teleplot(name,time);
     }
 
+    void teleplot(const String &varName, const String &text)
+    {
+        if (teleplotUDP.IsInitialized())
+            teleplotUDP.update(varName.c_str(), text.c_str(),"", 0, "|t");
+        else if (teleplotEnable == Enable::ENABLE_TRUE)
+            println(">%s:%s|t", varName.c_str(), text.c_str());            
+    }
+
     void teleplot(const String &varName, int var)
     {
         if (teleplotUDP.IsInitialized())

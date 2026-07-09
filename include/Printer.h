@@ -52,6 +52,7 @@ namespace Printer
     /**
      * Send data to be viewed on teleplot, eg: trace x and y in a graph
      */
+    void teleplot(const String &varName, const String &text);
     void teleplot(const String &varName, int var);
     void teleplot(const String &varName, float var);
     void teleplot(const String &varName, Point point);
