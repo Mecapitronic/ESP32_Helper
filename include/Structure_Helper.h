@@ -471,17 +471,36 @@ public:
 };
 
 // Use to calcul the time elapsed between two calls at a given number of loop
-struct Chrono
+class Chrono
 {
-    String name = "";
-    int32_t loopNbr = 0;
+public:
     static inline bool print = false;
-    int32_t loopMax = 0;
-    unsigned long startTime = 0;
-    unsigned long elapsedTime = 0;
-    unsigned long maxTime = 0;      // Maximum time reached in a loop
-    unsigned long minTime = ULONG_MAX;  // Minimum time reached in a loop
     Chrono(const String &_name, int32_t _nbrLoop) : name(_name), loopMax(_nbrLoop) {};
+
+    const String &Name() const
+    {
+        return name;
+    }
+
+    int32_t LoopCount() const
+    {
+        return loopNbr;
+    }
+
+    unsigned long ElapsedTime() const
+    {
+        return elapsedTime;
+    }
+
+    unsigned long MaxTime() const
+    {
+        return maxTime;
+    }
+
+    unsigned long MinTime() const
+    {
+        return minTime;
+    }
 
     void Start()
     {
@@ -499,7 +518,7 @@ struct Chrono
         unsigned long loopTime = micros() - startTime;
         elapsedTime += loopTime;
         loopNbr++;
-        
+
         // Update min and max times
         if (loopTime > maxTime)
         {
@@ -508,13 +527,22 @@ struct Chrono
         if (loopTime < minTime)
         {
             minTime = loopTime;
-        }        
+        }
         if (loopNbr >= loopMax)
         {
             return true;
         }
         return false;
     };
+
+private:
+    String name = "";
+    int32_t loopNbr = 0;
+    int32_t loopMax = 0;
+    unsigned long startTime = 0;
+    unsigned long elapsedTime = 0;
+    unsigned long maxTime = 0;      // Maximum time reached in a loop
+    unsigned long minTime = ULONG_MAX;  // Minimum time reached in a loop
 };
 
 template <typename T>

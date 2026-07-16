@@ -322,11 +322,11 @@ Format Specifier
     {
         if(Chrono::print)
         {
-            int time = (int)(chrono.elapsedTime/chrono.loopNbr);
-            int maxTime = (int)chrono.maxTime;
-            int minTime = (int)chrono.minTime;
+            int time = (int)(chrono.ElapsedTime()/chrono.LoopCount());
+            int maxTime = (int)chrono.MaxTime();
+            int minTime = (int)chrono.MinTime();
             uint stackSize = uxTaskGetStackHighWaterMark(nullptr);
-            println("Chrono [%s] avg=%d µs, max=%d µs, min=%d µs  --  Stack Size %u", chrono.name.c_str(), time, maxTime, minTime, stackSize);
+            println("Chrono [%s] avg=%d µs, max=%d µs, min=%d µs  --  Stack Size %u", chrono.Name().c_str(), time, maxTime, minTime, stackSize);
         }
         //if(Chrono::teleplot)
         //    teleplot(name,time);
