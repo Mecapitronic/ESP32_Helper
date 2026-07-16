@@ -30,9 +30,12 @@ namespace Wifi_Helper
         String wifi_ssid = "Mecapi";
         // The password must be at least 8 to 63 characters long
         String wifi_password = "Mecapi2025";
-        String wifi_base_ip = "192.168.43";
+        String wifi_base_ip = "192.168.43"; // tel
         String wifi_local_ip = "192.168.43.110"; // Local IP will be 192.168.43.(100 + numPami), default is 110 for Robot
         String wifi_server_ip = "192.168.43.215";
+        //String wifi_base_ip = "192.168.137"; // PC
+        //String wifi_local_ip = "192.168.137.110"; // Local IP will be 192.168.137.(100 + numPami), default is 110 for Robot
+        //String wifi_server_ip = "192.168.137.1";
         String wifi_teleplot_ip = wifi_server_ip;
         int32_t wifi_server_port = 20240;
         int32_t wifi_teleplot_port = 47269;
