@@ -1,67 +1,90 @@
 #include "ESP32_Helper.h"
-//#include <limits>
+#include "SimpleData.h"
 
 using namespace Printer;
 
-String jsonFileName;
+const String jsonFileName = "simple.json";
+SimpleData simpleData;
+
+// ============== Custom Command Handler ==============
+
+void PrintSimpleHelp()
+{
+    println("Simple JSON Commands");
+    println(" > SimpleShow");
+    println("      Print current values");
+    println(" > SimpleNom:text");
+    println("      Set nom and save");
+    println(" > SimpleCompteur:value");
+    println("      Set compteur and save");
+    println(" > SimpleActif:0|1");
+    println("      Set actif and save");
+    println(" > SimpleLoad");
+    println("      Reload values from file");
+    println();
+}
+
+bool HandleSimpleCommand(Command cmd)
+{
+    if (cmd.cmdEquals("SimpleShow"))
+    {
+        simpleData.Print();
+        return true;
+    }
+    else if (cmd.cmdEquals("SimpleLoad"))
+    {
+        if (JSON_Helper::LoadObject(simpleData, jsonFileName))
+            simpleData.Print();
+        return true;
+    }
+    else if (cmd.cmdEquals("SimpleNom") && cmd.dataStr1[0] != '\0')
+    {
+        simpleData.nom = String(cmd.dataStr1);
+    }
+    else if (cmd.cmdEquals("SimpleCompteur") && cmd.size == 1 && cmd.data[0] >= 0)
+    {
+        simpleData.compteur = cmd.data[0];
+    }
+    else if (cmd.cmdEquals("SimpleActif") && cmd.size == 1)
+    {
+        simpleData.actif = cmd.data[0] != 0;
+    }
+    else
+    {
+        return false;
+    }
+
+    if (JSON_Helper::SaveObject(simpleData, jsonFileName))
+        simpleData.Print();
+    return true;
+}
+
+// ============== Setup ==============
+
 void setup(void)
 {
     ESP32_Helper::Initialisation();
-    jsonFileName = "simple.json";
+
+    ESP32_Helper::RegisterCommandHandler("Simple", HandleSimpleCommand, PrintSimpleHelp);
+
+    if (!JSON_Helper::LoadObject(simpleData, jsonFileName))
+    {
+        println("Creating %s with default values", jsonFileName.c_str());
+        JSON_Helper::SaveObject(simpleData, jsonFileName);
+    }
+    simpleData.Print();
 }
+
+// ============== Loop ==============
 
 void loop(void)
 {
-    println("Reading initial JSON");
-    JsonDocument document;
-    if (JSON_Helper::LoadJsonFile(document, jsonFileName))
+    if (simpleData.actif)
     {
-        String nom = document["nom"].as<String>();
-        int32_t compteur = document["compteur"].as<int32_t>();
-        bool actif = document["actif"].as<bool>();
-        println("nom = %s, compteur = %ld, actif = %s",
-                nom.c_str(), static_cast<long>(compteur), actif ? "true" : "false");
-
-        if (compteur == std::numeric_limits<int32_t>::max())
-        {
-            println("Cannot increment compteur: integer limit reached");
-            return;
-        }
-        document["compteur"] = ++compteur;
-        if (document.overflowed())
-        {
-            println("JSON update failed: insufficient memory");
-            return;
-        }
-
-        String serialized;
-        size_t bytesWritten = serializeJsonPretty(document, serialized);
-        if (bytesWritten == 0 || bytesWritten != measureJsonPretty(document) ||
-            serialized.length() != bytesWritten)
-        {
-            println("JSON serialization failed or incomplete");
-            return;
-        }
-        FileSystem_Helper::WriteFile(jsonFileName, serialized);
-
-        println("Reading saved JSON");
-        JsonDocument savedDocument;
-        if (!JSON_Helper::LoadJsonFile(savedDocument, jsonFileName))
-        {
-            return;
-        }
-        if (savedDocument["nom"].as<String>() != nom ||
-            savedDocument["compteur"].as<int32_t>() != compteur ||
-            savedDocument["actif"].as<bool>() != actif)
-        {
-            println("JSON verification failed: saved values differ");
-            return;
-        }
-
-        println("JSON round-trip verified: compteur = %ld", static_cast<long>(compteur));
+        simpleData.compteur++;
+        if (JSON_Helper::SaveObject(simpleData, jsonFileName))
+            println("JSON round-trip verified: compteur = %ld", static_cast<long>(simpleData.compteur));
     }
-    else
-        println("Failed to load JSON file: %s", jsonFileName.c_str());
-    
+
     delay(3000);
 }

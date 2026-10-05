@@ -87,13 +87,6 @@ namespace ESP32_Helper
         }
         FileSystem_Helper::ListFiles();
         println("-- End of SPIFFS Initialisation --");
-        
-        println("-- Starting JSON Initialisation --");
-        if (!JSON_Helper::Initialisation())
-        {
-            println("Error initialising the JSON Helper");
-        }
-        println("-- End of JSON Initialisation --");
 
         // Register default namespace handlers through the same extension mechanism.
         customHandlers.clear();
@@ -103,7 +96,6 @@ namespace ESP32_Helper
         RegisterCommandHandler("Wifi", Wifi_Helper::HandleCommand, Wifi_Helper::PrintCommandHelp);
         //RegisterCommandHandler("Logger", Logger::HandleCommand, Logger::PrintCommandHelp);
         RegisterCommandHandler("SPIFFS", FileSystem_Helper::HandleCommand, FileSystem_Helper::PrintCommandHelp);
-        RegisterCommandHandler("JSON", JSON_Helper::HandleCommand, JSON_Helper::PrintCommandHelp);
 
         println("-- End of Helper Initialisation --");
         println();
