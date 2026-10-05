@@ -24,17 +24,17 @@ namespace FileSystem_Helper
 
     void ListFiles(const String &filter = "");
 
-    void CreateFile(const String &fileName);
+    bool CreateFile(const String &fileName);
     
     String ReadFile(const String &fileName);
 
-    void WriteFile(const String &fileName, const String &message, bool createFile = false);
+    bool WriteFile(const String &fileName, const String &message, bool createFile = false);
 
-    void AppendFile(const String &fileName, const String &message, bool createFile = false);
+    bool AppendFile(const String &fileName, const String &message, bool createFile = false);
 
-    void RenameFile(const String &fileName1, const String &fileName2);
+    bool RenameFile(const String &fileName1, const String &fileName2);
 
-    void DeleteFile(const String &fileName);
+    bool DeleteFile(const String &fileName);
 
     void TestFileIO(const String &fileName);
 

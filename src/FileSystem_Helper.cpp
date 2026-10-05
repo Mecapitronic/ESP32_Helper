@@ -56,24 +56,25 @@ namespace FileSystem_Helper
         root.close();
     }
 
-    void CreateFile(const String &fileName)
+    bool CreateFile(const String &fileName)
     {
         println("Creating file " + fileName);
         
         if(SPIFFS.exists("/" + fileName))
         {
             println("File already exists");
-            return;
+            return false;
         }
 
         File file = SPIFFS.open("/" + fileName, FILE_WRITE);
         if (!file)
         {
             println("Failed to create file");
-            return;
+            return false;
         }
         file.close();
         println("File created successfully");
+        return true;
     }
 
     String ReadFile(const String &fileName)
@@ -100,39 +101,35 @@ namespace FileSystem_Helper
         return content;
     }
 
-    void WriteFile(const String &fileName, const String &message, bool createFileIfNotExists)
+    bool WriteFile(const String &fileName, const String &message, bool createFileIfNotExists)
     {
         println("Writing file " + fileName);
         if(!SPIFFS.exists("/" + fileName))
         {
             if (createFileIfNotExists)
             {
-                CreateFile(fileName);
+                if (!CreateFile(fileName))
+                    return false;
             }
             else
             {
                 println("Source file does not exist");
-                return;
+                return false;
             }
         }
         File file = SPIFFS.open("/" + fileName, FILE_WRITE);
         if (!file)
         {
             println("Failed to open file for writing");
-            return;
+            return false;
         }
-        if (file.print(message))
-        {
-            println("File written");
-        }
-        else
-        {
-            println("Write failed");
-        }
+        bool written = file.print(message) == message.length();
+        println(written ? "File written" : "Write failed");
         file.close();
+        return written;
     }
 
-    void AppendFile(const String &fileName, const String &message, bool createFileIfNotExists)
+    bool AppendFile(const String &fileName, const String &message, bool createFileIfNotExists)
     {
         println("Appending to file " + fileName);
 
@@ -140,72 +137,66 @@ namespace FileSystem_Helper
         {
             if (createFileIfNotExists)
             {
-                CreateFile(fileName);
+                if (!CreateFile(fileName))
+                    return false;
             }
             else
             {
                 println("Source file does not exist");
-                return;
+                return false;
             }
         }
         File file = SPIFFS.open("/" + fileName, FILE_APPEND);
         if (!file)
         {
             println("Failed to open file for appending");
-            return;
+            return false;
         }
-        if (file.print(message))
-        {
-            println("Message appended");
-        }
-        else
-        {
-            println("Append failed");
-        }
+        bool appended = file.print(message) == message.length();
+        println(appended ? "Message appended" : "Append failed");
         file.close();
+        return appended;
     }
 
-    void RenameFile(const String &path1, const String &path2)
+    bool RenameFile(const String &path1, const String &path2)
     {
         println("Renaming file %s to file %s", path1.c_str(), path2.c_str());
 
         if(!SPIFFS.exists("/" + path1))
         {
             println("Source file does not exist");
-            return;
+            return false;
         }
         if(SPIFFS.exists("/" + path2))
         {
             println("Target file already exists");
-            return;
+            return false;
         }
         if (SPIFFS.rename("/" + path1, "/" + path2))
         {
             println("File renamed");
+            return true;
         }
-        else
-        {
-            println("Rename failed");
-        }
+        println("Rename failed");
+        return false;
     }
 
-    void DeleteFile(const String &fileName)
+    bool DeleteFile(const String &fileName)
     {
         println("Deleting file %s", fileName.c_str());
         
         if(!SPIFFS.exists("/" + fileName))
         {
             println("Source file does not exist");
-            return;
+            return false;
         }
         if (SPIFFS.remove("/" + fileName))
         {
             println("File deleted");
+            return true;
         }
-        else
-        {
-            println("Delete failed");
-        }
+        println("Delete failed");
+        return false;
     }
 
     void TestFileIO(const String &fileName)
