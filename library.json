@@ -30,5 +30,7 @@
   "platforms": [
     "espressif32"
   ],
-  "dependencies": []
+  "dependencies": {
+    "bblanchon/ArduinoJson": "7.4.2"
+  }
 }

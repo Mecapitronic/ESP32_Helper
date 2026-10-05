@@ -17,13 +17,14 @@ Ce dépôt contient la bibliothèque source (dossiers `include/` et `src/`) et p
 ```bash
 ESP32_Helper/
 ├── .github/                    # Configuration GitHub Actions
-├── .wokwi/                     # Configuration su simulateur wokwi
+├── .wokwi/                     # Configuration du simulateur wokwi
 ├── bin/                        # Dossier de sortie des firmwares compilés pour wokwi
 ├── data/                       # Fichiers exemples pour SPIFFS
 ├── examples/                   # Exemples d'utilisation
 ├── include/                    # En-têtes publics (.h)
 ├── src/                        # Implémentations (.cpp)
 ├── scripts/                    # Extra Script PlatformIO
+├── library.json                # Description de la lib pour intégration via platformIO
 ├── platformio.ini              # Configuration PlatformIO
 └── README.md                   # Documentation
 ```
@@ -73,6 +74,7 @@ Chaque sous-dossier de `examples/` contient un projet PlatformIO minimal :
 - 💾 `Example5_Preferences`   - montre comment lire/écrire des préférences via `Preferences_Helper`.
 - 📊 `Example6_Teleplot`      - démonstration de la sortie Teleplot/télémétrie.
 - 📂 `Example7_SPIFFS`        - opérations sur fichiers (liste, lecture, écriture). Compile l'environnement qui active `SIMULATOR` pour utiliser `MockSPIFFS` si nécessaire.
+- 📄 `Example8_JSON`          - lecture, deserialisation, modification et serialisation d'un fichier JSON simple situé dans la SPIFFS.
 
 Pour compiler un exemple, lancez la ligne de commande PlatformIO en ciblant l'environnement correspondant :
 ```

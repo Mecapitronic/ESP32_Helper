@@ -186,5 +186,13 @@ static bool _mockspiffs_preload = []() {
 )";
     MockSPIFFS.preload("/map.json", map_json);
 
+    MockSPIFFS.preload("/simple.json", R"(
+{
+  "nom": "ESP32",
+  "compteur": 0,
+  "actif": true
+}
+)");
+
     return true;
 }();
