@@ -4,13 +4,21 @@
 #include "ESP32_Helper.h"
 
 // Mirror of data/simple.json
-struct SimpleData
+struct SimpleData : public IJsonSerializable
 {
     String nom = "";
     int32_t compteur = 0;
     bool actif = false;
 
-    bool FromJson(const JsonDocument &document)
+    uint16_t Version() const override { return 1; }
+
+    // Version 0 = file written before the "version" field existed, same content
+    bool Migrate(JsonDocument & /*document*/, uint16_t fromVersion) override
+    {
+        return fromVersion == 0;
+    }
+
+    bool FromJson(const JsonDocument &document) override
     {
         if (!document["nom"].is<String>() ||
             !document["compteur"].is<int32_t>() ||
@@ -31,16 +39,11 @@ struct SimpleData
         return true;
     }
 
-    void ToJson(JsonDocument &document) const
+    void ToJson(JsonDocument &document) const override
     {
         document["nom"] = nom;
         document["compteur"] = compteur;
         document["actif"] = actif;
-    }
-
-    bool operator==(const SimpleData &other) const
-    {
-        return nom == other.nom && compteur == other.compteur && actif == other.actif;
     }
 
     void Print() const

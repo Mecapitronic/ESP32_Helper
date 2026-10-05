@@ -38,6 +38,8 @@ public:
     MockFile openNextFile();
     const char* name() const;
     size_t read(uint8_t* buffer, size_t len);
+    int read();
+    size_t readBytes(char* buffer, size_t len);
     size_t write(const uint8_t* buffer, size_t len);
     operator bool() const { return valid; }
 

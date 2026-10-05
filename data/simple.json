@@ -1,4 +1,5 @@
 {
+  "version": 1,
   "nom": "ESP32",
   "compteur": 0,
   "actif": true

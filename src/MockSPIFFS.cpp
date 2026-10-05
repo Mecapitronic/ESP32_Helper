@@ -85,6 +85,15 @@ size_t MockFile::read(uint8_t* buffer, size_t len) {
     return toRead;
 }
 
+int MockFile::read() {
+    uint8_t c;
+    return read(&c, 1) == 1 ? c : -1;
+}
+
+size_t MockFile::readBytes(char* buffer, size_t len) {
+    return read(reinterpret_cast<uint8_t*>(buffer), len);
+}
+
 size_t MockFile::write(const uint8_t* buffer, size_t len) {
     if (!valid || !writable) return 0;
     String &c = owner->files[idx].content;
