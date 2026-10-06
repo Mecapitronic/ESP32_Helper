@@ -19,6 +19,15 @@
 
 namespace FileSystem_Helper
 {
+    namespace AppendASCII
+    {
+        extern Timeout timeout;
+        extern int bufferSize;
+        extern std::vector<char> buffer;
+        extern String fileName;
+        void Reset();
+    }
+
     bool Initialisation();
 
     void FormatFS();

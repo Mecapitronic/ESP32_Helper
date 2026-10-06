@@ -5,6 +5,22 @@ using namespace std;
 
 namespace FileSystem_Helper
 {
+    namespace AppendASCII
+    {
+        Timeout timeout = Timeout(10000, false);
+        int bufferSize = 0;
+        std::vector<char> buffer;
+        String fileName = "";
+
+        void Reset()
+        {
+            timeout = Timeout(10000, false);
+            bufferSize = 0;
+            buffer.clear();
+            fileName = "";
+        }
+    }
+
     bool Initialisation()
     {
         if (!SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED))
@@ -337,6 +353,36 @@ namespace FileSystem_Helper
         {
             // SPIFFSDeleteFile:<fileName>
             DeleteFile(String(cmdTmp.dataStr1));
+        }
+        else if (cmdTmp.cmdEquals("SPIFFSAppendASCII"))
+        {
+            if(cmdTmp.dataStr1[0] == '\0')
+            {
+                Printer::println("Invalid SPIFFSAppendASCII command: missing file name");
+                return false;
+            }
+            if(cmdTmp.size <= 0)
+            {
+                Printer::println("Invalid SPIFFSAppendASCII command: missing data size");
+                return false;
+            }
+            if(cmdTmp.data[0] <= 0)
+            {
+                Printer::println("Invalid SPIFFSAppendASCII command: data size must be greater than 0");
+                return false;
+            }
+            if(cmdTmp.data[0] > 1024)
+            {
+                Printer::println("Invalid SPIFFSAppendASCII command: data size must not exceed 1024");
+                return false;
+            }
+
+            Printer::println("Starting SPIFFS ASCII Append session for file: %s with size %d", String(cmdTmp.dataStr1).c_str(), cmdTmp.data[0]);
+            FileSystem_Helper::AppendASCII::timeout.Start();
+            FileSystem_Helper::AppendASCII::bufferSize = cmdTmp.data[0];
+            FileSystem_Helper::AppendASCII::buffer.clear();
+            FileSystem_Helper::AppendASCII::fileName = cmdTmp.dataStr1;
+            return true;
         }
         else
         {
