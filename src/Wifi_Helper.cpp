@@ -304,7 +304,8 @@ namespace Wifi_Helper
                     wifiClient.print(" ");
                     wifiClient.write(readBuffer.data(), readBuffer.size());
                     wifiClient.println();
-                    ESP32_Helper::BufferReadCommand(readBuffer);
+                    Command command = ESP32_Helper::ParseCommandBuffer(readBuffer);
+                    ESP32_Helper::HandleCommand(command);
                 }
                 readBuffer.clear();
             }

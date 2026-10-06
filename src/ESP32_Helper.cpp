@@ -127,7 +127,8 @@ namespace ESP32_Helper
                 {
                     String receivedCmd(readBuffer.data(), readBuffer.size() - 1);
                     Printer::println("Received %u %s", static_cast<unsigned int>(readBuffer.size()), receivedCmd.c_str());
-                    ESP32_Helper::BufferReadCommand(readBuffer);
+                    Command command = ESP32_Helper::ParseCommandBuffer(readBuffer);
+                    ESP32_Helper::HandleCommand(command);
                 }
                 readBuffer.clear();
             }
@@ -221,7 +222,7 @@ namespace ESP32_Helper
     }
 
     // Read and extract Commands
-    void BufferReadCommand(std::vector<char> read)
+    Command ParseCommandBuffer(const std::vector<char> &read)
     {
         Command cmdTmp;
         uint16_t indexSeparator = 0;
@@ -242,7 +243,7 @@ namespace ESP32_Helper
                     {
                         println("Command name too long max %i chars", Command::sizeCmd - 1);
                         readBuffer.clear();
-                        return;
+                        return cmdTmp;
                     }
                     snprintf(cmdTmp.cmd, Command::sizeCmd, "%.*s", (int)i, &read[0]);
                     indexSeparator = i + 1;
@@ -299,7 +300,7 @@ namespace ESP32_Helper
             }
         }
         Printer::println("Command Received %s", cmdTmp.ToString().c_str());
-        HandleCommand(cmdTmp);
+        return cmdTmp;
     }
 
     bool HasWaitingCommand() { return awaitingCommand.MessagesWaiting() > 0; }

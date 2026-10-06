@@ -41,7 +41,7 @@ namespace ESP32_Helper
     void Update(void *pvParameters);
     void ProcessIncomingChar(char c);
     bool HandleCommand(Command cmdTmp);
-    void BufferReadCommand(std::vector<char> read);
+    Command ParseCommandBuffer(const std::vector<char> &read);
 
     /**
      * @brief Register a custom command handler
