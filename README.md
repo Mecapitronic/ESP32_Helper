@@ -76,6 +76,18 @@ Chaque sous-dossier de `examples/` contient un projet PlatformIO minimal :
 - 📂 `Example7_SPIFFS`        - opérations sur fichiers (liste, lecture, écriture). Compile l'environnement qui active `SIMULATOR` pour utiliser `MockSPIFFS` si nécessaire.
 - 📄 `Example8_JSON`          - lecture, deserialisation, modification et serialisation d'un fichier JSON simple situé dans la SPIFFS.
 
+### Ajouter du texte dans un fichier SPIFFS
+
+La commande historique `SPIFFSAppendFile:<fichier>:<message>` convient aux messages courts. Pour ajouter un texte plus long contenant `:`, `;`, des virgules ou des retours à la ligne, la commande série `SPIFFSAppendASCII` reçoit le corps selon une longueur annoncée :
+
+1. Envoyez l'en-tête `SPIFFSAppendASCII:<fichier>:<nombre-char>` terminé par newline (`\n`).
+2. Le firmware affiche `Starting SPIFFS ASCII Append session for file: ... with size ...`.
+3. Envoyez exactement le nombre annoncé de caractères, sans terminateur supplémentaire.
+
+Le contenu est ajouté au fichier et ces caractères sont lus comme données, pas comme séparateurs. Le protocole est prévu pour du texte ASCII; **le firmware actuel ne valide pas les caractères non ASCII**. La taille maximale est de 1024 caractères. Le timeout est de 10 secondes d'inactivité : à son expiration, le texte reçu jusque-là est abandonné et la réception normale des commandes reprend. Tout octet restant de l'ancien transfert peut alors être interprété comme une commande; en cas de timeout, arrêtez l'envoi et resynchronisez la liaison avant de réessayer.
+
+Cette implémentation fonctionne sur la liaison série UART; le transfert ASCII sur TCP Wi-Fi n'est pas activé.
+
 Pour compiler un exemple, lancez la ligne de commande PlatformIO en ciblant l'environnement correspondant :
 ```
 pio run -e Example1_FastStartup

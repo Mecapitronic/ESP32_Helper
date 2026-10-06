@@ -2,6 +2,7 @@
 #define FILE_SYSTEM_HELPER_H
 
 #include "ESP32_Helper.h"
+#include <vector>
 
 #ifdef SIMULATOR
 #include "MockSPIFFS.h"
@@ -30,6 +31,7 @@ namespace FileSystem_Helper
 
     bool WriteFile(const String &fileName, const String &message, bool createFile = false);
 
+    bool AppendFile(const String &fileName, const std::vector<char> &message, bool createFile = false);
     bool AppendFile(const String &fileName, const String &message, bool createFile = false);
 
     bool RenameFile(const String &fileName1, const String &fileName2);

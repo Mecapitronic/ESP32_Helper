@@ -129,6 +129,35 @@ namespace FileSystem_Helper
         return written;
     }
 
+    bool AppendFile(const String &fileName, const vector<char> &message, bool createFileIfNotExists)
+    {
+        println("Appending to file " + fileName);
+
+        if(!SPIFFS.exists("/" + fileName))
+        {
+            if (createFileIfNotExists)
+            {
+                if (!CreateFile(fileName))
+                    return false;
+            }
+            else
+            {
+                println("Source file does not exist");
+                return false;
+            }
+        }
+        File file = SPIFFS.open("/" + fileName, FILE_APPEND);
+        if (!file)
+        {
+            println("Failed to open file for appending");
+            return false;
+        }
+        bool appended = file.write(reinterpret_cast<const uint8_t *>(message.data()), message.size()) == message.size();
+        println(appended ? "Message appended" : "Append failed");
+        file.close();
+        return appended;
+    }
+
     bool AppendFile(const String &fileName, const String &message, bool createFileIfNotExists)
     {
         println("Appending to file " + fileName);
@@ -332,6 +361,9 @@ namespace FileSystem_Helper
         println("      Write message to file");
         println(" > SPIFFSAppendFile:<fileName>:<msg>:<createIfNotExists>");
         println("      Append message to file");
+        println(" > SPIFFSAppendASCII:<fileName>:<characterCount>");
+        println("      Append exactly characterCount ASCII characters");
+        println("      Send the body immediately after the header newline; body has no terminator");
         println(" > SPIFFSRenameFile:<oldFileName>:<newFileName>");
         println("      Rename the <oldFileName> file to <newFileName>");
         println(" > SPIFFSDeleteFile:<fileName>");

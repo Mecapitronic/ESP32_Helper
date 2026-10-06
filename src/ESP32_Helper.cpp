@@ -9,6 +9,12 @@ namespace ESP32_Helper
     {
         const int8_t readBufferMax = 64;
         std::vector<char> readBuffer;
+
+        Timeout serialASCIISessionTimeout = Timeout(10000, false);
+        int serialASCIISessionBufferSize = 0;
+        vector<char> serialASCIISessionBuffer;
+        String serialASCIISessionFileName;
+
         std::vector<CommandHandler> customHandlers;
         TaskThread taskUpdate;
         QueueThread<Command> awaitingCommand;
@@ -109,6 +115,14 @@ namespace ESP32_Helper
             {
                 ProcessIncomingChar(SERIAL_DEBUG.read());
             }
+            if(serialASCIISessionTimeout.IsTimeOut())
+            {
+                Printer::println("Serial ASCII session timed out for file: %s with %u/%u bytes", serialASCIISessionFileName.c_str(), static_cast<unsigned int>(serialASCIISessionBuffer.size()), static_cast<unsigned int>(serialASCIISessionBufferSize));
+                serialASCIISessionTimeout.Stop();
+                serialASCIISessionBuffer.clear();
+                serialASCIISessionBufferSize = 0;
+                serialASCIISessionFileName = "";
+            }
             vTaskDelay(1);
         }
         Printer::println("Command Update Task STOPPED !");
@@ -116,6 +130,29 @@ namespace ESP32_Helper
 
     void ProcessIncomingChar(char c)
     {
+       if (serialASCIISessionTimeout.IsRunning())
+       {
+           serialASCIISessionBuffer.push_back(static_cast<uint8_t>(c));
+           // Timeout will be restarted with each incoming character
+           serialASCIISessionTimeout.Start();
+           if (serialASCIISessionBuffer.size() >= serialASCIISessionBufferSize)
+           {
+               serialASCIISessionTimeout.Stop();
+               Printer::println("Processing complete ASCII session for file: %s with %u bytes", serialASCIISessionFileName.c_str(), static_cast<unsigned int>(serialASCIISessionBuffer.size()));               
+               if (FileSystem_Helper::AppendFile(serialASCIISessionFileName, serialASCIISessionBuffer, true))
+               {
+                   Printer::println("Successfully appended to file: %s", serialASCIISessionFileName.c_str());
+               }
+               else
+               {
+                   Printer::println("Failed to append to file: %s", serialASCIISessionFileName.c_str());
+               }
+               serialASCIISessionBuffer.clear();
+               serialASCIISessionBufferSize = 0;
+               serialASCIISessionFileName = "";
+           }
+           return;
+       }
         if (c == '\r')
             return; // Ignore Carriage Return
         if (readBuffer.size() < readBuffer.capacity())
@@ -154,6 +191,37 @@ namespace ESP32_Helper
     {
         if (cmdTmp.cmd[0] == '\0')
             return false;
+
+        if (cmdTmp.cmdEquals("SPIFFSAppendASCII"))
+        {
+            if(cmdTmp.dataStr1[0] == '\0')
+            {
+                Printer::println("Invalid SPIFFSAppendASCII command: missing file name");
+                return false;
+            }
+            if(cmdTmp.size <= 0)
+            {
+                Printer::println("Invalid SPIFFSAppendASCII command: missing data size");
+                return false;
+            }
+            if(cmdTmp.data[0] <= 0)
+            {
+                Printer::println("Invalid SPIFFSAppendASCII command: data size must be greater than 0");
+                return false;
+            }
+            if(cmdTmp.data[0] > 1024)
+            {
+                Printer::println("Invalid SPIFFSAppendASCII command: data size must not exceed 1024");
+                return false;
+            }
+
+            Printer::println("Starting SPIFFS ASCII Append session for file: %s with size %d", String(cmdTmp.dataStr1).c_str(), cmdTmp.data[0]);
+            serialASCIISessionTimeout.Start();
+            serialASCIISessionBufferSize = cmdTmp.data[0];
+            serialASCIISessionBuffer.clear();
+            serialASCIISessionFileName = cmdTmp.dataStr1;
+            return true;
+        }
 
         if (cmdTmp.cmdStartsWith("Help"))
         {
