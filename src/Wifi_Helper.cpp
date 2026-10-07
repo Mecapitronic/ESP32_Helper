@@ -59,8 +59,6 @@ namespace Wifi_Helper
             if (wifiEnable == enable && enable == Enable::ENABLE_FALSE)
             {
                 status = "already Disable";
-                wifiClient.stop();
-                WiFi.disconnect();
             }
             if (wifiEnable != enable && enable == Enable::ENABLE_TRUE)
             {
@@ -69,8 +67,6 @@ namespace Wifi_Helper
             if (wifiEnable != enable && enable == Enable::ENABLE_FALSE)
             {
                 status = "Disable";
-                wifiClient.stop();
-                WiFi.disconnect();
             }
             Printer::println("Wifi %s", status);
             wifiEnable = enable;
@@ -288,6 +284,17 @@ namespace Wifi_Helper
                 ArduinoOTA.handle();
 #endif
             }
+            else
+            {
+                if (wifiClient.connected())
+                {
+                    wifiClient.stop();
+                }
+                if (WiFi.status() == WL_CONNECTED)
+                {
+                    WiFi.disconnect();
+                }
+            }
             vTaskDelay(100);
         }
         println("Wifi Update Task STOPPED !");
@@ -476,6 +483,7 @@ namespace Wifi_Helper
         else if (cmdTmp.cmdEquals("WifiBaseIP") && cmdTmp.size == 3)
         {
             //WifiBaseIP:192:168:43
+            //WifiBaseIP:192:168:137
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]);
             wifi_base_ip = ip;
             Printer::println("Wifi base IP Changed !");
@@ -483,6 +491,7 @@ namespace Wifi_Helper
         else if (cmdTmp.cmdEquals("WifiLocalIP") && cmdTmp.size == 4)
         {
             //WifiLocalIP:192:168:43:110
+            //WifiLocalIP:192:168:137:110
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
             SetLocalIP(ip);
             Printer::println("Wifi local IP Changed !");
@@ -490,6 +499,7 @@ namespace Wifi_Helper
         else if (cmdTmp.cmdEquals("WifiServerIP") && cmdTmp.size == 4)
         {
             //WifiServerIP:192:168:43:215
+            //WifiServerIP:192:168:137:215
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
             SetServerIP(ip);
             Printer::println("Wifi server IP Changed !");
@@ -497,6 +507,7 @@ namespace Wifi_Helper
         else if (cmdTmp.cmdEquals("WifiTeleplotIP") && cmdTmp.size == 4)
         {
             //WifiTeleplotIP:192:168:43:1
+            //WifiTeleplotIP:192:168:137:1
             String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
             SetTeleplotIP(ip);
             Printer::println("Wifi teleplot IP Changed !");
