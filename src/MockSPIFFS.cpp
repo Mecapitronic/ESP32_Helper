@@ -1,5 +1,11 @@
 #include "MockSPIFFS.h"
 
+#ifdef SIMULATOR
+extern "C" const char embeddedMapJson[] asm("_binary_data_map_json_start");
+extern "C" const char embeddedSimpleJson[] asm("_binary_data_simple_json_start");
+extern "C" const char embeddedText[] asm("_binary_data_texte_txt_start");
+#endif
+
 // global instance
 MockSPIFFSClass MockSPIFFS;
 
@@ -170,38 +176,12 @@ void MockSPIFFSClass::preload(const String& path, const String& content) {
     else files[idx].content = content;
 }
 
-// preload only texte.txt
+// Load simulation fixtures from PlatformIO's embedded text sections.
 static bool _mockspiffs_preload = []() {
-    MockSPIFFS.preload("/texte.txt", "Hello World\n");
-    String map_json = R"(
-{
-  "map": {
-    "color": "jaune",
-    "vertices": [
-      { "id": 0, "point": { "x": 0, "y": 0 } },
-      { "id": 1, "point": { "x": 250, "y": 250 } },
-      { "id": 2, "point": { "x": 500, "y": 250 } }
-    ],
-    "segments": [
-      { "id": 0, "start": { "x": 0, "y": 1500 }, "end": { "x": 1500, "y": 1500 } },
-      { "id": 1, "start": { "x": 1500, "y": 1500 }, "end": { "x": 1500, "y": 0 } }
-    ],
-    "circles": [
-      { "id": 0, "center": { "x": 750, "y": 750 }, "radius": 100 },
-      { "id": 1, "center": { "x": 1200, "y": 300 }, "radius": 150 }
-    ]
-  }
-}
-)";
-    MockSPIFFS.preload("/map.json", map_json);
-
-    MockSPIFFS.preload("/simple.json", R"(
-{
-  "nom": "ESP32",
-  "compteur": 0,
-  "actif": true
-}
-)");
-
+#ifdef SIMULATOR
+    MockSPIFFS.preload("/texte.txt", String(embeddedText));
+    MockSPIFFS.preload("/map.json", String(embeddedMapJson));
+    MockSPIFFS.preload("/simple.json", String(embeddedSimpleJson));
+#endif
     return true;
 }();
