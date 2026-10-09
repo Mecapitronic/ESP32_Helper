@@ -184,7 +184,7 @@ namespace ESP32_Helper
 
         if (cmdTmp.cmdStartsWith("Help"))
         {
-            Printer::println("Help Commands");
+            Printer::println("Help Commands List Start");
             Printer::println(" > Help");
             Printer::println("     Display this help");
             Printer::println(" > Delay:[int]");
@@ -196,6 +196,7 @@ namespace ESP32_Helper
                 if (handler.helpFunc != nullptr)
                     handler.helpFunc();
             }
+            Printer::println("Help Commands List End");
             return true;
         }
         else if (cmdTmp.cmdStartsWith("Delay"))
