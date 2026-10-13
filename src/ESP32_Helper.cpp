@@ -10,7 +10,7 @@ namespace ESP32_Helper
         const int8_t readBufferMax = 64;
         std::vector<char> readBuffer;
 
-        std::vector<CommandHandler> customHandlers;
+        std::vector<CommandHandler> commandList;
         TaskThread taskUpdate;
         QueueThread<Command> awaitingCommand;
         TimerThread loggerFlushTimer;
@@ -90,14 +90,14 @@ namespace ESP32_Helper
         println("-- End of SPIFFS Initialisation --");
 
         // Register default namespace handlers through the same extension mechanism.
-        customHandlers.clear();
-        RegisterCommandHandler("Debug", Debugger::HandleCommand, Debugger::PrintCommandHelp);
+        commandList.clear();
+        /*RegisterCommandHandler("Debug", Debugger::HandleCommand, Debugger::PrintCommandHelp);
         RegisterCommandHandler("Print", Printer::HandleCommand, Printer::PrintCommandHelp);
         RegisterCommandHandler("Pref", Preferences_Helper::HandleCommand, Preferences_Helper::PrintCommandHelp);
         RegisterCommandHandler("Wifi", Wifi_Helper::HandleCommand, Wifi_Helper::PrintCommandHelp);
         //RegisterCommandHandler("Logger", Logger::HandleCommand, Logger::PrintCommandHelp);
         RegisterCommandHandler("SPIFFS", FileSystem_Helper::HandleCommand, FileSystem_Helper::PrintCommandHelp);
-
+*/
         println("-- End of Helper Initialisation --");
         println();
     }
@@ -167,14 +167,14 @@ namespace ESP32_Helper
         }
     }
 
-    void RegisterCommandHandler(const String &prefix, CommandHandlerFunc handler, CommandHelpFunc helpFunc)
+    void RegisterCommand(const String &command, const String &help, CommandHandlerFunc func)
     {
-        if (prefix == "" || handler == nullptr)
+        if (command == "" || func == nullptr)
         {
-            Printer::println("Invalid Command Handler registration for prefix " + prefix);
+            Printer::println("Invalid Command registration for command " + command);
             return;
         }
-        customHandlers.push_back({prefix, handler, helpFunc});
+        commandList.push_back(CommandHandler(command, help, func));
     }
 
     bool HandleCommand(Command cmdTmp)
@@ -182,23 +182,17 @@ namespace ESP32_Helper
         if (cmdTmp.cmd[0] == '\0')
             return false;
 
-        if (cmdTmp.cmdStartsWith("Help"))
+        if (cmdTmp.cmdEquals("Help"))
         {
             Printer::println("Help Commands List Start");
-            Printer::println(" > Help");
-            Printer::println("     Display this help");
-            Printer::println(" > Delay:[int]");
-            Printer::println("     Start Delay in ms");
-            Printer::println(" > Reboot");
-            Printer::println("     Reboot the ESP32");
-            for (const auto &handler : customHandlers)
+            for (const auto &handler : commandList)
             {
-                if (handler.helpFunc != nullptr)
-                    handler.helpFunc();
+                Printer::println(" > " + handler.command);
+                Printer::println("     " + handler.help);
             }
             Printer::println("Help Commands List End");
             return true;
-        }
+        }/*
         else if (cmdTmp.cmdStartsWith("Delay"))
         {
             if (cmdTmp.size > 0 && cmdTmp.data[0] > 0)
@@ -225,23 +219,20 @@ namespace ESP32_Helper
             // Handle Ping command
             println("Pong");
             return true;
-        }
+        }*/
         else
         {
             // Check all registered handlers (default namespaces + user custom handlers)
-            bool handled = false;
-            for (const auto &handler : customHandlers)
+            for (const auto &cmd : commandList)
             {
-                if (cmdTmp.cmdStartsWith(handler.prefix.c_str()))
+                if (cmdTmp.cmdEquals(cmd.command.c_str()))
                 {
-                    handled = handler.func(cmdTmp);
-                    if (!handled && handler.helpFunc != nullptr)
-                        handler.helpFunc();
-                    return handled;
+                    cmd.func(cmdTmp);
+                    return true;
                 }
             }
 
-            // If no custom handler found, send to main application queue
+            // If no command found, send to main application queue
             // Queue by value: Command is now pure POD (char arrays), safe for FreeRTOS
             Printer::println("No custom handler found for " + cmdTmp.ToString());
             awaitingCommand.Send(cmdTmp);

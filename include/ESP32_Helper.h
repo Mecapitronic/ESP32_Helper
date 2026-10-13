@@ -45,12 +45,12 @@ namespace ESP32_Helper
 
     /**
      * @brief Register a custom command handler
-     * @param prefix    Command prefix to match (e.g., "MyCmd")
-     * @param handler   Function pointer to handle the command, returns true if handled
-     * @param helpFunc  Optional function pointer to print help for this handler
+     * @param command   Command to match (e.g., "MyCmd")
+     * @param help      Help text describing the command
+     * @param func      Function pointer to handle the command
      */
-    void RegisterCommandHandler(const String& prefix, CommandHandlerFunc handler, CommandHelpFunc helpFunc = nullptr);
-
+    void RegisterCommand(const String &command, const String &help, CommandHandlerFunc func);
+    
     bool HasWaitingCommand();
     Command GetCommand();
     String convertToString(char *a, int32_t size);

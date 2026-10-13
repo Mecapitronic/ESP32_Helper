@@ -79,12 +79,12 @@ void setup(void)
 {
     ESP32_Helper::Initialisation();
     
-    // Register custom command handlers with their help functions
-    // Commands starting with "cpt" will be handled by handleCounterCommand
-    ESP32_Helper::RegisterCommandHandler("cpt", handleCounterCommand, printCounterHelp);
-    
-    // Commands starting with "Log" will be handled by handleLogCommand
-    ESP32_Helper::RegisterCommandHandler("Log", handleLogCommand, printLogHelp);
+    ESP32_Helper::RegisterCommand("cpt++", "Increment counter", [](Command cmd){ cpt++; println("Counter incremented %i", cpt); });
+    ESP32_Helper::RegisterCommand("cpt--", "Decrement counter", [](Command cmd){ cpt--; println("Counter decremented %i", cpt); });
+    ESP32_Helper::RegisterCommand("cpt", "Set counter to value, cpt:0", [](Command cmd){ if(cmd.size == 1){ cpt = cmd.data[0]; println("Counter set to %i", cpt); } });
+
+
+    ESP32_Helper::RegisterCommand("Log", "Print a log message, Log:message", [](Command cmd){ println("Log %s", cmd.ToString().c_str()); });
     
     println("Custom handlers registered!");
 }
@@ -103,13 +103,6 @@ void loop(void)
     //   "cpt--" to decrement counter
     //   "cpt:5" to set counter to 5
     //   "Log:MyMessage" to log a message
-    // 
-    // Unhandled commands will still be available via GetCommand()
-    if (ESP32_Helper::HasWaitingCommand())
-    {
-        Command command = ESP32_Helper::GetCommand();
-        println("Unhandled command received %s", command.ToString().c_str());
-    }
 
     // Try sending "Help" to see the list of commands available from the Lib
 }

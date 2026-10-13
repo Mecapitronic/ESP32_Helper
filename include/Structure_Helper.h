@@ -403,17 +403,17 @@ struct Command
 };
 
 // Type definition for command handler function
-// Returns true if the command was handled, false otherwise
-typedef bool (*CommandHandlerFunc)(Command);
-// Type definition for command help print function
-typedef void (*CommandHelpFunc)();
+typedef void (*CommandHandlerFunc)(Command);
 
 // Used to store all custom command
 struct CommandHandler
 {
-    String prefix;
+    String command;
+    String help;
     CommandHandlerFunc func;
-    CommandHelpFunc helpFunc;
+
+    CommandHandler(const String &_command, const String &_help, CommandHandlerFunc _func)
+        : command(_command), help(_help), func(_func) {}
 };
 
 // Use Start to specify the timeOut in ms,
