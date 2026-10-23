@@ -15,8 +15,7 @@ namespace Debugger
     bool IsEnable();
 
     void Initialisation();
-    bool HandleCommand(Command cmdTmp);
-    void PrintCommandHelp(void);
+    void RegisterCommands();
 
     bool WaitForAvailableSteps();
     void AddSteps(int16_t steps);

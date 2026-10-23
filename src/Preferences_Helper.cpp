@@ -18,6 +18,23 @@ namespace Preferences_Helper
         {
             preferences.end();
         }
+        RegisterCommands();
+    }
+    
+    void RegisterCommands()
+    {
+        ESP32_Helper::RegisterCommand("PrefList", "List all key preferences, PrefList", FunctionCommand( Preferences_Helper::ListPreferences(); ));
+        ESP32_Helper::RegisterCommand("PrefSave", "Save a value to preferences, PrefSave:key:value", FunctionCommand(
+            if(cmd.hasDataStr1() && cmd.hasData()){ Preferences_Helper::SaveToPreference(String(cmd.dataStr1), cmd.data[0]); }
+            else if(cmd.hasDataStr1() && cmd.hasDataStr2()){ Preferences_Helper::SaveToPreference(String(cmd.dataStr1), String(cmd.dataStr2)); }
+        ));
+        ESP32_Helper::RegisterCommand("PrefShow", "Load a value from preferences, PrefShow:key:defValue", FunctionCommand( 
+            if(cmd.hasDataStr1() && cmd.hasData()) Preferences_Helper::LoadFromPreference(String(cmd.dataStr1), cmd.data[0]);
+            else if(cmd.hasDataStr1() && cmd.hasDataStr2()) Preferences_Helper::LoadFromPreference(String(cmd.dataStr1), String(cmd.dataStr2));
+        ));
+        ESP32_Helper::RegisterCommand("PrefRemove", "Remove a key from preferences, PrefRemove:key", FunctionCommand( if(cmd.hasDataStr1()) Preferences_Helper::RemoveFromPreference(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("PrefShowFree", "Show free entries in preferences, PrefShowFree", FunctionCommand( Preferences_Helper::GetFreeEntries(); ));
+        ESP32_Helper::RegisterCommand("PrefClearAll", "Clear all preferences under the namespace, PrefClearAll", FunctionCommand( Preferences_Helper::ClearPreferences(); ));
     }
 
     int32_t LoadFromPreference(const String &pref, int32_t defValue)
@@ -126,123 +143,5 @@ namespace Preferences_Helper
         preferences.end();
         preferencesList.clear();
         println("Preferences cleared for namespace " + String(PREF_NAMESPACE));
-    }
-    
-    bool HandleCommand(Command cmdTmp)
-    {
-        if(cmdTmp.cmdEquals("PrefList"))
-        {
-            // PrefList
-            Preferences_Helper::ListPreferences();
-        }
-        else if(cmdTmp.cmdEquals("PrefSave"))
-        {
-            // PrefSave:cpt:123
-            // PrefSave:str:data
-            if (strlen(cmdTmp.dataStr1) > 0 && cmdTmp.size == 1)
-            {
-                String key(cmdTmp.dataStr1);
-                int32_t value = cmdTmp.data[0];
-                println("Save preference %s = %i", key.c_str(), value);
-                Preferences_Helper::SaveToPreference(key, value);
-            }
-            else if (strlen(cmdTmp.dataStr1) > 0 && strlen(cmdTmp.dataStr2) > 0)
-            {
-                String key(cmdTmp.dataStr1);
-                String value(cmdTmp.dataStr2);
-                println("Save preference %s = %s", key.c_str(), value.c_str());
-                Preferences_Helper::SaveToPreference(key, value);
-            }
-            else
-            {
-                println("Invalid PrefSave arguments !");
-                return false;
-            }
-        }
-        else if(cmdTmp.cmdEquals("PrefLoad"))
-        {
-            // PrefLoad:cpt:0
-            // PrefLoad:str:default
-            if (strlen(cmdTmp.dataStr1) > 0 && cmdTmp.size == 1)
-            {
-                String key(cmdTmp.dataStr1);
-                int32_t defValue = cmdTmp.data[0];
-                int32_t value = Preferences_Helper::LoadFromPreference(key, defValue);
-                println("Loaded preference %s = %i", key.c_str(), value);
-            }
-            else if (strlen(cmdTmp.dataStr1) > 0 && strlen(cmdTmp.dataStr2) > 0)
-            {
-                String key(cmdTmp.dataStr1);
-                String defValue(cmdTmp.dataStr2);
-                String value = Preferences_Helper::LoadFromPreference(key, defValue);
-                println("Loaded preference %s = %s", key.c_str(), value.c_str());
-            }
-            else
-            {
-                println("Invalid PrefLoad arguments !");
-                return false;
-            }
-        }
-        else if(cmdTmp.cmdEquals("PrefRemove"))
-        {
-            // PrefRemove:cpt
-            // PrefRemove:str
-            if (strlen(cmdTmp.dataStr1) > 0)
-            {
-                println("Remove preference %s", cmdTmp.dataStr1);
-                Preferences_Helper::RemoveFromPreference(String(cmdTmp.dataStr1));
-            }
-            else
-            {
-                println("Invalid PrefRemove arguments !");
-                return false;
-            }
-        }
-        else if(cmdTmp.cmdEquals("PrefFree"))
-        {
-            // PrefFree
-            Preferences_Helper::GetFreeEntries();
-        }
-        else if (cmdTmp.cmdEquals("PrefClear"))
-        {
-            // PrefClear:1
-            if (cmdTmp.size == 1 && cmdTmp.data[0] == 1)
-            {
-                println("Clear all pref under " + String(PREF_NAMESPACE));
-                Preferences_Helper::ClearPreferences();
-            }
-            else
-            {
-                println("Invalid PrefClear arguments !");
-                return false;
-            }
-        }
-        else
-        {
-            println("Not a Preferences command !");            
-            return false;
-        }
-        return true;
-    }
-    
-    void PrintCommandHelp()
-    {
-        println("Preferences Command Help");
-        println(" > PrefList");
-        println("      List all key preferences");
-        println(" > PrefSave:[string]:[int]");
-        println("      Save the int value to preferences with the key");
-        println(" > PrefSave:[string]:[string]");
-        println("      Save the string value to preferences with the key");
-        println(" > PrefLoad:[string]:[int]");
-        println("      Load the int value from preferences with the key, return defValue if not found");
-        println(" > PrefLoad:[string]:[string]");
-        println("      Load the string value from preferences with the key, return defValue if not found");
-        println(" > PrefRemove:[string]");
-        println("      Remove the key from preferences");
-        println(" > PrefFree");
-        println("      Show free entries in preferences");
-        println(" > PrefClear:[int]");
-        println("      1 Clear all preferences under the namespace");
     }
 }

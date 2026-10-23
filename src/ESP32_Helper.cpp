@@ -34,6 +34,11 @@ namespace ESP32_Helper
         {
             vTaskDelay(10);
         }
+        commandList.clear();
+        RegisterCommand("Delay", "Delay for a specified duration in ms, Delay:<duration>", FunctionCommand( if(cmd.hasData() && cmd.data[0] > 0) { Printer::println("Delaying for %d ms...", cmd.data[0]); vTaskDelay(cmd.data[0]); Printer::println("Delay complete."); } else { Printer::println("Delay command requires a duration in ms as data."); } ));
+        RegisterCommand("Reboot", "Reboot the system, Reboot", FunctionCommand( Printer::println("Rebooting..."); ESP.restart(); ));
+        RegisterCommand("Ping", "Ping the system, Ping", FunctionCommand( Printer::println("Pong"); ));
+
         Preferences_Helper::Initialisation();
         //Logger::Initialisation();
         //loggerFlushTimer = TimerThread(LoggerFlushCallback, "LoggerFlush", pdMS_TO_TICKS(LOGGER_FLUSH_PERIOD_MS));
@@ -89,15 +94,6 @@ namespace ESP32_Helper
         FileSystem_Helper::ListFiles();
         println("-- End of SPIFFS Initialisation --");
 
-        // Register default namespace handlers through the same extension mechanism.
-        commandList.clear();
-        /*RegisterCommandHandler("Debug", Debugger::HandleCommand, Debugger::PrintCommandHelp);
-        RegisterCommandHandler("Print", Printer::HandleCommand, Printer::PrintCommandHelp);
-        RegisterCommandHandler("Pref", Preferences_Helper::HandleCommand, Preferences_Helper::PrintCommandHelp);
-        RegisterCommandHandler("Wifi", Wifi_Helper::HandleCommand, Wifi_Helper::PrintCommandHelp);
-        //RegisterCommandHandler("Logger", Logger::HandleCommand, Logger::PrintCommandHelp);
-        RegisterCommandHandler("SPIFFS", FileSystem_Helper::HandleCommand, FileSystem_Helper::PrintCommandHelp);
-*/
         println("-- End of Helper Initialisation --");
         println();
     }
@@ -179,7 +175,7 @@ namespace ESP32_Helper
 
     bool HandleCommand(Command cmdTmp)
     {
-        if (cmdTmp.cmd[0] == '\0')
+        if (!cmdTmp.hasCommand())
             return false;
 
         if (cmdTmp.cmdEquals("Help"))
@@ -192,34 +188,7 @@ namespace ESP32_Helper
             }
             Printer::println("Help Commands List End");
             return true;
-        }/*
-        else if (cmdTmp.cmdStartsWith("Delay"))
-        {
-            if (cmdTmp.size > 0 && cmdTmp.data[0] > 0)
-            {
-                Printer::println("Delaying for %d ms...", cmdTmp.data[0]);
-                vTaskDelay(cmdTmp.data[0]);
-                Printer::println("Delay complete.");
-                return true;
-            }
-            else
-            {
-                Printer::println("Delay command requires a duration in ms as data.");
-                return false;
-            }
         }
-        else if (cmdTmp.cmdStartsWith("Reboot"))
-        {
-            Printer::println("Rebooting...");
-            ESP.restart();
-            return true;
-        }
-        else if (cmdTmp.cmdEquals("Ping"))
-        {
-            // Handle Ping command
-            println("Pong");
-            return true;
-        }*/
         else
         {
             // Check all registered handlers (default namespaces + user custom handlers)
@@ -256,7 +225,7 @@ namespace ESP32_Helper
             }
             else
             {
-                if (cmdTmp.cmd[0] == '\0')
+                if (!cmdTmp.hasCommand())
                 {
                     if (i >= Command::sizeCmd)
                     {
@@ -277,9 +246,9 @@ namespace ESP32_Helper
                         {
                             if (i - indexSeparator < Command::sizeStr)
                             {
-                                if (cmdTmp.dataStr1[0] == '\0')
+                                if (!cmdTmp.hasDataStr1())
                                     snprintf(cmdTmp.dataStr1, Command::sizeStr, "%s", strToConvert.c_str());
-                                else if (cmdTmp.dataStr2[0] == '\0')
+                                else if (!cmdTmp.hasDataStr2())
                                     snprintf(cmdTmp.dataStr2, Command::sizeStr, "%s", strToConvert.c_str());
                                 else
                                     println("3rd String not saved " + strToConvert);

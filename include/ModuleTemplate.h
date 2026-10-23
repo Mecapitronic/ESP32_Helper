@@ -16,8 +16,6 @@ public:
     // These bases functions() = 0 NEED to be implemented by derived class
     virtual void Initialisation() = 0;
     virtual void Update() = 0;
-    virtual void HandleCommand(Command cmd) = 0;
-    virtual void PrintCommandHelp() = 0;
 
     // These bases functions() {} will be called only if not implemented by derived class
     virtual ~IModule() { Printer::println("Deleting IModule"); }

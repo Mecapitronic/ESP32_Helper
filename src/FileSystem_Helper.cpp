@@ -29,7 +29,20 @@ namespace FileSystem_Helper
             return false;
         }
         println("SPIFFS Mounted Successfully");
+        RegisterCommands();
         return true;
+    }
+    
+    void RegisterCommands()
+    {
+        ESP32_Helper::RegisterCommand("SPIFFSFormat", "Format the SPIFFS file system", FunctionCommand( FormatFS(); ));
+        ESP32_Helper::RegisterCommand("SPIFFSListFiles", "List files in the SPIFFS file system, filter optional, SPIFFSListFiles:filter", FunctionCommand( ListFiles(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("SPIFFSCreateFile", "Create a file in the SPIFFS file system, SPIFFSCreateFile:<fileName>", FunctionCommand( CreateFile(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("SPIFFSReadFile", "Read a file from the SPIFFS file system, SPIFFSReadFile:<fileName>", FunctionCommand( ReadFile(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("SPIFFSWriteFile", "Write to a file in the SPIFFS file system, SPIFFSWriteFile:<fileName>:<msg>:<createFileIfNotExists>", FunctionCommand( WriteFile(String(cmd.dataStr1), String(cmd.dataStr2), cmd.size > 0 ? cmd.data[0] : false); ));
+        ESP32_Helper::RegisterCommand("SPIFFSAppendFile", "Append to a file in the SPIFFS file system, SPIFFSAppendFile:<fileName>:<msg>:<createFileIfNotExists>", FunctionCommand( AppendFile(String(cmd.dataStr1), String(cmd.dataStr2), cmd.size > 0 ? cmd.data[0] : false); ));
+        ESP32_Helper::RegisterCommand("SPIFFSRenameFile", "Rename a file in the SPIFFS file system, SPIFFSRenameFile:<oldFileName>:<newFileName>", FunctionCommand( RenameFile(String(cmd.dataStr1), String(cmd.dataStr2)); ));
+        ESP32_Helper::RegisterCommand("SPIFFSDeleteFile", "Delete a file from the SPIFFS file system, SPIFFSDeleteFile:<fileName>", FunctionCommand( DeleteFile(String(cmd.dataStr1)); ));
     }
 
     void FormatFS()
@@ -306,114 +319,5 @@ namespace FileSystem_Helper
         {
             println("- failed to open file for reading");
         }
-    }
-
-    bool HandleCommand(Command cmdTmp)
-    {
-        if (cmdTmp.cmdEquals("SPIFFSFormat"))
-        {
-            // SPIFFSFormat
-            FormatFS();
-        }
-        else if(cmdTmp.cmdEquals("SPIFFSListFiles"))
-        {
-            // SPIFFSListFiles:<filter>
-            ListFiles(String(cmdTmp.dataStr1));
-        }
-        else if(cmdTmp.cmdEquals("SPIFFSCreateFile"))
-        {
-            // SPIFFSCreateFile:<fileName>
-            CreateFile(String(cmdTmp.dataStr1));
-        }
-        else if(cmdTmp.cmdEquals("SPIFFSReadFile"))
-        {
-            // SPIFFSReadFile:<fileName>
-            println(ReadFile(String(cmdTmp.dataStr1)));
-        }
-        else if(cmdTmp.cmdEquals("SPIFFSWriteFile"))
-        {
-            // SPIFFSWriteFile:<fileName>:<msg>
-            // SPIFFSWriteFile:<fileName>:<msg>:1
-            bool createFileIfNotExists = cmdTmp.size > 0 ? cmdTmp.data[0] : false;
-            WriteFile(String(cmdTmp.dataStr1), String(cmdTmp.dataStr2), createFileIfNotExists);
-        }
-        else if(cmdTmp.cmdEquals("SPIFFSAppendFile"))
-        {
-            // SPIFFSAppendFile:<fileName>:<msg>
-            // SPIFFSAppendFile:<fileName>:<msg>:1
-            bool createFileIfNotExists = cmdTmp.size > 0 ? cmdTmp.data[0] : false;
-            AppendFile(String(cmdTmp.dataStr1), String(cmdTmp.dataStr2), createFileIfNotExists);
-        }
-        else if(cmdTmp.cmdEquals("SPIFFSRenameFile"))
-        {
-            // SPIFFSRenameFile:<oldFileName>:<newFileName>
-            RenameFile(String(cmdTmp.dataStr1), String(cmdTmp.dataStr2));
-        }
-        else if(cmdTmp.cmdEquals("SPIFFSDeleteFile"))
-        {
-            // SPIFFSDeleteFile:<fileName>
-            DeleteFile(String(cmdTmp.dataStr1));
-        }
-        else if (cmdTmp.cmdEquals("SPIFFSAppendASCII"))
-        {
-            if(cmdTmp.dataStr1[0] == '\0')
-            {
-                Printer::println("Invalid SPIFFSAppendASCII command: missing file name");
-                return false;
-            }
-            if(cmdTmp.size <= 0)
-            {
-                Printer::println("Invalid SPIFFSAppendASCII command: missing data size");
-                return false;
-            }
-            if(cmdTmp.data[0] <= 0)
-            {
-                Printer::println("Invalid SPIFFSAppendASCII command: data size must be greater than 0");
-                return false;
-            }
-            if(cmdTmp.data[0] > 1024)
-            {
-                Printer::println("Invalid SPIFFSAppendASCII command: data size must not exceed 1024");
-                return false;
-            }
-
-            Printer::println("Starting SPIFFS ASCII Append session for file: %s with size %d", String(cmdTmp.dataStr1).c_str(), cmdTmp.data[0]);
-            FileSystem_Helper::AppendASCII::timeout.Start();
-            FileSystem_Helper::AppendASCII::bufferSize = cmdTmp.data[0];
-            FileSystem_Helper::AppendASCII::buffer.clear();
-            FileSystem_Helper::AppendASCII::fileName = cmdTmp.dataStr1;
-            return true;
-        }
-        else
-        {
-            println("Not a SPIFFS command !");            
-            return false;
-        }
-        return true;
-    }
-    
-    void PrintCommandHelp()
-    {
-        println("SPIFFS Command Help");
-        println(" > SPIFFSFormat");
-        println("      Format SPIFFS");
-        println(" > SPIFFSListFiles:<filter>");
-        println("      List files in the SPIFFS filesystem, filter is optional");
-        println(" > SPIFFSCreateFile:<fileName>");
-        println("      Create a new file");
-        println(" > SPIFFSReadFile:<fileName>");
-        println("      Read file contents");
-        println(" > SPIFFSWriteFile:<fileName>:<msg>:<createIfNotExists>");
-        println("      Write message to file");
-        println(" > SPIFFSAppendFile:<fileName>:<msg>:<createIfNotExists>");
-        println("      Append message to file");
-        println(" > SPIFFSAppendASCII:<fileName>:<characterCount>");
-        println("      Append exactly characterCount ASCII characters");
-        println("      Send the body immediately after the header newline; body has no terminator");
-        println(" > SPIFFSRenameFile:<oldFileName>:<newFileName>");
-        println("      Rename the <oldFileName> file to <newFileName>");
-        println(" > SPIFFSDeleteFile:<fileName>");
-        println("      Delete the specified file");
-        println();
     }
 }

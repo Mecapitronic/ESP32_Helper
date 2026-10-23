@@ -244,6 +244,7 @@ namespace Wifi_Helper
                 });
         ArduinoOTA.begin();
 #endif
+        RegisterCommands();
 
         println("-- End of Wifi initialisation --");
     }
@@ -425,128 +426,57 @@ namespace Wifi_Helper
             println("Teleplot reset complete after disable request");
         }
     }
-
-    bool HandleCommand(Command cmdTmp)
-    {
-
-        if (cmdTmp.cmdEquals("WifiStatus"))
-        {
-            Printer::println("Wifi status %i", (wl_status_t)WiFi.status());
-            Printer::println("Wifi SSID %s", WiFi.SSID().c_str());
-            Printer::println("Wifi SSID saved %s", wifi_ssid.c_str());
-            Printer::println("Wifi Password saved %s", wifi_password.c_str());
-
-            Printer::println("Wifi IP %s", WiFi.localIP().toString().c_str());
-            Printer::println("Wifi MAC %s", WiFi.macAddress().c_str());
-            Printer::println("Wifi RSSI %i", WiFi.RSSI());
-            Printer::println("Wifi Local IP %s", wifi_local_ip.c_str());
-            Printer::println("Wifi Server IP %s", wifi_server_ip.c_str());
-            Printer::println("Wifi Teleplot IP %s", wifi_teleplot_ip.c_str());
-            Printer::println("Wifi Server Port %i", wifi_server_port);
-        }
-        else if (cmdTmp.cmdEquals("WifiEnable"))
-        {
-            // WifiEnable:0
-            // WifiEnable:1
-            Printer::println("Wifi status %i", (wl_status_t)WiFi.status());
-            if (cmdTmp.size == 1)
-                EnableWifi((Enable)cmdTmp.data[0]);
-        }
-        else if (cmdTmp.cmdEquals("WifiPassword"))
-        {
-            // Password must be at least 8 char or empty
-            // WifiPassword:********
-            size_t passLen = strlen(cmdTmp.dataStr1);
-            if (passLen == 0 || (passLen >= 8 && passLen <= 63))
-            {
-                Preferences_Helper::SaveToPreference("wifi_password", String(cmdTmp.dataStr1));
-                wifi_password = String(cmdTmp.dataStr1);
-                wifi_changed = true;
-                Printer::println("Wifi password Changed !");
-            }
-            else
-                Printer::println("Wifi Password must be at least 8 characters and max 63 char !");
-        }
-        else if (cmdTmp.cmdEquals("WifiSsid"))
-        {
-            size_t ssidLen = strlen(cmdTmp.dataStr1);
-            if (ssidLen > 0 && ssidLen <= 63)
-            {
-                Preferences_Helper::SaveToPreference("wifi_ssid", String(cmdTmp.dataStr1));
-                wifi_ssid = String(cmdTmp.dataStr1);
-                wifi_changed = true;
-                Printer::println("Wifi SSID Changed !");
-            }
-            else
-                Printer::println("Wifi SSID is empty or is too long (max 63 char) !");
-        }
-        else if (cmdTmp.cmdEquals("WifiBaseIP") && cmdTmp.size == 3)
-        {
-            //WifiBaseIP:192:168:43
-            //WifiBaseIP:192:168:137
-            String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]);
-            wifi_base_ip = ip;
-            Printer::println("Wifi base IP Changed !");
-        }
-        else if (cmdTmp.cmdEquals("WifiLocalIP") && cmdTmp.size == 4)
-        {
-            //WifiLocalIP:192:168:43:110
-            //WifiLocalIP:192:168:137:110
-            String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
-            SetLocalIP(ip);
-            Printer::println("Wifi local IP Changed !");
-        }
-        else if (cmdTmp.cmdEquals("WifiServerIP") && cmdTmp.size == 4)
-        {
-            //WifiServerIP:192:168:43:215
-            //WifiServerIP:192:168:137:215
-            String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
-            SetServerIP(ip);
-            Printer::println("Wifi server IP Changed !");
-        }
-        else if (cmdTmp.cmdEquals("WifiTeleplotIP") && cmdTmp.size == 4)
-        {
-            //WifiTeleplotIP:192:168:43:1
-            //WifiTeleplotIP:192:168:137:1
-            String ip = "" + String(cmdTmp.data[0]) + "." + String(cmdTmp.data[1]) + "." + String(cmdTmp.data[2]) + "." + String(cmdTmp.data[3]);
-            SetTeleplotIP(ip);
-            Printer::println("Wifi teleplot IP Changed !");
-        }
-        else if (cmdTmp.cmdEquals("WifiServerPort") && cmdTmp.size == 1)
-        {
-            Preferences_Helper::SaveToPreference("wifi_server_port", cmdTmp.data[0]);
-            Printer::println("Wifi server Port Changed !");
-        }
-        else
-        {
-            Printer::println("Not a Wifi command !");
-            return false;
-        }
-        return true;
+    
+    void RegisterCommands()
+    {        
+        ESP32_Helper::RegisterCommand("WifiStatus", "Print the Wifi status", FunctionCommand( PrintWifiStatus(); ));
+        ESP32_Helper::RegisterCommand("WifiEnable", "Enable or disable the Wifi, WifiEnable:1", FunctionCommand( if(cmd.hasData()) EnableWifi((Enable)cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("WifiPassword", "Change the Wifi password (must be 8-63 characters), WifiPassword:********", FunctionCommand( if(cmd.hasDataStr1()) SetPassword(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("WifiSsid", "Change the Wifi SSID (must be 8-63 characters), WifiSsid:MyNewSSID", FunctionCommand( if(cmd.hasDataStr1()) SetSsid(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("WifiBaseIP", "Change the base IP of the ESP, WifiBaseIP:192:168:43", FunctionCommand( if(cmd.hasData(3)) SetBaseIP(cmd.data[0], cmd.data[1], cmd.data[2]); ));
+        ESP32_Helper::RegisterCommand("WifiLocalIP", "Change the last digit of the local IP of the ESP, WifiLocalIP:110", FunctionCommand( if(cmd.hasData()) SetLocalIP(cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("WifiServerIP", "Change the last digit of the server IP for the ESP to connect, WifiServerIP:110", FunctionCommand( if(cmd.hasData()) SetServerIP(cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("WifiTeleplotIP", "Change the teleplot last digit of the IP the ESP sends to, WifiTeleplotIP:110", FunctionCommand( if(cmd.hasData()) SetTeleplotIP(cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("WifiServerPort", "Change the server Port for the ESP to connect, WifiServerPort:20240", FunctionCommand( if(cmd.hasData()) SetServerPort(cmd.data[0]); ));
     }
 
-    void PrintCommandHelp()
+    void SetSsid(const String &ssid)
     {
-        Printer::println("Wifi Command Help");
-        Printer::println(" > WifiStatus");
-        Printer::println("      Print the Wifi status");
-        Printer::println(" > WifiEnable:[bool]");
-        Printer::println("      1 Enable or 0 disable the wifi");
-        Printer::println(" > WifiPassword:[string]");
-        Printer::println("      Change the Wifi password (min 8, max 63 characters)");
-        Printer::println(" > WifiSsid:[string]");
-        Printer::println("      Change the Wifi SSID (max 63 characters)");
-        Printer::println(" > WifiBaseIP:[int]:[int]:[int]");
-        Printer::println("      Set the base IP of the ESP");
-        Printer::println(" > WifiLocalIP:[int]:[int]:[int]:[int]");
-        Printer::println("      Set the local IP of the ESP");
-        Printer::println(" > WifiServerIP:[int]:[int]:[int]:[int]");
-        Printer::println("      Set the server IP for the ESP to connect");
-        Printer::println(" > WifiTeleplotIP:[int]:[int]:[int]:[int]");
-        Printer::println("      Set the teleplot IP the ESP sends to");
-        Printer::println(" > WifiServerPort:[int]");
-        Printer::println("      Set the server Port for the ESP to connect");
-        Printer::println();
+        if(ssid == wifi_ssid)
+        {
+            println("SSID is the same as the current one, no change needed");
+            return;
+        }
+        else if(ssid.length() < 8 || ssid.length() > 63)
+        {
+            println("SSID must be between 8 and 63 characters");
+            return;
+        }
+        wifi_ssid = ssid;
+        Preferences_Helper::SaveToPreference("wifi_ssid", ssid);
+        wifi_changed = true;
+    }
+
+    void SetPassword(const String &password)
+    {
+        if(password == wifi_password)
+        {
+            println("Password is the same as the current one, no change needed");
+            return;
+        }
+        else if(password.length() < 8 || password.length() > 63)
+        {
+            println("Password must be between 8 and 63 characters");
+            return;
+        }
+        wifi_password = password;
+        Preferences_Helper::SaveToPreference("wifi_password", password);
+        wifi_changed = true;
+    }
+
+    void SetBaseIP(int first, int second, int third)
+    {
+        wifi_base_ip = String(first) + "." + String(second) + "." + String(third);
     }
 
     void SetLocalIP(const String &ip)
@@ -614,6 +544,23 @@ namespace Wifi_Helper
         SetTeleplotIP(wifi_base_ip + "." + String(lastDigit));
     }
 
+    void SetServerPort(int port)
+    {
+        if(port == wifi_server_port)
+        {
+            println("Server port is the same as the current one, no change needed");
+            return;
+        }
+        else if(port <= 0 || port > 65535)
+        {
+            println("Invalid server port");
+            return;
+        }
+        wifi_server_port = port;
+        Preferences_Helper::SaveToPreference("wifi_server_port", port);
+        wifi_changed = true;
+    }
+
     void WiFiStationConnected(WiFiEvent_t event, WiFiEventInfo_t info)
     {
         println("Connected to SSID " + WiFi.SSID() + " with IP " + WiFi.localIP().toString() + " successfully!");
@@ -622,6 +569,22 @@ namespace Wifi_Helper
     void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
     {
         println("WiFi lost connection " + String((wifi_err_reason_t)info.wifi_sta_disconnected.reason));
+    }
+
+    void PrintWifiStatus()
+    {
+        Printer::println("Wifi status %i", (wl_status_t)WiFi.status());
+        Printer::println("Wifi SSID %s", WiFi.SSID().c_str());
+        Printer::println("Wifi SSID saved %s", wifi_ssid.c_str());
+        Printer::println("Wifi Password saved %s", wifi_password.c_str());
+
+        Printer::println("Wifi IP %s", WiFi.localIP().toString().c_str());
+        Printer::println("Wifi MAC %s", WiFi.macAddress().c_str());
+        Printer::println("Wifi RSSI %i", WiFi.RSSI());
+        Printer::println("Wifi Local IP %s", wifi_local_ip.c_str());
+        Printer::println("Wifi Server IP %s", wifi_server_ip.c_str());
+        Printer::println("Wifi Teleplot IP %s", wifi_teleplot_ip.c_str());
+        Printer::println("Wifi Server Port %i", wifi_server_port);
     }
 }
 #endif

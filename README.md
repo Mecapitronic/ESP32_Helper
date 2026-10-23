@@ -70,7 +70,7 @@ Chaque sous-dossier de `examples/` contient un projet PlatformIO minimal :
 - 🚀 `Example1_FastStartup`   - démarrage minimal, utile pour tests rapides sans wifi.
 - 🔍 `Example2_Debug`         - démonstration des fonctions de debug/Logger.
 - 📡 `Example3_WithWifi`      - montre la configuration Wi‑Fi (nécessite `WITH_WIFI`) et l'usage d'OTA si activé.
-- 💬 `Example4_HandleCommand` - exemple de réception/traitement de commandes (format attendu et handler).
+- 💬 `Example4_CustomCommand` - exemple de réception/traitement de commandes (format attendu et handler).
 - 💾 `Example5_Preferences`   - montre comment lire/écrire des préférences via `Preferences_Helper`.
 - 📊 `Example6_Teleplot`      - démonstration de la sortie Teleplot/télémétrie.
 - 📂 `Example7_SPIFFS`        - opérations sur fichiers (liste, lecture, écriture). Compile l'environnement qui active `SIMULATOR` pour utiliser `MockSPIFFS` si nécessaire.

@@ -75,94 +75,21 @@ namespace Printer
     {
         SetLevel(lvl);
         EnablePrinter(enable);
+        RegisterCommands();
+    }
+
+    void RegisterCommands()
+    {
+        ESP32_Helper::RegisterCommand("PrintLevel", "Set the print level, PrintLevel:<level>", FunctionCommand( SetLevel((Level)cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("PrintEnable", "Enable or disable the printer, PrintEnable:<0|1>", FunctionCommand( EnablePrinter((Enable)cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("PrintTeleplot", "Enable or disable teleplot, PrintTeleplot:<0|1>", FunctionCommand( teleplotEnable = (cmd.data[0] == 0 ? Enable::ENABLE_FALSE : Enable::ENABLE_TRUE); ));
+        ESP32_Helper::RegisterCommand("PrintTeleplotUDP", "Enable or disable teleplot UDP, PrintTeleplotUDP:<0|1>", FunctionCommand( teleplotUDPEnable = (cmd.data[0] == 0 ? Enable::ENABLE_FALSE : Enable::ENABLE_TRUE); ));
+        ESP32_Helper::RegisterCommand("PrintChrono", "Enable or disable chrono print, PrintChrono:<0|1>", FunctionCommand( Chrono::print = (cmd.data[0] == 0 ? false : true); ));
     }
     
     void Update(void *pvParameters)
     {
         println("Printer Update");
-    }
-
-    bool HandleCommand(Command cmdTmp)
-    {
-        if (cmdTmp.cmdEquals("PrintLevel"))
-        {
-            // PrintLevel:0
-            if (cmdTmp.size == 1)
-                SetLevel((Level)cmdTmp.data[0]);
-        }
-        else if (cmdTmp.cmdEquals("PrintEnable"))
-        {
-            // PrintEnable:1
-            if (cmdTmp.size == 1)
-                EnablePrinter((Enable)cmdTmp.data[0]);
-        }
-        else if (cmdTmp.cmdEquals("PrintTeleplot") && cmdTmp.size == 1)
-        {
-            // PrintTeleplot:0
-            // PrintTeleplot:1
-            if (cmdTmp.data[0] == 0)
-            {
-                teleplotEnable = Enable::ENABLE_FALSE;
-                println("Teleplot Disable");
-            }
-            else
-            {
-                teleplotEnable = Enable::ENABLE_TRUE;
-                println("Teleplot Enable");
-            }
-
-        }
-        else if (cmdTmp.cmdEquals("PrintTeleplotUDP") && cmdTmp.size == 1)
-        {
-            // PrintTeleplotUDP:0
-            // PrintTeleplotUDP:1
-            if (cmdTmp.data[0] == 0)
-            {
-                teleplotUDPEnable = Enable::ENABLE_FALSE;
-                println("Teleplot UDP Disable");
-            }
-            else
-            {
-                teleplotUDPEnable = Enable::ENABLE_TRUE;
-                println("Teleplot UDP Enable");
-            }
-        }
-        else if (cmdTmp.cmdEquals("PrintChrono") && cmdTmp.size == 1)
-        {
-            // PrintChrono:1
-            if (cmdTmp.data[0] == 1)
-            {
-                Chrono::print = true;
-                println("Enable Chrono Print");
-            }
-            else
-            {
-                Chrono::print = false;
-                println("Disable Chrono Print");
-            }
-        }
-        else
-        {
-            println("Not a Print command !");            
-            return false;
-        }
-        return true;
-    }
-
-    void PrintCommandHelp()
-    {
-        println("Printer Command Help");
-        println(" > PrintLevel:[int]");
-        println("      0 VERBOSE, 1 INFO, 2 WARN, 3 ERROR");
-        println(" > PrintEnable:[int]");
-        println("      0 Disable, 1 Enable printer");
-        println(" > PrintTeleplot:[int]");
-        println("      0 Disable, 1 Enable");
-        println(" > PrintTeleplotUDP:[int]");
-        println("      0 Disable, 1 Enable");
-        println(" > PrintChrono:[int]");
-        println("      0 Disable, 1 Enable Chrono Print");
-        println();
     }
 
     Level PrintLevel() { return printLevel; }

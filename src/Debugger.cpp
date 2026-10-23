@@ -39,45 +39,15 @@ namespace Debugger
             return;
         }
         Printer::println("Preparing queueSteps done.");
+        
+        RegisterCommands();
     }
 
-    bool HandleCommand(Command cmdTmp)
+    void RegisterCommands()
     {
-         if (cmdTmp.cmdEquals("DebugEnable"))
-        {
-            // DebugEnable:1
-            if (cmdTmp.size == 1)
-                EnableDebugger((Enable)cmdTmp.data.at(0));
-        }
-        else if (cmdTmp.cmdEquals("DebugAddSteps"))
-        {
-            // DebugAddSteps:10
-            if (cmdTmp.size == 1 && cmdTmp.data.at(0) > 0)
-                AddSteps(cmdTmp.data.at(0));
-        }
-        else if (cmdTmp.cmdEquals("DebugGetSteps"))
-        {
-            // DebugGetSteps
-            Printer::println("Steps available %i", GetSteps());
-        }
-        else
-        {
-            Printer::println("Not a Debug command !");
-            return false;
-        }
-        return true;
-    }
-
-    void PrintCommandHelp()
-    {
-        Printer::println("Debugger Command Help");
-        Printer::println(" > DebugEnable:[int]");
-        Printer::println("      0 Disable, 1 Enable Debugger");
-        Printer::println(" > DebugAddSteps:[int]");
-        Printer::println("      Add the number of steps to the debugger");
-        Printer::println(" > DebugGetSteps");
-        Printer::println("      Get the actual number of steps available");
-        Printer::println();
+        ESP32_Helper::RegisterCommand("DebugEnable", "Enable or disable the debugger, DebugEnable:<0|1>", FunctionCommand( if(cmd.hasData()) EnableDebugger((Enable)cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("DebugAddSteps", "Add steps to the debugger, DebugAddSteps:<steps>", FunctionCommand( if(cmd.hasData() && cmd.data[0] > 0) AddSteps(cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("DebugGetSteps", "Get the number of available steps, DebugGetSteps", FunctionCommand( Printer::println("Steps available %i", GetSteps()); ));
     }
 
     bool WaitForAvailableSteps()

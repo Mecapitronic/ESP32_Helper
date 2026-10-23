@@ -34,15 +34,16 @@
 namespace Logger
 {
     void Initialisation();
+    void RegisterCommands();
     bool IsInitialized();
 
     bool Enqueue(const char *text, bool appendNewLine = false);
     void Flush(uint16_t maxMessages = LOGGER_MAX_FLUSH_BATCH);
     void PrintStats(bool force = false);
-    bool HandleCommand(Command cmdTmp);
-    void PrintCommandHelp();
 
     uint32_t DroppedMessages();
+    void EnableStats(bool enable);
+    void ResetStats();
 }
 
 #endif

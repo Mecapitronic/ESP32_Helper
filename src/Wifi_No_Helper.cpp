@@ -25,50 +25,70 @@ namespace Wifi_Helper
     void Initialisation()
     {
         Printer::println("-- NO Wifi initialisation --");
+        RegisterCommands();
+    }
+    
+    void RegisterCommands()
+    {        
+        ESP32_Helper::RegisterCommand("Wifi", " NO WIFI available", FunctionCommand( PrintWifiStatus(); ));
     }
 
     void Update(void *pvParameters)
     {
-        Printer::println("Wifi Update Task STOPPED !");
+        PrintWifiStatus();
+    }
+    
+    void SetSsid(const String &ssid)
+    {
+        PrintWifiStatus();
     }
 
-    bool HandleCommand(Command cmdTmp)
+    void SetPassword(const String &password)
     {
-        Printer::println("NO WIFI !");
-        return true;
+        PrintWifiStatus();
     }
-    
-    void PrintCommandHelp()
+
+    void SetBaseIP(int first, int second, int third)
     {
-        Printer::println("NO WIFI !");
+        PrintWifiStatus();
     }
-    
+
     void SetLocalIP(const String &ip)
     {
-        Printer::println("NO WIFI !");
+        PrintWifiStatus();
     }
 
     void SetLocalIP(int lastDigit)
     {
-        Printer::println("NO WIFI !");
+        PrintWifiStatus();
     }
     
     void SetServerIP(const String &ip)
     {
-        Printer::println("NO WIFI !");
+        PrintWifiStatus();
     }
 
     void SetServerIP(int lastDigit)
     {
-        Printer::println("NO WIFI !");
+        PrintWifiStatus();
     }
     
     void SetTeleplotIP(const String &ip)
     {
-        Printer::println("NO WIFI !");
+        PrintWifiStatus();
     }
 
     void SetTeleplotIP(int lastDigit)
+    {
+        PrintWifiStatus();
+    }
+    
+    void SetServerPort(int port)
+    {
+        PrintWifiStatus();
+    }
+
+    void PrintWifiStatus()
     {
         Printer::println("NO WIFI !");
     }

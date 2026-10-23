@@ -33,15 +33,16 @@ namespace Wifi_Helper
     bool IsClientConnected();
 
     void Initialisation(void);
+    void RegisterCommands();
     void Update(void *pvParameters);
     void ProcessIncomingChar(char c);
     void HandleWifiConnection();
     void HandleClientConnection();
     void HandleTeleplotConnection();
 
-    bool HandleCommand(Command cmdTmp);
-    void PrintCommandHelp(void);
-
+    void SetSsid(const String &ssid);
+    void SetPassword(const String &password);
+    void SetBaseIP(int first, int second, int third);
     void SetLocalIP(const String &ip);
     void SetLocalIP(int lastDigit);
     void SetServerIP(const String &ip);

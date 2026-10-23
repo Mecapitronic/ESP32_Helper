@@ -14,6 +14,7 @@
 namespace Preferences_Helper
 {
     void Initialisation();
+    void RegisterCommands();
     int32_t LoadFromPreference(const String &pref, int32_t defValue);
     String LoadFromPreference(const String &pref, const String &defValue);
     void SaveToPreference(const String &pref, int32_t value);
@@ -22,8 +23,6 @@ namespace Preferences_Helper
     void ListPreferences();
     int32_t GetFreeEntries();
     void ClearPreferences();
-    bool HandleCommand(Command cmdTmp);
-    void PrintCommandHelp(void);
 }
 
 #endif

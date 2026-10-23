@@ -29,6 +29,7 @@ namespace FileSystem_Helper
     }
 
     bool Initialisation();
+    void RegisterCommands();
 
     void FormatFS();
 
@@ -49,8 +50,5 @@ namespace FileSystem_Helper
 
     void TestFileIO(const String &fileName);
 
-    bool HandleCommand(Command cmdTmp);
-
-    void PrintCommandHelp();
 }
 #endif

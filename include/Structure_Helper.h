@@ -328,6 +328,7 @@ struct PointTracker
     bool hasBeenSent = false;
 };
 
+#define FunctionCommand(x) [](Command cmd){x}
 // Command comming from User to be handle
 // Pure POD struct: no dynamic String, safe for FreeRTOS queue by value
 struct Command
@@ -371,12 +372,14 @@ struct Command
         return strcmp(cmd, other) == 0;
     }
     
+    // Check if the command starts with the given prefix
     bool cmdStartsWith(const char* prefix) const 
     {
         if (prefix == nullptr) return false;
         return strncmp(cmd, prefix, strlen(prefix)) == 0;
     }
     
+    // Print the command as a string for debugging purposes
     String ToString()
     {
         String toString = "";
@@ -400,6 +403,15 @@ struct Command
         }
         return toString;
     }
+
+    // Test if the command has been set
+    bool hasCommand() const { return cmd[0] != '\0'; }
+    // Test if there is a string in dataStr1
+    bool hasDataStr1() const { return !(dataStr1[0] == '\0'); }
+    // Test if there is a string in dataStr2
+    bool hasDataStr2() const { return !(dataStr2[0] == '\0'); }
+    // Test if there is at least 'count' number of data elements in the data array
+    bool hasData(int8_t count = 1) const { return size >= (count > 0 ? count : 1);}
 };
 
 // Type definition for command handler function

@@ -64,11 +64,19 @@ namespace Logger
             if (SERIAL_DEBUG)
                 SERIAL_DEBUG.println("Logger init failed");
         }
+        RegisterCommands();
     }
 
     bool IsInitialized()
     {
         return initialized;
+    }
+
+    void RegisterCommands()
+    {
+        ESP32_Helper::RegisterCommand("LoggerStats", "Affiche les stats, LoggerStats", FunctionCommand( Logger::PrintStats(true); ));
+        ESP32_Helper::RegisterCommand("LoggerEnableStats", "Active/Désactive l'affichage automatique des stats, LoggerEnableStats:0|1", FunctionCommand( if (cmd.hasData()) Logger::EnableStats(cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("LoggerResetStats", "Réinitialise les statistiques du logger", FunctionCommand( Logger::ResetStats(); ));
     }
 
     bool Enqueue(const char *text, bool appendNewLine)
@@ -303,74 +311,43 @@ namespace Logger
         return droppedMessages;
     }
 
-    bool HandleCommand(Command cmdTmp)
+    void EnableStats(bool enable)
     {
-        if (cmdTmp.cmdEquals("LoggerStats"))
+        portENTER_CRITICAL(&statsMutex);
+        stats.statsEnabled = enable;
+        portEXIT_CRITICAL(&statsMutex);
+        if (SERIAL_DEBUG)
         {
-            // LoggerStats:1  -> activer impression auto toutes les LOGGER_STATS_PERIOD_MS
-            // LoggerStats:0  -> désactiver
-            // LoggerStats    -> afficher maintenant
-            if (cmdTmp.size == 0)
-            {
-                PrintStats(true);
-            }
-            else if (cmdTmp.size >= 1)
-            {
-                portENTER_CRITICAL(&statsMutex);
-                stats.statsEnabled = (cmdTmp.data[0] != 0);
-                portEXIT_CRITICAL(&statsMutex);
-                if (SERIAL_DEBUG)
-                {
-                    SERIAL_DEBUG.print("Logger stats auto print ");
-                    SERIAL_DEBUG.println(cmdTmp.data[0] != 0 ? "enabled" : "disabled");
-                }
-                if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
-                {
-                    WIFI_DEBUG.print("Logger stats auto print ");
-                    WIFI_DEBUG.println(cmdTmp.data[0] != 0 ? "enabled" : "disabled");
-                }
-            }
+            SERIAL_DEBUG.print("Logger stats auto print ");
+            SERIAL_DEBUG.println(enable ? "enabled" : "disabled");
         }
-        else if (cmdTmp.cmdEquals("LoggerResetStats"))
+        if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
         {
-            // LoggerResetStats
-            portENTER_CRITICAL(&statsMutex);
-            stats.totalEnqueued = 0;
-            stats.totalFlushed = 0;
-            stats.totalDropped = 0;
-            stats.totalFlushWithData = 0;
-            stats.windowEnqueued = 0;
-            stats.windowFlushed = 0;
-            stats.windowDropped = 0;
-            stats.windowFlushWithData = 0;
-            stats.windowMaxMessagesPerFlush = 0;
-            stats.windowMaxFlushTimeUs = 0;
-            stats.windowFlushTimeUsAccum = 0;
-            stats.maxQueueDepth = 0;
-            stats.lastStatsPrintMs = millis();
-            portEXIT_CRITICAL(&statsMutex);
-            if (SERIAL_DEBUG)
-                SERIAL_DEBUG.println("Logger stats reset.");
-            if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
-                WIFI_DEBUG.println("Logger stats reset.");
+            WIFI_DEBUG.print("Logger stats auto print ");
+            WIFI_DEBUG.println(enable ? "enabled" : "disabled");
         }
-        else
-        {
-            Printer::println("Not a Logger command !");
-            return false;
-        }
-        return true;
     }
 
-    void PrintCommandHelp()
+    void ResetStats()
     {
-        Printer::println("Logger Command Help");
-        Printer::println(" > LoggerStats");
-        Printer::println("      Affiche les stats maintenant");
-        Printer::println(" > LoggerStats:[int]");
-        Printer::println("      0 Desactiver, 1 Activer l'affichage auto toutes les %dms", LOGGER_STATS_PERIOD_MS);
-        Printer::println(" > LoggerResetStats");
-        Printer::println("      Remet tous les compteurs a zero");
-        Printer::println();
+        portENTER_CRITICAL(&statsMutex);
+        stats.totalEnqueued = 0;
+        stats.totalFlushed = 0;
+        stats.totalDropped = 0;
+        stats.totalFlushWithData = 0;
+        stats.windowEnqueued = 0;
+        stats.windowFlushed = 0;
+        stats.windowDropped = 0;
+        stats.windowFlushWithData = 0;
+        stats.windowMaxMessagesPerFlush = 0;
+        stats.windowMaxFlushTimeUs = 0;
+        stats.windowFlushTimeUsAccum = 0;
+        stats.maxQueueDepth = 0;
+        stats.lastStatsPrintMs = millis();
+        portEXIT_CRITICAL(&statsMutex);
+        if (SERIAL_DEBUG)
+            SERIAL_DEBUG.println("Logger stats reset.");
+        if (Wifi_Helper::IsEnable() && Wifi_Helper::IsClientConnected())
+            WIFI_DEBUG.println("Logger stats reset.");
     }
 }
