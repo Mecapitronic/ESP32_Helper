@@ -3,8 +3,8 @@
     SERIAL_DEBUG is the Serial port used for communication with the PC
     You can redefine it to change the Serial port used
     
-    This example also demonstrates how to register custom command handlers
-    using RegisterCommandHandler() for extensible command processing.
+    This example also demonstrates how to register custom command
+    using RegisterCommand() for extensible command processing.
 */
 
 #include "ESP32_Helper.h"
@@ -29,6 +29,8 @@ void setup(void)
     ESP32_Helper::RegisterCommand("Log", "Print a log message, Log:message", FunctionCommand( if(cmd.hasDataStr1()) { println("Log %s", cmd.dataStr1); } ));
     
     println("Custom handlers registered!");
+
+    ESP32_Helper::HandleCommand("Help");
 }
 
 // ============== Loop ==============
