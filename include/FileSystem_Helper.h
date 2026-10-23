@@ -19,12 +19,13 @@
 
 namespace FileSystem_Helper
 {
-    namespace AppendASCII
+    namespace WriteASCII
     {
         extern Timeout timeout;
         extern int bufferSize;
         extern std::vector<char> buffer;
         extern String fileName;
+        extern bool overwrite;
         void Reset();
     }
 
@@ -39,6 +40,7 @@ namespace FileSystem_Helper
     
     String ReadFile(const String &fileName);
 
+    bool WriteFile(const String &fileName, const std::vector<char> &message, bool createFile = false);
     bool WriteFile(const String &fileName, const String &message, bool createFile = false);
 
     bool AppendFile(const String &fileName, const std::vector<char> &message, bool createFile = false);
@@ -50,5 +52,6 @@ namespace FileSystem_Helper
 
     void TestFileIO(const String &fileName);
 
+    void SPIFFS_ASCII(Command cmdTmp);
 }
 #endif

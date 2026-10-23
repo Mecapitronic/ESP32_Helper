@@ -49,5 +49,8 @@ namespace Wifi_Helper
     void SetServerIP(int lastDigit);
     void SetTeleplotIP(const String &ip);
     void SetTeleplotIP(int lastDigit);
+    void SetServerPort(int port);
+
+    void PrintWifiStatus();
 }
 #endif

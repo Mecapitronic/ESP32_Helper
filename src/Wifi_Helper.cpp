@@ -275,10 +275,10 @@ namespace Wifi_Helper
                     {
                         ProcessIncomingChar(wifiClient.read());
                     }
-                    if (FileSystem_Helper::AppendASCII::timeout.IsTimeOut())
+                    if (FileSystem_Helper::WriteASCII::timeout.IsTimeOut())
                     {
-                        Printer::println("WiFi ASCII session timed out for file: %s with %u/%u bytes", FileSystem_Helper::AppendASCII::fileName.c_str(), static_cast<unsigned int>(FileSystem_Helper::AppendASCII::buffer.size()), static_cast<unsigned int>(FileSystem_Helper::AppendASCII::bufferSize));
-                        FileSystem_Helper::AppendASCII::Reset();
+                        Printer::println("WiFi ASCII session timed out for file: %s with %u/%u bytes", FileSystem_Helper::WriteASCII::fileName.c_str(), static_cast<unsigned int>(FileSystem_Helper::WriteASCII::buffer.size()), static_cast<unsigned int>(FileSystem_Helper::WriteASCII::bufferSize));
+                        FileSystem_Helper::WriteASCII::Reset();
                     }
                 }
 #ifdef WITH_OTA
@@ -303,24 +303,24 @@ namespace Wifi_Helper
 
     void ProcessIncomingChar(char c)
     {
-        if (FileSystem_Helper::AppendASCII::timeout.IsRunning())
+        if (FileSystem_Helper::WriteASCII::timeout.IsRunning())
         {
-            FileSystem_Helper::AppendASCII::buffer.push_back(static_cast<uint8_t>(c));
+            FileSystem_Helper::WriteASCII::buffer.push_back(static_cast<uint8_t>(c));
             // Timeout will be restarted with each incoming character
-            FileSystem_Helper::AppendASCII::timeout.Start();
-            if (FileSystem_Helper::AppendASCII::buffer.size() >= FileSystem_Helper::AppendASCII::bufferSize)
+            FileSystem_Helper::WriteASCII::timeout.Start();
+            if (FileSystem_Helper::WriteASCII::buffer.size() >= FileSystem_Helper::WriteASCII::bufferSize)
             {
-                FileSystem_Helper::AppendASCII::timeout.Stop();
-                Printer::println("Processing complete WiFi ASCII session for file: %s with %u bytes", FileSystem_Helper::AppendASCII::fileName.c_str(), static_cast<unsigned int>(FileSystem_Helper::AppendASCII::buffer.size()));               
-                if (FileSystem_Helper::AppendFile(FileSystem_Helper::AppendASCII::fileName, FileSystem_Helper::AppendASCII::buffer, true))
+                FileSystem_Helper::WriteASCII::timeout.Stop();
+                Printer::println("Processing complete WiFi ASCII session for file: %s with %u bytes", FileSystem_Helper::WriteASCII::fileName.c_str(), static_cast<unsigned int>(FileSystem_Helper::WriteASCII::buffer.size()));               
+                if (FileSystem_Helper::AppendFile(FileSystem_Helper::WriteASCII::fileName, FileSystem_Helper::WriteASCII::buffer, true))
                 {
-                    Printer::println("Successfully appended to file: %s", FileSystem_Helper::AppendASCII::fileName.c_str());
+                    Printer::println("Successfully appended to file: %s", FileSystem_Helper::WriteASCII::fileName.c_str());
                 }
                 else
                 {
-                    Printer::println("Failed to append to file: %s", FileSystem_Helper::AppendASCII::fileName.c_str());
+                    Printer::println("Failed to append to file: %s", FileSystem_Helper::WriteASCII::fileName.c_str());
                 }
-                FileSystem_Helper::AppendASCII::Reset();
+                FileSystem_Helper::WriteASCII::Reset();
             }
             return;
         }

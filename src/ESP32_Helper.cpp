@@ -106,10 +106,10 @@ namespace ESP32_Helper
             {
                 ProcessIncomingChar(SERIAL_DEBUG.read());
             }
-            if(FileSystem_Helper::AppendASCII::timeout.IsTimeOut())
+            if(FileSystem_Helper::WriteASCII::timeout.IsTimeOut())
             {
-                Printer::println("Serial ASCII session timed out for file: %s with %u/%u bytes", FileSystem_Helper::AppendASCII::fileName.c_str(), static_cast<unsigned int>(FileSystem_Helper::AppendASCII::buffer.size()), static_cast<unsigned int>(FileSystem_Helper::AppendASCII::bufferSize));
-                FileSystem_Helper::AppendASCII::Reset();
+                Printer::println("Serial ASCII session timed out for file: %s with %u/%u bytes", FileSystem_Helper::WriteASCII::fileName.c_str(), static_cast<unsigned int>(FileSystem_Helper::WriteASCII::buffer.size()), static_cast<unsigned int>(FileSystem_Helper::WriteASCII::bufferSize));
+                FileSystem_Helper::WriteASCII::Reset();
             }
             vTaskDelay(1);
         }
@@ -118,24 +118,38 @@ namespace ESP32_Helper
 
     void ProcessIncomingChar(char c)
     {
-       if (FileSystem_Helper::AppendASCII::timeout.IsRunning())
+       if (FileSystem_Helper::WriteASCII::timeout.IsRunning())
        {
-           FileSystem_Helper::AppendASCII::buffer.push_back(static_cast<uint8_t>(c));
+           FileSystem_Helper::WriteASCII::buffer.push_back(static_cast<uint8_t>(c));
            // Timeout will be restarted with each incoming character
-           FileSystem_Helper::AppendASCII::timeout.Start();
-           if (FileSystem_Helper::AppendASCII::buffer.size() >= FileSystem_Helper::AppendASCII::bufferSize)
+           FileSystem_Helper::WriteASCII::timeout.Start();
+           if (FileSystem_Helper::WriteASCII::buffer.size() >= FileSystem_Helper::WriteASCII::bufferSize)
            {
-               FileSystem_Helper::AppendASCII::timeout.Stop();
-               Printer::println("Processing complete ASCII session for file: %s with %u bytes", FileSystem_Helper::AppendASCII::fileName.c_str(), static_cast<unsigned int>(FileSystem_Helper::AppendASCII::buffer.size()));               
-               if (FileSystem_Helper::AppendFile(FileSystem_Helper::AppendASCII::fileName, FileSystem_Helper::AppendASCII::buffer, true))
+               FileSystem_Helper::WriteASCII::timeout.Stop();
+               Printer::println("Processing complete ASCII session for file: %s with %u bytes", FileSystem_Helper::WriteASCII::fileName.c_str(), static_cast<unsigned int>(FileSystem_Helper::WriteASCII::buffer.size()));               
+               if(FileSystem_Helper::WriteASCII::overwrite)
                {
-                   Printer::println("Successfully appended to file: %s", FileSystem_Helper::AppendASCII::fileName.c_str());
+                    if (FileSystem_Helper::WriteFile(FileSystem_Helper::WriteASCII::fileName, FileSystem_Helper::WriteASCII::buffer, true))
+                    {
+                        Printer::println("Successfully overwrote file: %s", FileSystem_Helper::WriteASCII::fileName.c_str());
+                    }
+                    else
+                    {
+                        Printer::println("Failed to overwrite file: %s", FileSystem_Helper::WriteASCII::fileName.c_str());
+                    }
                }
                else
                {
-                   Printer::println("Failed to append to file: %s", FileSystem_Helper::AppendASCII::fileName.c_str());
-               }
-               FileSystem_Helper::AppendASCII::Reset();
+                    if (FileSystem_Helper::AppendFile(FileSystem_Helper::WriteASCII::fileName, FileSystem_Helper::WriteASCII::buffer, true))
+                    {
+                        Printer::println("Successfully appended to file: %s", FileSystem_Helper::WriteASCII::fileName.c_str());
+                    }
+                    else
+                    {
+                        Printer::println("Failed to append to file: %s", FileSystem_Helper::WriteASCII::fileName.c_str());
+                    }
+                }
+               FileSystem_Helper::WriteASCII::Reset();
            }
            return;
        }

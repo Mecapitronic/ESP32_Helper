@@ -5,12 +5,13 @@ using namespace std;
 
 namespace FileSystem_Helper
 {
-    namespace AppendASCII
+    namespace WriteASCII
     {
         Timeout timeout = Timeout(10000, false);
         int bufferSize = 0;
         std::vector<char> buffer;
         String fileName = "";
+        bool overwrite = false;
 
         void Reset()
         {
@@ -18,6 +19,7 @@ namespace FileSystem_Helper
             bufferSize = 0;
             buffer.clear();
             fileName = "";
+            overwrite = false;
         }
     }
 
@@ -43,6 +45,7 @@ namespace FileSystem_Helper
         ESP32_Helper::RegisterCommand("SPIFFSAppendFile", "Append to a file in the SPIFFS file system, SPIFFSAppendFile:<fileName>:<msg>:<createFileIfNotExists>", FunctionCommand( AppendFile(String(cmd.dataStr1), String(cmd.dataStr2), cmd.size > 0 ? cmd.data[0] : false); ));
         ESP32_Helper::RegisterCommand("SPIFFSRenameFile", "Rename a file in the SPIFFS file system, SPIFFSRenameFile:<oldFileName>:<newFileName>", FunctionCommand( RenameFile(String(cmd.dataStr1), String(cmd.dataStr2)); ));
         ESP32_Helper::RegisterCommand("SPIFFSDeleteFile", "Delete a file from the SPIFFS file system, SPIFFSDeleteFile:<fileName>", FunctionCommand( DeleteFile(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("SPIFFS_ASCII", "Append by default or overwrite ASCII data to a file in the SPIFFS file system, SPIFFS_ASCII:<fileName>:<msg>:<overwrite>", FunctionCommand( SPIFFS_ASCII(cmd); ));
     }
 
     void FormatFS()
@@ -128,6 +131,37 @@ namespace FileSystem_Helper
         }
         file.close();
         return content;
+    }
+
+    // FIXME : If we overwrite the file, we should delete it before because we could end up with both previous data ans current data overlapping ?
+
+    bool WriteFile(const String &fileName, const vector<char> &message, bool createFileIfNotExists)
+    {
+        println("Writing file " + fileName);
+
+        if(!SPIFFS.exists("/" + fileName))
+        {
+            if (createFileIfNotExists)
+            {
+                if (!CreateFile(fileName))
+                    return false;
+            }
+            else
+            {
+                println("Source file does not exist");
+                return false;
+            }
+        }
+        File file = SPIFFS.open("/" + fileName, FILE_WRITE);
+        if (!file)
+        {
+            println("Failed to open file for writing");
+            return false;
+        }
+        bool written = file.write(reinterpret_cast<const uint8_t *>(message.data()), message.size()) == message.size();
+        println(written ? "File written" : "Write failed");
+        file.close();
+        return written;
     }
 
     bool WriteFile(const String &fileName, const String &message, bool createFileIfNotExists)
@@ -319,5 +353,49 @@ namespace FileSystem_Helper
         {
             println("- failed to open file for reading");
         }
+    }
+
+    void SPIFFS_ASCII(Command cmdTmp)
+    {
+        if (!cmdTmp.hasDataStr1())
+        {
+            Printer::println("Invalid SPIFFS_ASCII command: missing file name");
+            return;
+        }
+        if (cmdTmp.size <= 0)
+        {
+            Printer::println("Invalid SPIFFS_ASCII command: missing data size");
+            return;
+        }
+        if (cmdTmp.data[0] <= 0)
+        {
+            Printer::println(
+                "Invalid SPIFFS_ASCII command: data size must be greater than 0");
+            return;
+        }
+        if (cmdTmp.data[0] > 1024)
+        {
+            Printer::println(
+                "Invalid SPIFFS_ASCII command: data size must not exceed 1024");
+            return;
+        }
+        if (cmdTmp.size>1 && cmdTmp.data[1] == 1)
+        {
+            Printer::println("SPIFFS ASCII session will overwrite existing file");
+            FileSystem_Helper::WriteASCII::overwrite = true;
+        }
+        else
+        {
+            Printer::println("SPIFFS ASCII session will append to existing file");
+            FileSystem_Helper::WriteASCII::overwrite = false;
+        }
+
+        Printer::println("Starting SPIFFS ASCII Append session for file: %s with size %d",
+                         String(cmdTmp.dataStr1).c_str(),
+                         cmdTmp.data[0]);
+        FileSystem_Helper::WriteASCII::timeout.Start();
+        FileSystem_Helper::WriteASCII::bufferSize = cmdTmp.data[0];
+        FileSystem_Helper::WriteASCII::buffer.clear();
+        FileSystem_Helper::WriteASCII::fileName = cmdTmp.dataStr1;
     }
 }
