@@ -28,30 +28,42 @@ namespace ESP32_Helper
         SERIAL_DEBUG.setRxBufferSize(1024);
         SERIAL_DEBUG.setTxBufferSize(1024);
         SERIAL_DEBUG.begin(static_cast<unsigned long>(baud_speed));
-        Timeout serialStartTimeout;
+        /*Timeout serialStartTimeout;
         serialStartTimeout.Start(2000);
         while (!SERIAL_DEBUG && !serialStartTimeout.IsTimeOut())
         {
             vTaskDelay(10);
-        }
+        }*/
         commandList.clear();
         RegisterCommand("Delay", "Delay for a specified duration in ms, Delay:<duration>", FunctionCommand( if(cmd.hasData() && cmd.data[0] > 0) { Printer::println("Delaying for %d ms...", cmd.data[0]); vTaskDelay(cmd.data[0]); Printer::println("Delay complete."); } else { Printer::println("Delay command requires a duration in ms as data."); } ));
         RegisterCommand("Reboot", "Reboot the system, Reboot", FunctionCommand( Printer::println("Rebooting..."); ESP.restart(); ));
         RegisterCommand("Ping", "Ping the system, Ping", FunctionCommand( Printer::println("Pong"); ));
 
-        Preferences_Helper::Initialisation();
         //Logger::Initialisation();
         //loggerFlushTimer = TimerThread(LoggerFlushCallback, "LoggerFlush", pdMS_TO_TICKS(LOGGER_FLUSH_PERIOD_MS));
         //loggerFlushTimer.Start();
 
         println();
-        println("-- Starting Helper Initialisation --");
+        println("+---------------+");
+        println("¦  M E C A P I  ¦");
+        println("+---------------+");
+        println();
+        println("%s at %s", __DATE__, __TIME__);
+        println();
+
+        println("-- Starting ESP32 Helper Initialisation --");
+        
+        println("-- Starting Preferences Initialisation --");
+        Preferences_Helper::Initialisation();
+        println("-- End of Preferences Initialisation --");
 
         println("-- Starting Printer Initialisation --");
         Printer::Initialisation(printEnable, printLvl);
         println("-- End of Printer Initialisation --");
 
+        println("-- Starting WiFi Initialisation --");
         Wifi_Helper::Initialisation();
+        println("-- End of WiFi Initialisation --");
 
         println("Creating Incoming Command Queue");
         awaitingCommand = QueueThread<Command>(20);
@@ -73,14 +85,6 @@ namespace ESP32_Helper
         /* pin task to core 0 */
         taskUpdate = TaskThread(ESP32_Helper::Update, "CommandUpdate");
 
-        println();
-        println("+---------------+");
-        println("¦  M E C A P I  ¦");
-        println("+---------------+");
-        println();
-        println("%s at %s", __DATE__, __TIME__);
-        println();
-
         println("-- Starting Debugger Initialisation --");
         Debugger::Initialisation();
         Debugger::EnableDebugger(debugEnable);
@@ -94,7 +98,7 @@ namespace ESP32_Helper
         FileSystem_Helper::ListFiles();
         println("-- End of SPIFFS Initialisation --");
 
-        println("-- End of Helper Initialisation --");
+        println("-- End of ESP32 Helper Initialisation --");
         println();
     }
 
@@ -217,7 +221,7 @@ namespace ESP32_Helper
 
             // If no command found, send to main application queue
             // Queue by value: Command is now pure POD (char arrays), safe for FreeRTOS
-            Printer::println("No custom handler found for " + cmdTmp.ToString());
+            Printer::println("No command found for " + cmdTmp.ToString());
             awaitingCommand.Send(cmdTmp);
             return false;
         }

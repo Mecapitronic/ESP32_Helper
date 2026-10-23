@@ -12,7 +12,6 @@ namespace Preferences_Helper
 
     void Initialisation()
     {
-        println("Initialisation of Preferences Helper");
         // First boot can fail in read-only mode if the namespace does not exist yet.
         if (preferences.begin(PREF_NAMESPACE))
         {
