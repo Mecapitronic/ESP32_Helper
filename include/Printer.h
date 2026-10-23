@@ -22,6 +22,7 @@ namespace Printer
 {
     extern Teleplot teleplotUDP;
     extern Enable teleplotUDPEnable;
+    extern Enable teleplotEnable;
 
     void SetLevel(Level level);
     void EnablePrinter(Enable enable);
