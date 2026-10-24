@@ -189,6 +189,13 @@ namespace ESP32_Helper
             return;
         }
         commandList.push_back(CommandHandler(command, help, func));
+        /*        
+        ESP32_Helper::RegisterCommand("", "",
+            FunctionCommand(
+                if (cmd.hasData()) {
+
+                } ));
+        */
     }
 
     bool HandleCommand(Command cmdTmp)
