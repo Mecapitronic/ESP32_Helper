@@ -45,9 +45,9 @@ namespace Debugger
 
     void RegisterCommands()
     {
-        ESP32_Helper::RegisterCommand("DebugEnable", "Enable or disable the debugger, DebugEnable:<0|1>", FunctionCommand( if(cmd.hasData()) EnableDebugger((Enable)cmd.data[0]); ));
-        ESP32_Helper::RegisterCommand("DebugAddSteps", "Add steps to the debugger, DebugAddSteps:<steps>", FunctionCommand( if(cmd.hasData() && cmd.data[0] > 0) AddSteps(cmd.data[0]); ));
-        ESP32_Helper::RegisterCommand("DebugGetSteps", "Get the number of available steps, DebugGetSteps", FunctionCommand( Printer::println("Steps available %i", GetSteps()); ));
+        ESP32_Helper::RegisterCommand("DebugEnable", "DebugEnable:<enabled:bool> - Enable or disable the debugger.", FunctionCommand( if(cmd.hasData()) EnableDebugger((Enable)cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("DebugAddSteps", "DebugAddSteps:<steps:int> - Add debugger steps", FunctionCommand( if(cmd.hasData() && cmd.data[0] > 0) AddSteps(cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("DebugGetSteps", "DebugGetSteps - Show the number of available debugger steps.", FunctionCommand( Printer::println("Steps available %i", GetSteps()); ));
     }
 
     bool WaitForAvailableSteps()

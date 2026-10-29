@@ -35,9 +35,9 @@ namespace ESP32_Helper
             vTaskDelay(10);
         }*/
         commandList.clear();
-        RegisterCommand("Delay", "Delay for a specified duration in ms, Delay:<duration>", FunctionCommand( if(cmd.hasData() && cmd.data[0] > 0) { Printer::println("Delaying for %d ms...", cmd.data[0]); vTaskDelay(cmd.data[0]); Printer::println("Delay complete."); } else { Printer::println("Delay command requires a duration in ms as data."); } ));
-        RegisterCommand("Reboot", "Reboot the system, Reboot", FunctionCommand( Printer::println("Rebooting..."); ESP.restart(); ));
-        RegisterCommand("Ping", "Ping the system, Ping", FunctionCommand( Printer::println("Pong"); ));
+        RegisterCommand("Delay", "Delay:<duration:int@ms> - Delay execution; duration > 0. Example: Delay:1000", FunctionCommand( if(cmd.hasData() && cmd.data[0] > 0) { Printer::println("Delaying for %d ms...", cmd.data[0]); vTaskDelay(cmd.data[0]); Printer::println("Delay complete."); } else { Printer::println("Delay command requires a duration in ms as data."); } ));
+        RegisterCommand("Reboot", "Reboot - Reboot the system.", FunctionCommand( Printer::println("Rebooting..."); ESP.restart(); ));
+        RegisterCommand("Ping", "Ping - Reply with Pong.", FunctionCommand( Printer::println("Pong"); ));
 
         //Logger::Initialisation();
         //loggerFlushTimer = TimerThread(LoggerFlushCallback, "LoggerFlush", pdMS_TO_TICKS(LOGGER_FLUSH_PERIOD_MS));
@@ -206,6 +206,17 @@ namespace ESP32_Helper
         if (cmdTmp.cmdEquals("Help"))
         {
             Printer::println("Help Commands List Start");
+            Printer::println("Syntax: Command:<name:type@unit>(:name:type@unit=default) - Description");
+            Printer::println("<...> required; (...) optional, including its ':'; =default when omitted.");
+            Printer::println("Types: int (signed 32-bit), string, bool (0=false, 1=true), int|string (either).");
+            Printer::println("float denotes a decimal, only if explicitly handled by the command; not parsed natively.");
+            Printer::println("%s", "Units after '@': ms, s, %, deg, mm, mm/s, bit/s, byte; omitted when not applicable.");
+            Printer::println("Do not type annotations, brackets or parentheses. Example: Delay:1000");
+            Printer::println("Separate arguments with ':'; end commands with newline or ';'. No quoting/escaping.");
+            Printer::println("Numeric-only arguments are integers, not strings; ':' and ';' cannot occur in strings.");
+            Printer::println("Limits: 24 characters per name/string, 6 integers, 2 strings; 63 characters per command.");
+            Printer::println("Multiple signatures describe distinct usages; constraints are documented, not auto-validated.");
+            Printer::println(" > Help - List commands and explain this notation.");
             for (const auto &handler : commandList)
             {
                 Printer::println(" > " + handler.command);

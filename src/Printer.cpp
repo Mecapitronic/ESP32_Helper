@@ -80,11 +80,11 @@ namespace Printer
 
     void RegisterCommands()
     {
-        ESP32_Helper::RegisterCommand("PrintLevel", "Set the print level, PrintLevel:<level>", FunctionCommand( SetLevel((Level)cmd.data[0]); ));
-        ESP32_Helper::RegisterCommand("PrintEnable", "Enable or disable the printer, PrintEnable:<0|1>", FunctionCommand( EnablePrinter((Enable)cmd.data[0]); ));
-        ESP32_Helper::RegisterCommand("PrintTeleplot", "Enable or disable teleplot, PrintTeleplot:<0|1>", FunctionCommand( teleplotEnable = (cmd.data[0] == 0 ? Enable::ENABLE_FALSE : Enable::ENABLE_TRUE); ));
-        ESP32_Helper::RegisterCommand("PrintTeleplotUDP", "Enable or disable teleplot UDP, PrintTeleplotUDP:<0|1>", FunctionCommand( teleplotUDPEnable = (cmd.data[0] == 0 ? Enable::ENABLE_FALSE : Enable::ENABLE_TRUE); ));
-        ESP32_Helper::RegisterCommand("PrintChrono", "Enable or disable chrono print, PrintChrono:<0|1>", FunctionCommand( Chrono::print = (cmd.data[0] == 0 ? false : true); ));
+        ESP32_Helper::RegisterCommand("PrintLevel", "PrintLevel:<level:int> - Set print level; 0=verbose, 1=info, 2=warn, 3=error, 4=none.", FunctionCommand( SetLevel((Level)cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("PrintEnable", "PrintEnable:<enabled:bool> - Enable or disable printing.", FunctionCommand( EnablePrinter((Enable)cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("PrintTeleplot", "PrintTeleplot:<enabled:bool> - Enable or disable serial Teleplot output.", FunctionCommand( teleplotEnable = (cmd.data[0] == 0 ? Enable::ENABLE_FALSE : Enable::ENABLE_TRUE); ));
+        ESP32_Helper::RegisterCommand("PrintTeleplotUDP", "PrintTeleplotUDP:<enabled:bool> - Enable or disable UDP Teleplot output.", FunctionCommand( teleplotUDPEnable = (cmd.data[0] == 0 ? Enable::ENABLE_FALSE : Enable::ENABLE_TRUE); ));
+        ESP32_Helper::RegisterCommand("PrintChrono", "PrintChrono:<enabled:bool> - Enable or disable timing output.", FunctionCommand( Chrono::print = (cmd.data[0] == 0 ? false : true); ));
     }
     
     void Update(void *pvParameters)

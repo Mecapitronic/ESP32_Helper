@@ -46,8 +46,15 @@ namespace ESP32_Helper
     /**
      * @brief Register a custom command handler
      * @param command   Command to match (e.g., "MyCmd")
-     * @param help      Help text describing the command
+     * @param help      Syntax first, then " - Description"; see README command help convention
      * @param func      Function pointer to handle the command
+     * @details Use <name:type@unit> for required arguments and
+     * (:name:type@unit=default) for optional ones, including their separator.
+     * Omit unit/default when not applicable. Types: int (signed 32-bit), string,
+     * bool (0 or 1), int|string; float only with explicit handler conversion.
+     * Example: "Delay:<duration:int@ms> - Delay execution; duration > 0."
+     * Use separate newline-delimited signatures for distinct usages.
+     * These annotations document the handler; they do not validate input.
      */
     void RegisterCommand(const String &command, const String &help, CommandHandlerFunc func);
     

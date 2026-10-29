@@ -429,15 +429,15 @@ namespace Wifi_Helper
     
     void RegisterCommands()
     {        
-        ESP32_Helper::RegisterCommand("WifiStatus", "Print the Wifi status", FunctionCommand( PrintWifiStatus(); ));
-        ESP32_Helper::RegisterCommand("WifiEnable", "Enable or disable the Wifi, WifiEnable:1", FunctionCommand( if(cmd.hasData()) EnableWifi((Enable)cmd.data[0]); ));
-        ESP32_Helper::RegisterCommand("WifiPassword", "Change the Wifi password (must be 8-63 characters), WifiPassword:********", FunctionCommand( if(cmd.hasDataStr1()) SetPassword(String(cmd.dataStr1)); ));
-        ESP32_Helper::RegisterCommand("WifiSsid", "Change the Wifi SSID (must be 8-63 characters), WifiSsid:MyNewSSID", FunctionCommand( if(cmd.hasDataStr1()) SetSsid(String(cmd.dataStr1)); ));
-        ESP32_Helper::RegisterCommand("WifiBaseIP", "Change the base IP of the ESP, WifiBaseIP:192:168:43", FunctionCommand( if(cmd.hasData(3)) SetBaseIP(cmd.data[0], cmd.data[1], cmd.data[2]); ));
-        ESP32_Helper::RegisterCommand("WifiLocalIP", "Change the last digit of the local IP of the ESP, WifiLocalIP:110", FunctionCommand( if(cmd.hasData()) SetLocalIP(cmd.data[0]); ));
-        ESP32_Helper::RegisterCommand("WifiServerIP", "Change the last digit of the server IP for the ESP to connect, WifiServerIP:110", FunctionCommand( if(cmd.hasData()) SetServerIP(cmd.data[0]); ));
-        ESP32_Helper::RegisterCommand("WifiTeleplotIP", "Change the teleplot last digit of the IP the ESP sends to, WifiTeleplotIP:110", FunctionCommand( if(cmd.hasData()) SetTeleplotIP(cmd.data[0]); ));
-        ESP32_Helper::RegisterCommand("WifiServerPort", "Change the server Port for the ESP to connect, WifiServerPort:20240", FunctionCommand( if(cmd.hasData()) SetServerPort(cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("WifiStatus", "WifiStatus - Show Wi-Fi status.", FunctionCommand( PrintWifiStatus(); ));
+        ESP32_Helper::RegisterCommand("WifiEnable", "WifiEnable:<enabled:bool> - Enable or disable Wi-Fi.", FunctionCommand( if(cmd.hasData()) EnableWifi((Enable)cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("WifiPassword", "WifiPassword:<password:string> - Change Wi-Fi password; 8..63 characters, within command buffer limits.", FunctionCommand( if(cmd.hasDataStr1()) SetPassword(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("WifiSsid", "WifiSsid:<ssid:string> - Change Wi-Fi SSID; 8..63 characters, within command buffer limits.", FunctionCommand( if(cmd.hasDataStr1()) SetSsid(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("WifiBaseIP", "WifiBaseIP:<octet1:int>:<octet2:int>:<octet3:int> - Set the IP prefix; each octet: 0..255. Example: WifiBaseIP:192:168:43", FunctionCommand( if(cmd.hasData(3)) SetBaseIP(cmd.data[0], cmd.data[1], cmd.data[2]); ));
+        ESP32_Helper::RegisterCommand("WifiLocalIP", "WifiLocalIP:<octet:int> - Set the last octet of the local IP; octet: 0..255.", FunctionCommand( if(cmd.hasData()) SetLocalIP(cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("WifiServerIP", "WifiServerIP:<octet:int> - Set the last octet of the server IP; octet: 0..255.", FunctionCommand( if(cmd.hasData()) SetServerIP(cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("WifiTeleplotIP", "WifiTeleplotIP:<octet:int> - Set the last octet of the Teleplot IP; octet: 0..255.", FunctionCommand( if(cmd.hasData()) SetTeleplotIP(cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("WifiServerPort", "WifiServerPort:<port:int> - Set the server TCP port; port: 1..65535.", FunctionCommand( if(cmd.hasData()) SetServerPort(cmd.data[0]); ));
     }
 
     void SetSsid(const String &ssid)

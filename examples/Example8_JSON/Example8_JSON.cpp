@@ -10,27 +10,27 @@ SimpleData simpleData;
 
 void RegisterMyCustomCommands()
 {
-    ESP32_Helper::RegisterCommand("SimpleShow", "Print current values", FunctionCommand( simpleData.Print(); ));
-    ESP32_Helper::RegisterCommand("SimpleNom", "SimpleNom:text - Set nom and save", FunctionCommand(
+    ESP32_Helper::RegisterCommand("SimpleShow", "SimpleShow - Show current values.", FunctionCommand( simpleData.Print(); ));
+    ESP32_Helper::RegisterCommand("SimpleNom", "SimpleNom:<name:string> - Set nom in memory; use SimpleSave to persist.", FunctionCommand(
         if (!cmd.hasDataStr1())
             return;
         simpleData.nom = String(cmd.dataStr1);
     ));
-    ESP32_Helper::RegisterCommand("SimpleCompteur", "SimpleCompteur:value - Set compteur and save", FunctionCommand(
+    ESP32_Helper::RegisterCommand("SimpleCompteur", "SimpleCompteur:<value:int> - Set compteur in memory; value >= 0. Use SimpleSave to persist.", FunctionCommand(
         if (!cmd.hasData() || cmd.data[0] < 0)
             return;
         simpleData.compteur = cmd.data[0];
     ));
-    ESP32_Helper::RegisterCommand("SimpleActif", "SimpleActif:0|1 - Set actif and save", FunctionCommand(
+    ESP32_Helper::RegisterCommand("SimpleActif", "SimpleActif:<enabled:bool> - Set actif in memory; use SimpleSave to persist.", FunctionCommand(
         if (!cmd.hasData())
             return;
         simpleData.actif = cmd.data[0] != 0;
     ));
-    ESP32_Helper::RegisterCommand("SimpleLoad", "Reload values from file", FunctionCommand(
+    ESP32_Helper::RegisterCommand("SimpleLoad", "SimpleLoad - Reload values from the JSON file.", FunctionCommand(
         if (JSON_Helper::LoadObject(simpleData, jsonFileName))
             println("Loaded from %s", jsonFileName.c_str());
     ));
-    ESP32_Helper::RegisterCommand("SimpleSave", "Save current values to file", FunctionCommand(
+    ESP32_Helper::RegisterCommand("SimpleSave", "SimpleSave - Save current values to the JSON file.", FunctionCommand(
         if (JSON_Helper::SaveObject(simpleData, jsonFileName))
            println("Saved to %s", jsonFileName.c_str());
     ));

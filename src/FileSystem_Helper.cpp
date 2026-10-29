@@ -37,15 +37,19 @@ namespace FileSystem_Helper
     
     void RegisterCommands()
     {
-        ESP32_Helper::RegisterCommand("SPIFFSFormat", "Format the SPIFFS file system", FunctionCommand( FormatFS(); ));
-        ESP32_Helper::RegisterCommand("SPIFFSListFiles", "List files in the SPIFFS file system, filter optional, SPIFFSListFiles:filter", FunctionCommand( ListFiles(String(cmd.dataStr1)); ));
-        ESP32_Helper::RegisterCommand("SPIFFSCreateFile", "Create a file in the SPIFFS file system, SPIFFSCreateFile:<fileName>", FunctionCommand( CreateFile(String(cmd.dataStr1)); ));
-        ESP32_Helper::RegisterCommand("SPIFFSReadFile", "Read a file from the SPIFFS file system, SPIFFSReadFile:<fileName>", FunctionCommand( ReadFile(String(cmd.dataStr1)); ));
-        ESP32_Helper::RegisterCommand("SPIFFSWriteFile", "Write to a file in the SPIFFS file system, SPIFFSWriteFile:<fileName>:<msg>:<createFileIfNotExists>", FunctionCommand( WriteFile(String(cmd.dataStr1), String(cmd.dataStr2), cmd.size > 0 ? cmd.data[0] : false); ));
-        ESP32_Helper::RegisterCommand("SPIFFSAppendFile", "Append to a file in the SPIFFS file system, SPIFFSAppendFile:<fileName>:<msg>:<createFileIfNotExists>", FunctionCommand( AppendFile(String(cmd.dataStr1), String(cmd.dataStr2), cmd.size > 0 ? cmd.data[0] : false); ));
-        ESP32_Helper::RegisterCommand("SPIFFSRenameFile", "Rename a file in the SPIFFS file system, SPIFFSRenameFile:<oldFileName>:<newFileName>", FunctionCommand( RenameFile(String(cmd.dataStr1), String(cmd.dataStr2)); ));
-        ESP32_Helper::RegisterCommand("SPIFFSDeleteFile", "Delete a file from the SPIFFS file system, SPIFFSDeleteFile:<fileName>", FunctionCommand( DeleteFile(String(cmd.dataStr1)); ));
-        ESP32_Helper::RegisterCommand("SPIFFS_ASCII", "Append by default or overwrite ASCII data to a file in the SPIFFS file system, SPIFFS_ASCII:<fileName>:<msg>:<overwrite>", FunctionCommand( SPIFFS_ASCII(cmd); ));
+        ESP32_Helper::RegisterCommand("SPIFFSFormat", "SPIFFSFormat - Format SPIFFS; delete all files.", FunctionCommand( FormatFS(); ));
+        ESP32_Helper::RegisterCommand("SPIFFSListFiles", "SPIFFSListFiles(:filter:string) - List files; omit filter to list all files.", FunctionCommand( ListFiles(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("SPIFFSCreateFile", "SPIFFSCreateFile:<fileName:string> - Create a file.", FunctionCommand( CreateFile(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("SPIFFSReadFile", "SPIFFSReadFile:<fileName:string> - Read a file.", FunctionCommand( ReadFile(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("SPIFFSWriteFile", "SPIFFSWriteFile:<fileName:string>:<msg:string>(:createFileIfNotExists:bool=0) - Write a short message to a file.", FunctionCommand( WriteFile(String(cmd.dataStr1), String(cmd.dataStr2), cmd.size > 0 ? cmd.data[0] : false); ));
+        ESP32_Helper::RegisterCommand("SPIFFSAppendFile", "SPIFFSAppendFile:<fileName:string>:<msg:string>(:createFileIfNotExists:bool=0) - Append a short message to a file.", FunctionCommand( AppendFile(String(cmd.dataStr1), String(cmd.dataStr2), cmd.size > 0 ? cmd.data[0] : false); ));
+        ESP32_Helper::RegisterCommand("SPIFFSRenameFile", "SPIFFSRenameFile:<oldFileName:string>:<newFileName:string> - Rename a file.", FunctionCommand( RenameFile(String(cmd.dataStr1), String(cmd.dataStr2)); ));
+        ESP32_Helper::RegisterCommand("SPIFFSDeleteFile", "SPIFFSDeleteFile:<fileName:string> - Delete a file.", FunctionCommand( DeleteFile(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("SPIFFS_ASCII",
+            "SPIFFS_ASCII:<fileName:string>:<size:int@byte>(:overwrite:bool=0) - Receive a serial ASCII payload; size: 1..1024."
+            "\n     End the header with newline, then send exactly size bytes, without an extra terminator."
+            "\n     overwrite: 0=append, 1=replace; creates the file if missing. Inactivity timeout: 10000 ms.",
+            FunctionCommand( SPIFFS_ASCII(cmd); ));
     }
 
     void FormatFS()

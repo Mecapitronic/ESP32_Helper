@@ -22,18 +22,18 @@ namespace Preferences_Helper
     
     void RegisterCommands()
     {
-        ESP32_Helper::RegisterCommand("PrefList", "List all key preferences, PrefList", FunctionCommand( Preferences_Helper::ListPreferences(); ));
-        ESP32_Helper::RegisterCommand("PrefSave", "Save a value to preferences, PrefSave:key:value", FunctionCommand(
+        ESP32_Helper::RegisterCommand("PrefList", "PrefList - List known preference keys and their values.", FunctionCommand( Preferences_Helper::ListPreferences(); ));
+        ESP32_Helper::RegisterCommand("PrefSave", "PrefSave:<key:string>:<value:int|string> - Save an integer or string preference.", FunctionCommand(
             if(cmd.hasDataStr1() && cmd.hasData()){ Preferences_Helper::SaveToPreference(String(cmd.dataStr1), cmd.data[0]); }
             else if(cmd.hasDataStr1() && cmd.hasDataStr2()){ Preferences_Helper::SaveToPreference(String(cmd.dataStr1), String(cmd.dataStr2)); }
         ));
-        ESP32_Helper::RegisterCommand("PrefShow", "Load a value from preferences, PrefShow:key:defValue", FunctionCommand( 
+        ESP32_Helper::RegisterCommand("PrefShow", "PrefShow:<key:string>:<defaultValue:int|string> - Read a preference; use defaultValue if missing. Its type selects the stored type.", FunctionCommand(
             if(cmd.hasDataStr1() && cmd.hasData()) Preferences_Helper::LoadFromPreference(String(cmd.dataStr1), cmd.data[0]);
             else if(cmd.hasDataStr1() && cmd.hasDataStr2()) Preferences_Helper::LoadFromPreference(String(cmd.dataStr1), String(cmd.dataStr2));
         ));
-        ESP32_Helper::RegisterCommand("PrefRemove", "Remove a key from preferences, PrefRemove:key", FunctionCommand( if(cmd.hasDataStr1()) Preferences_Helper::RemoveFromPreference(String(cmd.dataStr1)); ));
-        ESP32_Helper::RegisterCommand("PrefShowFree", "Show free entries in preferences, PrefShowFree", FunctionCommand( Preferences_Helper::GetFreeEntries(); ));
-        ESP32_Helper::RegisterCommand("PrefClearAll", "Clear all preferences under the namespace, PrefClearAll", FunctionCommand( Preferences_Helper::ClearPreferences(); ));
+        ESP32_Helper::RegisterCommand("PrefRemove", "PrefRemove:<key:string> - Remove a preference key.", FunctionCommand( if(cmd.hasDataStr1()) Preferences_Helper::RemoveFromPreference(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("PrefShowFree", "PrefShowFree - Show free preference entries.", FunctionCommand( Preferences_Helper::GetFreeEntries(); ));
+        ESP32_Helper::RegisterCommand("PrefClearAll", "PrefClearAll - Delete all preferences in the current namespace.", FunctionCommand( Preferences_Helper::ClearPreferences(); ));
     }
 
     int32_t LoadFromPreference(const String &pref, int32_t defValue)

@@ -22,11 +22,11 @@ void setup(void)
     
     // Register custom command handlers for counter and log commands : Command Name, Help description, FunctionCommand to be executed
 
-    ESP32_Helper::RegisterCommand("cpt++", "Increment counter", FunctionCommand( cpt++; println("Counter incremented %i", cpt); ));
-    ESP32_Helper::RegisterCommand("cpt--", "Decrement counter", FunctionCommand( cpt--; println("Counter decremented %i", cpt); ));
-    ESP32_Helper::RegisterCommand("cpt", "Set counter to value, cpt:0", FunctionCommand( if(cmd.hasData()){ cpt = cmd.data[0]; println("Counter set to %i", cpt); } ));
+    ESP32_Helper::RegisterCommand("cpt++", "cpt++ - Increment the counter.", FunctionCommand( cpt++; println("Counter incremented %i", cpt); ));
+    ESP32_Helper::RegisterCommand("cpt--", "cpt-- - Decrement the counter.", FunctionCommand( cpt--; println("Counter decremented %i", cpt); ));
+    ESP32_Helper::RegisterCommand("cpt", "cpt:<value:int> - Set the counter. Example: cpt:5", FunctionCommand( if(cmd.hasData()){ cpt = cmd.data[0]; println("Counter set to %i", cpt); } ));
 
-    ESP32_Helper::RegisterCommand("Log", "Print a log message, Log:message", FunctionCommand( if(cmd.hasDataStr1()) { println("Log %s", cmd.dataStr1); } ));
+    ESP32_Helper::RegisterCommand("Log", "Log:<message:string> - Print a log message. Example: Log:MyMessage", FunctionCommand( if(cmd.hasDataStr1()) { println("Log %s", cmd.dataStr1); } ));
     
     println("Custom handlers registered!");
 

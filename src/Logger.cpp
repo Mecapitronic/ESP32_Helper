@@ -74,9 +74,9 @@ namespace Logger
 
     void RegisterCommands()
     {
-        ESP32_Helper::RegisterCommand("LoggerStats", "Affiche les stats, LoggerStats", FunctionCommand( Logger::PrintStats(true); ));
-        ESP32_Helper::RegisterCommand("LoggerEnableStats", "Active/Désactive l'affichage automatique des stats, LoggerEnableStats:0|1", FunctionCommand( if (cmd.hasData()) Logger::EnableStats(cmd.data[0]); ));
-        ESP32_Helper::RegisterCommand("LoggerResetStats", "Réinitialise les statistiques du logger", FunctionCommand( Logger::ResetStats(); ));
+        ESP32_Helper::RegisterCommand("LoggerStats", "LoggerStats - Show logger statistics.", FunctionCommand( Logger::PrintStats(true); ));
+        ESP32_Helper::RegisterCommand("LoggerEnableStats", "LoggerEnableStats:<enabled:bool> - Enable or disable automatic logger statistics.", FunctionCommand( if (cmd.hasData()) Logger::EnableStats(cmd.data[0]); ));
+        ESP32_Helper::RegisterCommand("LoggerResetStats", "LoggerResetStats - Reset logger statistics.", FunctionCommand( Logger::ResetStats(); ));
     }
 
     bool Enqueue(const char *text, bool appendNewLine)

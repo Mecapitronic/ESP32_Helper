@@ -30,7 +30,7 @@ namespace Wifi_Helper
     
     void RegisterCommands()
     {        
-        ESP32_Helper::RegisterCommand("Wifi", " NO WIFI available", FunctionCommand( PrintWifiStatus(); ));
+        ESP32_Helper::RegisterCommand("Wifi", "Wifi - Report that Wi-Fi is not available in this build.", FunctionCommand( PrintWifiStatus(); ));
     }
 
     void Update(void *pvParameters)
