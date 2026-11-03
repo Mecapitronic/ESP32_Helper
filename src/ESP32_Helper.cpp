@@ -183,7 +183,7 @@ namespace ESP32_Helper
 
     void RegisterCommand(const String &command, const String &help, CommandHandlerFunc func)
     {
-        if (command == "" || func == nullptr)
+        if (command == "")
         {
             Printer::println("Invalid Command registration for command " + command);
             return;
@@ -230,7 +230,7 @@ namespace ESP32_Helper
             // Check all registered handlers (default namespaces + user custom handlers)
             for (const auto &cmd : commandList)
             {
-                if (cmdTmp.cmdEquals(cmd.command.c_str()))
+                if (cmd.func != nullptr && cmdTmp.cmdEquals(cmd.command.c_str()))
                 {
                     cmd.func(cmdTmp);
                     return true;
