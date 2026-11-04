@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install PlatformIO Core
-        run: pip install --upgrade platformio
+        run: python -m pip install --only-binary=:all: platformio==6.2.0
       # install the libraries before compiling 
       # otherwise compilation might fail to find the just-installed libraries
       # - name: Install platformIO libraries
