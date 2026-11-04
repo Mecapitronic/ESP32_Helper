@@ -23,7 +23,7 @@ void setup(void)
 static int32_t cpt = 0;
 Point point = Point(0, 0);
 PoseF pose = PoseF(0.0f, 0.0f, 0.0f);
-int64_t timeSinceBoot = 0;
+float timeSinceBoot = 0;
 
 void loop(void)
 {
@@ -35,9 +35,9 @@ void loop(void)
     pose.y = cpt * 1.2f;
     pose.h = pose.x + pose.y;
     delay(1000);
-    timeSinceBoot = esp_timer_get_time();
+    timeSinceBoot = (int32_t)(esp_timer_get_time());
 
-    teleplot("time", (int32_t)(timeSinceBoot/1000));
+    teleplot("time", timeSinceBoot/1000);
     teleplot("cpt", cpt);
     teleplot("point", point);
     teleplot("pose", pose);
