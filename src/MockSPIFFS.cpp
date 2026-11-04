@@ -112,7 +112,16 @@ int MockSPIFFSClass::indexOf(const String& path) const {
     return -1;
 }
 
-    bool MockSPIFFSClass::begin(bool formatOnFail){return true;}
+bool MockSPIFFSClass::begin(bool formatOnFail) {
+    if (!initialized) {
+        preload("/texte.txt", String(embeddedText));
+        preload("/map.json", String(embeddedMapJson));
+        preload("/simple.json", String(embeddedSimpleJson));
+        initialized = true;
+    }
+    return true;
+}
+
     bool MockSPIFFSClass::format(){return true;}
 
 MockFile MockSPIFFSClass::open(const String& path, const char* mode) {
@@ -174,13 +183,4 @@ void MockSPIFFSClass::preload(const String& path, const String& content) {
     if (idx < 0) files.push_back({path, content});
     else files[idx].content = content;
 }
-
-// Load simulation fixtures from PlatformIO's embedded text sections.
-static bool _mockspiffs_preload = []() {
-    MockSPIFFS.preload("/texte.txt", String(embeddedText));
-    MockSPIFFS.preload("/map.json", String(embeddedMapJson));
-    MockSPIFFS.preload("/simple.json", String(embeddedSimpleJson));
-
-    return true;
-}();
 #endif

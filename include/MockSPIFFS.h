@@ -73,6 +73,7 @@ public:
 
 private:
     std::vector<MockFileEntry> files;
+    bool initialized = false;
     int indexOf(const String& path) const;
 
     friend class MockFile;
