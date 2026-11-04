@@ -376,7 +376,9 @@ struct Command
     bool cmdStartsWith(const char* prefix) const 
     {
         if (prefix == nullptr) return false;
-        return strncmp(cmd, prefix, strlen(prefix)) == 0;
+        const size_t prefixLength = strnlen(prefix, sizeof(cmd));
+        if (prefixLength == sizeof(cmd)) return false;
+        return strncmp(cmd, prefix, prefixLength) == 0;
     }
     
     // Print the command as a string for debugging purposes
@@ -393,11 +395,11 @@ struct Command
                 toString +=("," + String(data[size_data]));
             }
         }
-        if (strlen(dataStr1) > 0)
+        if (hasDataStr1())
         {
             toString += (" DataStr1=" + String(dataStr1));
         }
-        if (strlen(dataStr2) > 0)
+        if (hasDataStr2())
         {
             toString += (" DataStr2=" + String(dataStr2));
         }
