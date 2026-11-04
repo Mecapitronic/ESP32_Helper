@@ -275,6 +275,14 @@ Format Specifier
             println(">%s:%d", varName.c_str(), var);            
     }
 
+    void teleplot(const String &varName, long var)
+    {
+        if (teleplotUDP.IsInitialized())
+            teleplotUDP.update(varName.c_str(), var);
+        else if (teleplotEnable == Enable::ENABLE_TRUE)
+            println(">%s:%ld", varName.c_str(), var);
+    }
+
     void teleplot(const String &varName, float var)
     {
         if (teleplotUDP.IsInitialized())

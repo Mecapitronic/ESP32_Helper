@@ -54,6 +54,7 @@ namespace Printer
      */
     void teleplot(const String &varName, const String &text);
     void teleplot(const String &varName, int var);
+    void teleplot(const String &varName, long var);
     void teleplot(const String &varName, float var);
     void teleplot(const String &varName, Point point);
     void teleplot(const String &varName, PointF point);
