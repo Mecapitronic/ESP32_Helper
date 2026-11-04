@@ -4,7 +4,7 @@
 #include "ESP32_Helper.h"
 #include <vector>
 
-#ifdef SIMULATOR
+#ifdef MOCK_SPIFFS
 #include "MockSPIFFS.h"
 #define SPIFFS MockSPIFFS
 #define File MockFile

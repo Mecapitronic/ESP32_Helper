@@ -4,7 +4,6 @@
 extern "C" const char embeddedMapJson[] asm("_binary_data_map_json_start");
 extern "C" const char embeddedSimpleJson[] asm("_binary_data_simple_json_start");
 extern "C" const char embeddedText[] asm("_binary_data_texte_txt_start");
-#endif
 
 // global instance
 MockSPIFFSClass MockSPIFFS;
@@ -178,10 +177,10 @@ void MockSPIFFSClass::preload(const String& path, const String& content) {
 
 // Load simulation fixtures from PlatformIO's embedded text sections.
 static bool _mockspiffs_preload = []() {
-#ifdef MOCK_SPIFFS
     MockSPIFFS.preload("/texte.txt", String(embeddedText));
     MockSPIFFS.preload("/map.json", String(embeddedMapJson));
     MockSPIFFS.preload("/simple.json", String(embeddedSimpleJson));
-#endif
+
     return true;
 }();
+#endif

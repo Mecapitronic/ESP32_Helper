@@ -1,6 +1,7 @@
 #ifndef MOCK_SPIFFS_H
 #define MOCK_SPIFFS_H
 
+#ifdef MOCK_SPIFFS 
 #include <Arduino.h>
 #include <vector>
 
@@ -83,4 +84,5 @@ namespace fs { using FS = MockSPIFFSClass; }
 // instance used when SIMULATOR is defined (FileSystem_Helper.h maps SPIFFS to MockSPIFFS)
 extern MockSPIFFSClass MockSPIFFS;
 
+#endif
 #endif
