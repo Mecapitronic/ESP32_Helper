@@ -14,9 +14,9 @@ void setup(void)
     Debugger::AddSteps(10);
 }
 
-int32_t cpt = 0;
 void loop(void)
 {
+    static int32_t cpt = 0;
     // Send
     // DebugSteps:10/n
     // over Serial to unblock the loop

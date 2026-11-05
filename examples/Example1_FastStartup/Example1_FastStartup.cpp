@@ -12,9 +12,9 @@ void setup(void)
     ESP32_Helper::Initialisation();
 }
 
-int32_t cpt = 0;
 void loop(void)
 {
+    static int32_t cpt = 0;
     // This will be print on Serial
     println("Hello World %i times !", cpt++);
     delay(1000);

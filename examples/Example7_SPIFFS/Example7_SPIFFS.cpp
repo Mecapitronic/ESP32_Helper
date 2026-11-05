@@ -7,12 +7,11 @@
 #include "ESP32_Helper.h"
 using namespace Printer;
 
-int32_t cpt;
 void setup(void)
 {
     ESP32_Helper::Initialisation();    
 
-    cpt = Preferences_Helper::LoadFromPreference("cpt", -1);
+    int32_t cpt = Preferences_Helper::LoadFromPreference("cpt", -1);
     println("Load cpt = ", cpt);
 
     delay(3000);
@@ -54,6 +53,13 @@ void setup(void)
 
 void loop(void)
 {
+    static bool firstLoop = true;
+    int32_t cpt = 0;
+    if (firstLoop)
+    {
+        cpt = Preferences_Helper::LoadFromPreference("cpt", -1);
+        firstLoop = false;
+    }
     delay(5000);
     println("Hello World %i times !", cpt++);
     FileSystem_Helper::AppendFile("cpt", String(cpt)+"\r\n",true);

@@ -7,9 +7,9 @@
 #include "ESP32_Helper.h"
 using namespace Printer;
 
-int32_t cpt;
 void setup(void)
 {
+    int32_t cpt = 0;
     ESP32_Helper::Initialisation();
     Preferences_Helper::ListPreferences();
     Preferences_Helper::GetFreeEntries();
@@ -19,6 +19,7 @@ void setup(void)
 
 void loop(void)
 {
+    int32_t cpt = 0;
     cpt = Preferences_Helper::LoadFromPreference("cpt", cpt);
     // This will be print on Serial
     println("Hello World %i times !", cpt++);

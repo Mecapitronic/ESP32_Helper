@@ -20,9 +20,9 @@ void setup(void)
     ESP32_Helper::Initialisation();
 }
 
-int32_t cpt = 0;
 void loop(void)
 {
+    static int32_t cpt = 0;
     // This will be send over Wifi if enable and also on Serial
     println("Hello World %i times !", cpt++);
     delay(1000);

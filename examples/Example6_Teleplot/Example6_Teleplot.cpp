@@ -20,13 +20,14 @@ void setup(void)
     Printer::teleplotUDPEnable = Enable::ENABLE_TRUE;
 }
 
-static int32_t cpt = 0;
-Point point = Point(0, 0);
-PoseF pose = PoseF(0.0f, 0.0f, 0.0f);
-float timeSinceBoot = 0;
 
 void loop(void)
 {
+    static int32_t cpt = 0;
+    static Point point = Point(0, 0);
+    static PoseF pose = PoseF(0.0f, 0.0f, 0.0f);
+    static float timeSinceBoot = 0;
+
     // This will be send over Wifi if enable and also on Serial
     println("Hello World %i times !", cpt++);
     point.x = cpt + cpt;
