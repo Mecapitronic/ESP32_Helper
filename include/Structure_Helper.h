@@ -443,6 +443,8 @@ private:
     int32_t previousTime = 0;
     // Return true if the timeout is running
     bool isRunning = false;
+    // Return true if the timeout has passed once the timeOut value while running
+    bool hasTimedOut = false;
 public:
     Timeout() = default;
     Timeout(int32_t _timeOut, bool _start = false) : timeOut(_timeOut) {
@@ -461,6 +463,7 @@ public:
         {
             timeOut = _timeOut;
         }
+        hasTimedOut = false;
         currentTime = (int32_t)millis();
         previousTime = currentTime;
         isRunning = true;
@@ -472,6 +475,7 @@ public:
             currentTime = (int32_t)millis();
             if (currentTime - previousTime >= timeOut)
             {
+                hasTimedOut = true;
                 previousTime = currentTime;
                 return true;
             }
@@ -485,6 +489,10 @@ public:
     int32_t GetTimeout()
     {
         return timeOut;
+    }
+    bool HasTimedOut() const
+    {
+        return hasTimedOut;
     }
 };
 
