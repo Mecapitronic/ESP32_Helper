@@ -482,6 +482,10 @@ public:
     {
         isRunning = false;
     }
+    int32_t GetTimeout()
+    {
+        return timeOut;
+    }
 };
 
 // Use to calcul the time elapsed between two calls at a given number of loop
