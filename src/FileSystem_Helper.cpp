@@ -40,7 +40,7 @@ namespace FileSystem_Helper
         ESP32_Helper::RegisterCommand("SPIFFSFormat", "SPIFFSFormat - Format SPIFFS; delete all files.", FunctionCommand( FormatFS(); ));
         ESP32_Helper::RegisterCommand("SPIFFSListFiles", "SPIFFSListFiles(:filter:string) - List files; omit filter to list all files.", FunctionCommand( ListFiles(String(cmd.dataStr1)); ));
         ESP32_Helper::RegisterCommand("SPIFFSCreateFile", "SPIFFSCreateFile:<fileName:string> - Create a file.", FunctionCommand( CreateFile(String(cmd.dataStr1)); ));
-        ESP32_Helper::RegisterCommand("SPIFFSReadFile", "SPIFFSReadFile:<fileName:string> - Read a file.", FunctionCommand( ReadFile(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("SPIFFSReadFile", "SPIFFSReadFile:<fileName:string> - Read a file.", FunctionCommand( println("Reading file <%s> : ", String(cmd.dataStr1).c_str()); ReadFile(String(cmd.dataStr1)); ));
         ESP32_Helper::RegisterCommand("SPIFFSWriteFile", "SPIFFSWriteFile:<fileName:string>:<msg:string>(:createFileIfNotExists:bool=0) - Write a short message to a file.", FunctionCommand( WriteFile(String(cmd.dataStr1), String(cmd.dataStr2), cmd.size > 0 ? cmd.data[0] : false); ));
         ESP32_Helper::RegisterCommand("SPIFFSAppendFile", "SPIFFSAppendFile:<fileName:string>:<msg:string>(:createFileIfNotExists:bool=0) - Append a short message to a file.", FunctionCommand( AppendFile(String(cmd.dataStr1), String(cmd.dataStr2), cmd.size > 0 ? cmd.data[0] : false); ));
         ESP32_Helper::RegisterCommand("SPIFFSRenameFile", "SPIFFSRenameFile:<oldFileName:string>:<newFileName:string> - Rename a file.", FunctionCommand( RenameFile(String(cmd.dataStr1), String(cmd.dataStr2)); ));
@@ -137,7 +137,51 @@ namespace FileSystem_Helper
         return content;
     }
 
-    // FIXME : If we overwrite the file, we should delete it before because we could end up with both previous data ans current data overlapping ?
+    bool ReadFileByLine(const String &fileName, vector<String> &lines)
+    {
+        lines.clear();
+        println("Reading file " + fileName);
+        if(!SPIFFS.exists("/" + fileName))
+        {
+            println("Source file does not exist");
+            return false;
+        }
+        File file = SPIFFS.open("/" + fileName);
+        if (!file)
+        {
+            println("Failed to open file for reading");
+            return false;
+        }
+
+        bool lineOpen = false;
+        while (file.available())
+        {
+            int character = file.read();
+            if (character < 0)
+                break;
+
+            if (character == '\n')
+            {
+                if (!lineOpen)
+                    lines.emplace_back(); // évite une création et copie, construit directement dans le vector
+                String &line = lines.back();
+                // on supprime le \r inutile
+                if (line.length() > 0 && line[line.length() - 1] == '\r')
+                    line.remove(line.length() - 1);
+                lineOpen = false;
+                continue;
+            }
+
+            if (!lineOpen)
+            {
+                lines.emplace_back();
+                lineOpen = true;
+            }
+            lines.back() += static_cast<char>(character);
+        }
+        file.close();
+        return true;
+    }
 
     bool WriteFile(const String &fileName, const vector<char> &message, bool createFileIfNotExists)
     {

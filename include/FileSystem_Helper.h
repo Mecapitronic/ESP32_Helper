@@ -39,6 +39,7 @@ namespace FileSystem_Helper
     bool CreateFile(const String &fileName);
     
     String ReadFile(const String &fileName);
+    bool ReadFileByLine(const String &fileName, std::vector<String> &lines);
 
     bool WriteFile(const String &fileName, const std::vector<char> &message, bool createFile = false);
     bool WriteFile(const String &fileName, const String &message, bool createFile = false);
