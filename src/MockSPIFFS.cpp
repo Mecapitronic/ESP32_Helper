@@ -1,10 +1,11 @@
 #include "MockSPIFFS.h"
 
-#ifdef MOCK_SPIFFS 
+#ifdef MOCK_SPIFFS
+#ifdef MOCK_SPIFFS_TEST
 extern "C" const char embeddedMapJson[] asm("_binary_data_map_json_start");
 extern "C" const char embeddedSimpleJson[] asm("_binary_data_simple_json_start");
 extern "C" const char embeddedText[] asm("_binary_data_texte_txt_start");
-
+#endif
 // global instance
 MockSPIFFSClass MockSPIFFS;
 
@@ -114,15 +115,17 @@ int MockSPIFFSClass::indexOf(const String& path) const {
 
 bool MockSPIFFSClass::begin(bool formatOnFail) {
     if (!initialized) {
+    #ifdef MOCK_SPIFFS_TEST
         preload("/texte.txt", String(embeddedText));
         preload("/map.json", String(embeddedMapJson));
         preload("/simple.json", String(embeddedSimpleJson));
+    #endif
         initialized = true;
     }
     return true;
 }
 
-    bool MockSPIFFSClass::format(){return true;}
+bool MockSPIFFSClass::format() { return true; }
 
 MockFile MockSPIFFSClass::open(const String& path, const char* mode) {
     char m = (mode && mode[0]) ? mode[0] : 'r';
