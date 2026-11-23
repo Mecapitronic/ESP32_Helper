@@ -40,7 +40,7 @@ namespace FileSystem_Helper
         ESP32_Helper::RegisterCommand("SPIFFSFormat", "SPIFFSFormat - Format SPIFFS; delete all files.", FunctionCommand( FormatFS(); ));
         ESP32_Helper::RegisterCommand("SPIFFSListFiles", "SPIFFSListFiles(:filter:string) - List files; omit filter to list all files.", FunctionCommand( ListFiles(String(cmd.dataStr1)); ));
         ESP32_Helper::RegisterCommand("SPIFFSCreateFile", "SPIFFSCreateFile:<fileName:string> - Create a file.", FunctionCommand( CreateFile(String(cmd.dataStr1)); ));
-        ESP32_Helper::RegisterCommand("SPIFFSReadFile", "SPIFFSReadFile:<fileName:string> - Read a file.", FunctionCommand( println("Reading file <%s> : ", String(cmd.dataStr1).c_str()); ReadFile(String(cmd.dataStr1)); ));
+        ESP32_Helper::RegisterCommand("SPIFFSReadFile", "SPIFFSReadFile:<fileName:string> - Read a file.", FunctionCommand( println(ReadFile(String(cmd.dataStr1))); ));
         ESP32_Helper::RegisterCommand("SPIFFSWriteFile", "SPIFFSWriteFile:<fileName:string>:<msg:string>(:createFileIfNotExists:bool=0) - Write a short message to a file.", FunctionCommand( WriteFile(String(cmd.dataStr1), String(cmd.dataStr2), cmd.size > 0 ? cmd.data[0] : false); ));
         ESP32_Helper::RegisterCommand("SPIFFSAppendFile", "SPIFFSAppendFile:<fileName:string>:<msg:string>(:createFileIfNotExists:bool=0) - Append a short message to a file.", FunctionCommand( AppendFile(String(cmd.dataStr1), String(cmd.dataStr2), cmd.size > 0 ? cmd.data[0] : false); ));
         ESP32_Helper::RegisterCommand("SPIFFSRenameFile", "SPIFFSRenameFile:<oldFileName:string>:<newFileName:string> - Rename a file.", FunctionCommand( RenameFile(String(cmd.dataStr1), String(cmd.dataStr2)); ));
@@ -140,7 +140,7 @@ namespace FileSystem_Helper
     bool ReadFileByLine(const String &fileName, vector<String> &lines)
     {
         lines.clear();
-        println("Reading file " + fileName);
+        println("Reading file By Line: " + fileName);
         if(!SPIFFS.exists("/" + fileName))
         {
             println("Source file does not exist");

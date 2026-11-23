@@ -35,6 +35,7 @@ namespace ESP32_Helper
             vTaskDelay(10);
         }*/
         commandList.clear();
+        RegisterCommand("Help", "Help - Display the Help message with all available commands.", FunctionCommand( PrintHelp(); ));
         RegisterCommand("Delay", "Delay:<duration:int@ms> - Delay execution; duration > 0. Example: Delay:1000", FunctionCommand( if(cmd.hasData() && cmd.data[0] > 0) { Printer::println("Delaying for %d ms...", cmd.data[0]); vTaskDelay(cmd.data[0]); Printer::println("Delay complete."); } else { Printer::println("Delay command requires a duration in ms as data."); } ));
         RegisterCommand("Reboot", "Reboot - Reboot the system.", FunctionCommand( Printer::println("Rebooting..."); ESP.restart(); ));
         RegisterCommand("Ping", "Ping - Reply with Pong.", FunctionCommand( Printer::println("Pong"); ));
@@ -198,51 +199,71 @@ namespace ESP32_Helper
         */
     }
 
+    void PrintHelp()
+    {
+        Printer::println("--- Help Commands List Start ---");
+        Printer::println("Syntax: Command:<name:type@unit>(:name:type@unit=default) - Description");
+        Printer::println("<...> required; (...) optional, including its ':'; =default when omitted.");
+        Printer::println("Types: int (signed 32-bit), string, bool (0=false, 1=true), int|string (either).");
+        Printer::println("float denotes a decimal, only if explicitly handled by the command; not parsed natively.");
+        Printer::println("%s", "Units after '@': ms, s, %, deg, mm, mm/s, bit/s, byte; omitted when not applicable.");
+        Printer::println("Do not type annotations, brackets or parentheses. Example: Delay:1000");
+        Printer::println("Separate arguments with ':'; end commands with newline or ';'. No quoting/escaping.");
+        Printer::println("Numeric-only arguments are integers, not strings; ':' and ';' cannot occur in strings.");
+        Printer::println("Limits: 24 characters per name/string, 6 integers, 2 strings; 63 characters per command.");
+        Printer::println("Multiple signatures describe distinct usages; constraints are documented, not auto-validated.");
+        for (const auto &handler : commandList)
+        {
+            Printer::println(" > " + handler.command);
+            Printer::println("     " + handler.help);
+        }
+        Printer::println("--- Help Commands List End ---");
+    }
+
     bool HandleCommand(Command cmdTmp)
     {
         if (!cmdTmp.hasCommand())
             return false;
 
-        if (cmdTmp.cmdEquals("Help"))
+        // Check all registered handlers (default namespaces + user custom handlers)
+        for (const auto &cmd : commandList)
         {
-            Printer::println("Help Commands List Start");
-            Printer::println("Syntax: Command:<name:type@unit>(:name:type@unit=default) - Description");
-            Printer::println("<...> required; (...) optional, including its ':'; =default when omitted.");
-            Printer::println("Types: int (signed 32-bit), string, bool (0=false, 1=true), int|string (either).");
-            Printer::println("float denotes a decimal, only if explicitly handled by the command; not parsed natively.");
-            Printer::println("%s", "Units after '@': ms, s, %, deg, mm, mm/s, bit/s, byte; omitted when not applicable.");
-            Printer::println("Do not type annotations, brackets or parentheses. Example: Delay:1000");
-            Printer::println("Separate arguments with ':'; end commands with newline or ';'. No quoting/escaping.");
-            Printer::println("Numeric-only arguments are integers, not strings; ':' and ';' cannot occur in strings.");
-            Printer::println("Limits: 24 characters per name/string, 6 integers, 2 strings; 63 characters per command.");
-            Printer::println("Multiple signatures describe distinct usages; constraints are documented, not auto-validated.");
-            Printer::println(" > Help - List commands and explain this notation.");
-            for (const auto &handler : commandList)
+            if (cmd.func != nullptr && cmdTmp.cmdEquals(cmd.command.c_str()))
             {
-                Printer::println(" > " + handler.command);
-                Printer::println("     " + handler.help);
+                cmd.func(cmdTmp);
+                return true;
             }
-            Printer::println("Help Commands List End");
-            return true;
         }
-        else
-        {
-            // Check all registered handlers (default namespaces + user custom handlers)
-            for (const auto &cmd : commandList)
-            {
-                if (cmd.func != nullptr && cmdTmp.cmdEquals(cmd.command.c_str()))
-                {
-                    cmd.func(cmdTmp);
-                    return true;
-                }
-            }
 
-            // If no command found, send to main application queue
-            // Queue by value: Command is now pure POD (char arrays), safe for FreeRTOS
-            Printer::println("No command found for " + cmdTmp.ToString());
-            awaitingCommand.Send(cmdTmp);
-            return false;
+        // If no command found, send to main application queue
+        // Queue by value: Command is now pure POD (char arrays), safe for FreeRTOS
+        Printer::println("No command found for " + cmdTmp.ToString());
+        awaitingCommand.Send(cmdTmp);
+        return false;
+    }
+
+    bool IsCommandRegistered(const String &command)
+    {
+        for (const auto &cmd : commandList)
+        {
+            if (cmd.command == command)
+            {
+                return true;
+            }
         }
+        return false;
+    }
+
+    Command ParseCommand(const String &commandStr)
+    {
+        std::vector<char> commandVec;
+        String test="";
+        for (size_t i = 0; i < commandStr.length(); i++)
+        {
+            commandVec.push_back(commandStr[i]);
+            test+=commandStr[i];
+        }        
+        return ParseCommandBuffer(commandVec);
     }
 
     // Read and extract Commands
@@ -323,7 +344,7 @@ namespace ESP32_Helper
                 isString = false;
             }
         }
-        Printer::println("Command Received %s", cmdTmp.ToString().c_str());
+        //Printer::println("Command Received %s", cmdTmp.ToString().c_str());
         return cmdTmp;
     }
 
