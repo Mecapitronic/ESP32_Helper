@@ -134,7 +134,11 @@ public:
     {
         return _enable == true;
     }
-    bool Running(bool _run)
+    bool IsRunning()
+    {
+        return _isRunning == true;
+    }
+    bool SetRunning(bool _run)
     {
         return _isRunning = _run;
     }
