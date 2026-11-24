@@ -40,6 +40,7 @@ struct SimpleData : public IJsonSerializable
 
     void Print() const
     {
+        Printer::println("SimpleData:");
         Printer::println("nom = %s, compteur = %ld, actif = %s",
                          nom.c_str(), static_cast<long>(compteur), actif ? "true" : "false");
     }

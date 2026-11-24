@@ -58,9 +58,7 @@ namespace JSON_Helper
     bool LoadObject(IJsonSerializable &object, const String &fileName)
     {
         JsonDocument document;
-        if (!LoadJsonFile(document, fileName))
-            return false;
-        return object.FromJson(document);
+        return LoadJsonFile(document, fileName) && object.FromJson(document);
     }
 
     bool SaveObject(const IJsonSerializable &object, const String &fileName)

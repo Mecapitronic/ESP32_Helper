@@ -14,16 +14,19 @@ void RegisterMyCustomCommands()
     ESP32_Helper::RegisterCommand("SimpleNom", "SimpleNom:<name:string> - Set nom in memory; use SimpleSave to persist.", FunctionCommand(
         if (!cmd.hasDataStr1())
             return;
+        println("Setting nom from '%s' to '%s'", simpleData.nom.c_str(), cmd.dataStr1);
         simpleData.nom = String(cmd.dataStr1);
     ));
     ESP32_Helper::RegisterCommand("SimpleCompteur", "SimpleCompteur:<value:int> - Set compteur in memory; value >= 0. Use SimpleSave to persist.", FunctionCommand(
         if (!cmd.hasData() || cmd.data[0] < 0)
             return;
+        println("Setting compteur from %ld to %ld", static_cast<long>(simpleData.compteur), static_cast<long>(cmd.data[0]));
         simpleData.compteur = cmd.data[0];
     ));
     ESP32_Helper::RegisterCommand("SimpleActif", "SimpleActif:<enabled:bool> - Set actif in memory; use SimpleSave to persist.", FunctionCommand(
         if (!cmd.hasData())
             return;
+        println("Setting actif from %s to %s", simpleData.actif ? "true" : "false", cmd.data[0] != 0 ? "true" : "false");
         simpleData.actif = cmd.data[0] != 0;
     ));
     ESP32_Helper::RegisterCommand("SimpleLoad", "SimpleLoad - Reload values from the JSON file.", FunctionCommand(
