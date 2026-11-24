@@ -7,8 +7,6 @@ namespace JSON_Helper
 {
     namespace
     {
-        const char *VERSION_KEY = "version";
-
         bool Serialize(const JsonDocument &document, String &serialized)
         {
             if (document.overflowed())
@@ -62,18 +60,6 @@ namespace JSON_Helper
         JsonDocument document;
         if (!LoadJsonFile(document, fileName))
             return false;
-
-        uint16_t fileVersion = document[VERSION_KEY] | 0;
-        if (fileVersion != object.Version())
-        {
-            if (!object.Migrate(document, fileVersion))
-            {
-                println("JSON unsupported version %u in %s, expected %u",
-                        fileVersion, fileName.c_str(), object.Version());
-                return false;
-            }
-            println("JSON %s migrated from version %u to %u", fileName.c_str(), fileVersion, object.Version());
-        }
         return object.FromJson(document);
     }
 
@@ -81,17 +67,6 @@ namespace JSON_Helper
     {
         JsonDocument document;
         object.ToJson(document);
-        document[VERSION_KEY] = object.Version();
-
-        String serialized;
-        if (!Serialize(document, serialized) || !FileSystem_Helper::WriteFile(fileName, serialized, true))
-            return false;
-
-        if (FileSystem_Helper::ReadFile(fileName) != serialized)
-        {
-            println("JSON verification failed: saved content differs in %s", fileName.c_str());
-            return false;
-        }
-        return true;
+        return SaveJsonFile(document, fileName);
     }
 }

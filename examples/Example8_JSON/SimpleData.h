@@ -10,14 +10,6 @@ struct SimpleData : public IJsonSerializable
     int32_t compteur = 0;
     bool actif = false;
 
-    uint16_t Version() const override { return 1; }
-
-    // Version 0 = file written before the "version" field existed, same content
-    bool Migrate(JsonDocument & /*document*/, uint16_t fromVersion) override
-    {
-        return fromVersion == 0;
-    }
-
     bool FromJson(const JsonDocument &document) override
     {
         if (!document["nom"].is<String>() ||
