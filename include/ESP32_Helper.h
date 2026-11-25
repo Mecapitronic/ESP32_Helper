@@ -65,5 +65,12 @@ namespace ESP32_Helper
     Command GetCommand();
     String convertToString(char *a, int32_t size);
 
+    template <typename T>
+    struct EnumTypeHash {
+      std::size_t operator()(const T& type) const {
+        return static_cast<std::size_t>(type);
+      }
+    };
 }
+
 #endif
