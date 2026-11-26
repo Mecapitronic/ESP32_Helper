@@ -382,7 +382,7 @@ struct Command
     }
     
     // Print the command as a string for debugging purposes
-    String ToString()
+    String ToString() const
     {
         String toString = "";
         toString+=(" Cmd=" + String(cmd));
